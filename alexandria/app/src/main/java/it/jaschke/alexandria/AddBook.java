@@ -237,6 +237,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
                 Log.v(LOG_TAG, "onReceive called");
                 bookEmptyTv.setText(intent.getStringExtra(MESSAGE_KEY));
                 hideKeyboard();
+                
 //                Toast.makeText(getActivity().getApplication(), intent.getStringExtra(MESSAGE_KEY), Toast.LENGTH_LONG).show();
             }
         }
