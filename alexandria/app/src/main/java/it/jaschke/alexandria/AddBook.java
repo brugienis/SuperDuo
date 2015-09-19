@@ -1,13 +1,16 @@
 package it.jaschke.alexandria;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -15,6 +18,7 @@ import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,16 +30,22 @@ import it.jaschke.alexandria.services.DownloadImage;
 
 
 public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
-    private static final String TAG = "INTENT_TO_SCAN_ACTIVITY";
-    private EditText ean;
-    private final int LOADER_ID = 1;
+
     private View rootView;
+    private EditText ean;
+    private TextView bookEmptyTv;
+    private final int LOADER_ID = 1;
     private final String EAN_CONTENT="eanContent";
-    private static final String SCAN_FORMAT = "scanFormat";
-    private static final String SCAN_CONTENTS = "scanContents";
+    private BroadcastReceiver messageReciever;
 
     private String mScanFormat = "Format:";
     private String mScanContents = "Contents:";
+
+    private static final String SCAN_FORMAT = "scanFormat";
+    private static final String SCAN_CONTENTS = "scanContents";
+    public static final String MESSAGE_EVENT = "MESSAGE_EVENT";
+    public static final String MESSAGE_KEY = "MESSAGE_EXTRA";
+    private static final String TAG = "INTENT_TO_SCAN_ACTIVITY";
 
     private final String LOG_TAG = AddBook.class.getSimpleName();
 
@@ -55,6 +65,9 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.fragment_add_book, container, false);
+
+        bookEmptyTv = (TextView) rootView.findViewById(R.id.bookEmpty);
+
         ean = (EditText) rootView.findViewById(R.id.ean);
 
         ean.addTextChangedListener(new TextWatcher() {
@@ -215,5 +228,38 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         activity.setTitle(R.string.scan);
+    }
+
+    private class MessageReciever extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(intent.getStringExtra(MESSAGE_KEY)!=null){
+                Log.v(LOG_TAG, "onReceive called");
+                bookEmptyTv.setText(intent.getStringExtra(MESSAGE_KEY));
+                hideKeyboard();
+//                Toast.makeText(getActivity().getApplication(), intent.getStringExtra(MESSAGE_KEY), Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    private void hideKeyboard() {
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(ean.getWindowToken(), 0);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        messageReciever = new MessageReciever();
+        IntentFilter filter = new IntentFilter(MESSAGE_EVENT);
+        LocalBroadcastManager.getInstance(getActivity().getApplication()).registerReceiver(messageReciever, filter);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        LocalBroadcastManager.getInstance(getActivity().getApplication()).unregisterReceiver(messageReciever);
     }
 }
