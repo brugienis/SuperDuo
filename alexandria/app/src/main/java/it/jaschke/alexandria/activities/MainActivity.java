@@ -33,10 +33,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
      */
     private CharSequence title;
     public static boolean IS_TABLET = false;
-//    private BroadcastReceiver messageReciever;
-
-//    public static final String MESSAGE_EVENT = "MESSAGE_EVENT";
-//    public static final String MESSAGE_KEY = "MESSAGE_EXTRA";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,10 +43,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         }else {
             setContentView(R.layout.activity_main);
         }
-
-//        messageReciever = new MessageReciever();
-//        IntentFilter filter = new IntentFilter(MESSAGE_EVENT);
-//        LocalBroadcastManager.getInstance(this).registerReceiver(messageReciever,filter);
 
         navigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -128,12 +120,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
     }
 
     @Override
-    protected void onDestroy() {
-//        LocalBroadcastManager.getInstance(this).unregisterReceiver(messageReciever);
-        super.onDestroy();
-    }
-
-    @Override
     public void onItemSelected(String ean) {
         Bundle args = new Bundle();
         args.putString(BookDetail.EAN_KEY, ean);
@@ -151,15 +137,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                 .commit();
 
     }
-
-//    private class MessageReciever extends BroadcastReceiver {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            if(intent.getStringExtra(MESSAGE_KEY)!=null){
-//                Toast.makeText(MainActivity.this, intent.getStringExtra(MESSAGE_KEY), Toast.LENGTH_LONG).show();
-//            }
-//        }
-//    }
 
     public void goBack(View view){
         getSupportFragmentManager().popBackStack();

@@ -32,12 +32,12 @@ import it.jaschke.alexandria.utilities.Utility;
  */
 public class BookService extends IntentService {
 
-    private final String LOG_TAG = BookService.class.getSimpleName();
-
+    private static final String GOOGLEAPIS_URL = "https://www.googleapis.com/books/v1/volumes?";
     public static final String FETCH_BOOK = "it.jaschke.alexandria.services.action.FETCH_BOOK";
     public static final String DELETE_BOOK = "it.jaschke.alexandria.services.action.DELETE_BOOK";
-
     public static final String EAN = "it.jaschke.alexandria.services.extra.EAN";
+
+    private static final String LOG_TAG = BookService.class.getSimpleName();
 
     public BookService() {
         super("Alexandria");
@@ -62,7 +62,7 @@ public class BookService extends IntentService {
      * parameters.
      */
     private void deleteBook(String ean) {
-        Log.e(LOG_TAG, "deleteBook - ean: " + ean);
+//        Log.e(LOG_TAG, "deleteBook - ean: " + ean);
         if (ean != null) {
             getContentResolver().delete(AlexandriaContract.BookEntry.buildBookUri(Long.parseLong(ean)), null, null);
         }
@@ -73,8 +73,6 @@ public class BookService extends IntentService {
      * parameters.
      */
     private void fetchBook(String ean) {
-        Log.e(LOG_TAG, "fetchBook - ean: " + ean);
-
         if (ean.length() != 13) {
             return;
         }
@@ -87,7 +85,6 @@ public class BookService extends IntentService {
                 null  // sort order
         );
 
-        Log.e(LOG_TAG, "fetchBook - bookEntry.getCount(): " + bookEntry.getCount());
         if(bookEntry.getCount() > 0){
             bookEntry.close();
             return;
@@ -101,12 +98,12 @@ public class BookService extends IntentService {
         boolean serverProblem = false;
 
         try {
-            final String FORECAST_BASE_URL = "https://www.googleapis.com/books/v1/volumes?";
+//            final String FORECAST_BASE_URL = "https://www.googleapis.com/books/v1/volumes?";
             final String QUERY_PARAM = "q";
 
             final String ISBN_PARAM = "isbn:" + ean;
 
-            Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
+            Uri builtUri = Uri.parse(GOOGLEAPIS_URL).buildUpon()
                     .appendQueryParameter(QUERY_PARAM, ISBN_PARAM)
                     .build();
 
@@ -118,7 +115,7 @@ public class BookService extends IntentService {
 
             InputStream inputStream = urlConnection.getInputStream();
             StringBuffer buffer = new StringBuffer();
-            Log.e(LOG_TAG, "fetchBook - inputStream: " + inputStream);
+//            Log.e(LOG_TAG, "fetchBook - inputStream: " + inputStream);
             if (inputStream == null) {
                 return;
             }
@@ -130,7 +127,7 @@ public class BookService extends IntentService {
                 buffer.append("\n");
             }
 
-            Log.e(LOG_TAG, "fetchBook - buffer.length(): " + buffer.length());
+//            Log.e(LOG_TAG, "fetchBook - buffer.length(): " + buffer.length());
             if (buffer.length() == 0) {
                 return;
             }
@@ -141,6 +138,7 @@ public class BookService extends IntentService {
             // to parse it.
             serverProblem = true;
         }
+        // FIXME: 22/09/2015 - test again to see if exception is thrown when no network connection
         catch (Exception e) {
             Log.e(LOG_TAG, "Error ", e);
             e.printStackTrace();
@@ -152,14 +150,14 @@ public class BookService extends IntentService {
             if (reader != null) {
                 try {
                     reader.close();
-                } catch (final IOException e) {
-                    Log.e(LOG_TAG, "Error closing stream", e);
+                } catch (final IOException nothingCanBeDone) {
+//                    Log.e(LOG_TAG, "Error closing stream", e);
                 }
             }
 
         }
 
-        Log.e(LOG_TAG, "fetchBook - after retrieving JSON - serverProblem: " + serverProblem);
+//        Log.e(LOG_TAG, "fetchBook - after retrieving JSON - serverProblem: " + serverProblem);
         if (!serverProblem) {
 
             final String ITEMS = "items";
@@ -221,7 +219,7 @@ public class BookService extends IntentService {
             }
         }
 
-        Log.e(LOG_TAG, "fetchBook - after parsing JSON - serverProblem: " + serverProblem  + "/" + Utility.isNetworkAvailable(this));
+//        Log.e(LOG_TAG, "fetchBook - after parsing JSON - serverProblem: " + serverProblem  + "/" + Utility.isNetworkAvailable(this));
         if (serverProblem) {
             String message;
             if (Utility.isNetworkAvailable(this)) {

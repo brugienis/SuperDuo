@@ -32,7 +32,7 @@
                     android:saveEnabled="true"
                     android:maxLength="@integer/ean_size"
                     android:maxLines="1"
-                    android:hint="@string/input_hint"
+                    android:hint="@string/isbn_input_hint"
                     android:paddingRight="20dp"/>
 
             </android.support.design.widget.TextInputLayout>
@@ -111,7 +111,7 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
-                android:text="@string/cancel_button"
+                android:text="@string/delete_book_button"
                 android:layout_weight="1"
                 style="?android:attr/buttonBarButtonStyle"
                 android:id="@+id/delete_button"
@@ -125,7 +125,7 @@
                 android:text="@string/ok_button"
                 android:visibility="invisible"
                 android:layout_weight="1"
-                android:id="@+id/save_button"
+                android:id="@+id/next_button"
                 android:drawableLeft="@drawable/ic_action_accept"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_gravity="bottom"

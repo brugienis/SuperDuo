@@ -3,7 +3,6 @@ package it.jaschke.alexandria.utilities;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
 
 /**
  * Created by business on 20/09/2015.
@@ -23,7 +22,6 @@ public class Utility {
                 (ConnectivityManager)c.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        Log.v(LOG_TAG, "isNetworkAvailable - activeNetwork: " + activeNetwork);
         return activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
     }
