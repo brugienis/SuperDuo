@@ -47,7 +47,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
     public static final String MESSAGE_KEY = "MESSAGE_EXTRA";
     private static final String TAG = "INTENT_TO_SCAN_ACTIVITY";
 
-    private final String LOG_TAG = AddBook.class.getSimpleName();
+    private final static String LOG_TAG = AddBook.class.getSimpleName();
 
 
     public AddBook(){
@@ -56,7 +56,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if(ean!=null) {
+        if (ean != null) {
             outState.putString(EAN_CONTENT, ean.getText().toString());
         }
     }
@@ -83,22 +83,25 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
 
             @Override
             public void afterTextChanged(Editable s) {
-                String ean =s.toString();
-                Log.v(LOG_TAG, "afterTextChanged - ean: " + ean);
+                String eanStr =s.toString();
+                Log.v(LOG_TAG, "afterTextChanged - ean: " + eanStr);
                 //catch isbn10 numbers
-                if(ean.length()==10 && !ean.startsWith("978")){
-                    ean="978"+ean;
+                if(eanStr.length() == 10 && !eanStr.startsWith("978")){
+                    eanStr="978"+eanStr;
                 }
-                if(ean.length()<13){
-                    clearFields();
+                if(eanStr.length() < 13){
+//                    clearFieldsΩFields();
                     return;
                 }
+                ean.setEnabled(false);
+                hideKeyboard();
                 //Once we have an ISBN, start a book intent
                 Intent bookIntent = new Intent(getActivity(), BookService.class);
-                bookIntent.putExtra(BookService.EAN, ean);
+                bookIntent.putExtra(BookService.EAN, eanStr);
                 bookIntent.setAction(BookService.FETCH_BOOK);
                 getActivity().startService(bookIntent);
                 AddBook.this.restartLoader();
+                bookEmptyTv.setText("Search started");
             }
         });
 
@@ -175,13 +178,18 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
      * test with
      * Popular: How a Geek in Pearls Discovered the Secret to Confidence
      * by Maya Van Wagenen
-     * ISBN-13: 978-0147512543
+     * ISBN-13: 978-01 475 125 43
      */
     @Override
     public void onLoadFinished(android.support.v4.content.Loader<Cursor> loader, Cursor data) {
+        Log.v(LOG_TAG, "onLoadFinished - start");
         if (!data.moveToFirst()) {
+            Log.i(LOG_TAG, "onLoadFinished - cursor is EMPTY");
             return;
         }
+
+        bookEmptyTv.setText("");
+        ean.setEnabled(true);
 
         String bookTitle = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.TITLE));
         Log.i(LOG_TAG, "onLoadFinished - bookTitle: " + bookTitle);
@@ -206,6 +214,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
 
         rootView.findViewById(R.id.save_button).setVisibility(View.VISIBLE);
         rootView.findViewById(R.id.delete_button).setVisibility(View.VISIBLE);
+        Log.v(LOG_TAG, "onLoadFinished - end");
     }
 
     @Override
@@ -230,14 +239,14 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
         activity.setTitle(R.string.scan);
     }
 
-    private class MessageReciever extends BroadcastReceiver {
+    private class messageReciever extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(intent.getStringExtra(MESSAGE_KEY)!=null){
-                Log.v(LOG_TAG, "onReceive called");
+            if(intent.getStringExtra(MESSAGE_KEY) != null) {
+                Log.v(LOG_TAG, "messageReciever.onReceive called");
                 bookEmptyTv.setText(intent.getStringExtra(MESSAGE_KEY));
-                hideKeyboard();
-                
+                ean.setEnabled(true);
+
 //                Toast.makeText(getActivity().getApplication(), intent.getStringExtra(MESSAGE_KEY), Toast.LENGTH_LONG).show();
             }
         }
@@ -253,7 +262,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
     public void onResume() {
         super.onResume();
 
-        messageReciever = new MessageReciever();
+        messageReciever = new messageReciever();
         IntentFilter filter = new IntentFilter(MESSAGE_EVENT);
         LocalBroadcastManager.getInstance(getActivity().getApplication()).registerReceiver(messageReciever, filter);
     }

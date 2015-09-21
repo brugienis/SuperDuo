@@ -22,6 +22,7 @@ import java.net.URL;
 import it.jaschke.alexandria.AddBook;
 import it.jaschke.alexandria.R;
 import it.jaschke.alexandria.data.AlexandriaContract;
+import it.jaschke.alexandria.utilities.Utility;
 
 
 /**
@@ -61,7 +62,8 @@ public class BookService extends IntentService {
      * parameters.
      */
     private void deleteBook(String ean) {
-        if(ean!=null) {
+        Log.e(LOG_TAG, "deleteBook - ean: " + ean);
+        if (ean != null) {
             getContentResolver().delete(AlexandriaContract.BookEntry.buildBookUri(Long.parseLong(ean)), null, null);
         }
     }
@@ -71,8 +73,9 @@ public class BookService extends IntentService {
      * parameters.
      */
     private void fetchBook(String ean) {
+        Log.e(LOG_TAG, "fetchBook - ean: " + ean);
 
-        if(ean.length()!=13){
+        if (ean.length() != 13) {
             return;
         }
 
@@ -84,7 +87,8 @@ public class BookService extends IntentService {
                 null  // sort order
         );
 
-        if(bookEntry.getCount()>0){
+        Log.e(LOG_TAG, "fetchBook - bookEntry.getCount(): " + bookEntry.getCount());
+        if(bookEntry.getCount() > 0){
             bookEntry.close();
             return;
         }
@@ -94,6 +98,7 @@ public class BookService extends IntentService {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
         String bookJsonString = null;
+        boolean serverProblem = false;
 
         try {
             final String FORECAST_BASE_URL = "https://www.googleapis.com/books/v1/volumes?";
@@ -113,6 +118,7 @@ public class BookService extends IntentService {
 
             InputStream inputStream = urlConnection.getInputStream();
             StringBuffer buffer = new StringBuffer();
+            Log.e(LOG_TAG, "fetchBook - inputStream: " + inputStream);
             if (inputStream == null) {
                 return;
             }
@@ -124,13 +130,22 @@ public class BookService extends IntentService {
                 buffer.append("\n");
             }
 
+            Log.e(LOG_TAG, "fetchBook - buffer.length(): " + buffer.length());
             if (buffer.length() == 0) {
                 return;
             }
             bookJsonString = buffer.toString();
-        } catch (Exception e) {
+        } catch (IOException e) {
             Log.e(LOG_TAG, "Error ", e);
-        } finally {
+            // If the code didn't successfully get the weather data, there's no point in attempting
+            // to parse it.
+            serverProblem = true;
+        }
+        catch (Exception e) {
+            Log.e(LOG_TAG, "Error ", e);
+            e.printStackTrace();
+        }
+        finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
             }
@@ -144,60 +159,80 @@ public class BookService extends IntentService {
 
         }
 
-        final String ITEMS = "items";
+        Log.e(LOG_TAG, "fetchBook - after retrieving JSON - serverProblem: " + serverProblem);
+        if (!serverProblem) {
 
-        final String VOLUME_INFO = "volumeInfo";
+            final String ITEMS = "items";
 
-        final String TITLE = "title";
-        final String SUBTITLE = "subtitle";
-        final String AUTHORS = "authors";
-        final String DESC = "description";
-        final String CATEGORIES = "categories";
-        final String IMG_URL_PATH = "imageLinks";
-        final String IMG_URL = "thumbnail";
+            final String VOLUME_INFO = "volumeInfo";
 
-        try {
-            JSONObject bookJson = new JSONObject(bookJsonString);
-            JSONArray bookArray;
-            if(bookJson.has(ITEMS)){
-                bookArray = bookJson.getJSONArray(ITEMS);
-            }else{
-                Intent messageIntent = new Intent(AddBook.MESSAGE_EVENT);
-                messageIntent.putExtra(AddBook.MESSAGE_KEY,getResources().getString(R.string.not_found));
-                LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(messageIntent);
-                return;
+            final String TITLE = "title";
+            final String SUBTITLE = "subtitle";
+            final String AUTHORS = "authors";
+            final String DESC = "description";
+            final String CATEGORIES = "categories";
+            final String IMG_URL_PATH = "imageLinks";
+            final String IMG_URL = "thumbnail";
+
+            try {
+                JSONObject bookJson = new JSONObject(bookJsonString);
+                JSONArray bookArray;
+                if (bookJson.has(ITEMS)) {
+                    bookArray = bookJson.getJSONArray(ITEMS);
+                } else {
+                    Log.e(LOG_TAG, "fetchBook - JSON doesn't have ITEMS: " + bookJsonString);
+                    Intent messageIntent = new Intent(AddBook.MESSAGE_EVENT);
+                    messageIntent.putExtra(AddBook.MESSAGE_KEY, getResources().getString(R.string.empty_book_data_isbn_not_found));
+                    LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(messageIntent);
+                    return;
+                }
+
+                JSONObject bookInfo = ((JSONObject) bookArray.get(0)).getJSONObject(VOLUME_INFO);
+
+                String title = bookInfo.getString(TITLE);
+
+                String subtitle = "";
+                if (bookInfo.has(SUBTITLE)) {
+                    subtitle = bookInfo.getString(SUBTITLE);
+                }
+
+                String desc = "";
+                if (bookInfo.has(DESC)) {
+                    desc = bookInfo.getString(DESC);
+                }
+
+                String imgUrl = "";
+                if (bookInfo.has(IMG_URL_PATH) && bookInfo.getJSONObject(IMG_URL_PATH).has(IMG_URL)) {
+                    imgUrl = bookInfo.getJSONObject(IMG_URL_PATH).getString(IMG_URL);
+                }
+
+                writeBackBook(ean, title, subtitle, desc, imgUrl);
+
+                if (bookInfo.has(AUTHORS)) {
+                    writeBackAuthors(ean, bookInfo.getJSONArray(AUTHORS));
+                }
+                if (bookInfo.has(CATEGORIES)) {
+                    writeBackCategories(ean, bookInfo.getJSONArray(CATEGORIES));
+                }
+
+            } catch (JSONException e) {
+                Log.e(LOG_TAG, "Error ", e);
+                serverProblem = true;
             }
+        }
 
-            JSONObject bookInfo = ((JSONObject) bookArray.get(0)).getJSONObject(VOLUME_INFO);
-
-            String title = bookInfo.getString(TITLE);
-
-            String subtitle = "";
-            if(bookInfo.has(SUBTITLE)) {
-                subtitle = bookInfo.getString(SUBTITLE);
+        Log.e(LOG_TAG, "fetchBook - after parsing JSON - serverProblem: " + serverProblem  + "/" + Utility.isNetworkAvailable(this));
+        if (serverProblem) {
+            String message;
+            if (Utility.isNetworkAvailable(this)) {
+                message = getResources().getString(R.string.empty_book_data_server_error);
+            } else {
+                message = getResources().getString(R.string.empty_book_data_no_network);
             }
-
-            String desc="";
-            if(bookInfo.has(DESC)){
-                desc = bookInfo.getString(DESC);
-            }
-
-            String imgUrl = "";
-            if(bookInfo.has(IMG_URL_PATH) && bookInfo.getJSONObject(IMG_URL_PATH).has(IMG_URL)) {
-                imgUrl = bookInfo.getJSONObject(IMG_URL_PATH).getString(IMG_URL);
-            }
-
-            writeBackBook(ean, title, subtitle, desc, imgUrl);
-
-            if(bookInfo.has(AUTHORS)) {
-                writeBackAuthors(ean, bookInfo.getJSONArray(AUTHORS));
-            }
-            if(bookInfo.has(CATEGORIES)){
-                writeBackCategories(ean,bookInfo.getJSONArray(CATEGORIES) );
-            }
-
-        } catch (JSONException e) {
-            Log.e(LOG_TAG, "Error ", e);
+            Intent messageIntent = new Intent(AddBook.MESSAGE_EVENT);
+            messageIntent.putExtra(AddBook.MESSAGE_KEY, message);
+            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(messageIntent);
+            return;
         }
     }
 
