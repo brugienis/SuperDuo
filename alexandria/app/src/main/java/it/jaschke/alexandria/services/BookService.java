@@ -178,7 +178,7 @@ public class BookService extends IntentService {
                 if (bookJson.has(ITEMS)) {
                     bookArray = bookJson.getJSONArray(ITEMS);
                 } else {
-                    Log.e(LOG_TAG, "fetchBook - JSON doesn't have ITEMS: " + bookJsonString);
+//                    Log.e(LOG_TAG, "fetchBook - JSON doesn't have ITEMS: " + bookJsonString);
                     Intent messageIntent = new Intent(AddBook.MESSAGE_EVENT);
                     messageIntent.putExtra(AddBook.MESSAGE_KEY, getResources().getString(R.string.empty_book_data_isbn_not_found));
                     LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(messageIntent);

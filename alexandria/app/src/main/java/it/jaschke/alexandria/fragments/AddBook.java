@@ -13,7 +13,6 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,11 +51,12 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
     private String mScanContents = "Contents:";
 
     private static final String NINE_SEVEN_EIGHT = "978";
-    private static final String SCAN_FORMAT = "scanFormat";
-    private static final String SCAN_CONTENTS = "scanContents";
     public static final String MESSAGE_EVENT = "MESSAGE_EVENT";
     public static final String MESSAGE_KEY = "MESSAGE_EXTRA";
-    private static final String TAG = "INTENT_TO_SCAN_ACTIVITY";
+
+//    private static final String SCAN_FORMAT = "scanFormat";
+//    private static final String SCAN_CONTENTS = "scanContents";
+//    private static final String TAG = "INTENT_TO_SCAN_ACTIVITY";
 
     private final static String LOG_TAG = AddBook.class.getSimpleName();
 
@@ -208,23 +208,19 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
      */
     @Override
     public void onLoadFinished(android.support.v4.content.Loader<Cursor> loader, Cursor data) {
-//        Log.v(LOG_TAG, "onLoadFinished - start");
         if (!data.moveToFirst()) {
-            Log.i(LOG_TAG, "onLoadFinished - cursor is EMPTY");
             return;
         }
 
         bookEmptyTv.setText("");
 
         String bookTitle = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.TITLE));
-//        Log.i(LOG_TAG, "onLoadFinished - bookTitleTv: " + bookTitle);
         bookTitleTv.setText(bookTitle);
 
         String bookSubTitle = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.SUBTITLE));
         bookSubTitleTv.setText(bookSubTitle);
 
         String authors = data.getString(data.getColumnIndex(AlexandriaContract.AuthorEntry.AUTHOR));
-//        Log.i(LOG_TAG, "onLoadFinished - authorsTv: " + authors);
         String[] authorsArr = authors.split(",");
         authorsTv.setLines(authorsArr.length);
         authorsTv.setText(authors.replace(",", "\n"));
@@ -249,7 +245,6 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
     }
 
     private void clearFields() {
-        Log.i(LOG_TAG, "clearFields - start");
         eanTv.setText("");
         bookTitleTv.setText("");
         bookSubTitleTv.setText("");
@@ -270,11 +265,8 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
         @Override
         public void onReceive(Context context, Intent intent) {
             if(intent.getStringExtra(MESSAGE_KEY) != null) {
-                Log.v(LOG_TAG, "messageReciever.onReceive called");
                 bookEmptyTv.setText(intent.getStringExtra(MESSAGE_KEY));
                 eanTv.setEnabled(true);
-
-//                Toast.makeText(getActivity().getApplication(), intent.getStringExtra(MESSAGE_KEY), Toast.LENGTH_LONG).show();
             }
         }
     }

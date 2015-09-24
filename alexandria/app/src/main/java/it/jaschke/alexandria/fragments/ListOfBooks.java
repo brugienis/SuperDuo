@@ -3,10 +3,12 @@ package it.jaschke.alexandria.fragments;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,10 +26,13 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
 
     private BookListAdapter bookListAdapter;
     private ListView bookList;
+    private TextInputLayout searchTextInputLayout;
     private int position = ListView.INVALID_POSITION;
     private EditText searchText;
 
     private final int LOADER_ID = 10;
+
+    private final static String LOG_TAG = ListOfBooks.class.getSimpleName();
 
     public ListOfBooks() {
     }
@@ -48,11 +53,27 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
                 null  // sort order
         );
 
-
         bookListAdapter = new BookListAdapter(getActivity(), cursor, 0);
+
         View rootView = inflater.inflate(R.layout.fragment_list_of_books, container, false);
+
         searchText = (EditText) rootView.findViewById(R.id.searchText);
-        rootView.findViewById(R.id.searchButton).setOnClickListener(
+        View searchButtonVw = rootView.findViewById(R.id.searchButton);
+
+        searchTextInputLayout = (TextInputLayout) rootView.findViewById(R.id.name_et_textinputlayout);
+        searchText.requestFocus();
+
+//        searchTextInputLayout.setVisibility(View.VISIBLE);
+        Log.v(LOG_TAG, "onCreateView - cursor.getCount(): " + cursor.getCount());
+        if (cursor.getCount() == 0) {
+            searchTextInputLayout.setHint("No books available");
+            searchText.setEnabled(false);
+            searchButtonVw.setEnabled(false);
+        } else {
+            searchTextInputLayout.setHint(getActivity().getResources().getString(R.string.title_input_hint));
+        }
+
+        searchButtonVw.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -87,7 +108,7 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
         final String selection = AlexandriaContract.BookEntry.TITLE +" LIKE ? OR " + AlexandriaContract.BookEntry.SUBTITLE + " LIKE ? ";
-        String searchString =searchText.getText().toString();
+        String searchString = searchText.getText().toString();
 
         if(searchString.length()>0){
             searchString = "%"+searchString+"%";
@@ -113,7 +134,14 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        Log.v(LOG_TAG, "onLoadFinished - start");
         bookListAdapter.swapCursor(data);
+//        bookListAdapter.changeCursor(data);
+        if (bookListAdapter.isEmpty()) {
+            searchTextInputLayout.setHint("No books available");
+        } else {
+            searchTextInputLayout.setHint(getResources().getString(R.string.title_input_hint));
+        }
         if (position != ListView.INVALID_POSITION) {
             bookList.smoothScrollToPosition(position);
         }
@@ -129,4 +157,6 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
         super.onAttach(activity);
         activity.setTitle(R.string.books);
     }
+
+
 }

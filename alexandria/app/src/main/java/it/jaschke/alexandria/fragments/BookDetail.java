@@ -19,7 +19,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import it.jaschke.alexandria.R;
-import it.jaschke.alexandria.activities.MainActivity;
 import it.jaschke.alexandria.data.AlexandriaContract;
 import it.jaschke.alexandria.services.BookService;
 import it.jaschke.alexandria.services.DownloadImage;
@@ -133,11 +132,11 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
 
     }
 
-    @Override
-    public void onPause() {
-        super.onDestroyView();
-        if(MainActivity.IS_TABLET && rootView.findViewById(R.id.right_container)==null){
-            getActivity().getSupportFragmentManager().popBackStack();
-        }
-    }
+//    @Override
+//    public void onPause() {
+//        super.onDestroyView();
+//        if(MainActivity.IS_TABLET && rootView.findViewById(R.id.right_container)==null){
+//            getActivity().getSupportFragmentManager().popBackStack();
+//        }
+//    }
 }
