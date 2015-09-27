@@ -11,6 +11,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -204,6 +205,9 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
      * Popular: How a Geek in Pearls Discovered the Secret to Confidence
      * by Maya Van Wagenen
      * ISBN-13: 978-01 475 125 43
+     *
+     * 978-1118087886 OK
+     * 1118087887 problem
      */
     @Override
     public void onLoadFinished(android.support.v4.content.Loader<Cursor> loader, Cursor data) {
@@ -214,12 +218,15 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
         bookEmptyTv.setText("");
 
         String bookTitle = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.TITLE));
+        Log.v(LOG_TAG, "onLoadFinished - bookTitle: " + bookTitle);
         bookTitleTv.setText(bookTitle);
 
         String bookSubTitle = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.SUBTITLE));
+        Log.v(LOG_TAG, "onLoadFinished - bookSubTitle: " + bookSubTitle);
         bookSubTitleTv.setText(bookSubTitle);
 
         String authors = data.getString(data.getColumnIndex(AlexandriaContract.AuthorEntry.AUTHOR));
+        Log.v(LOG_TAG, "onLoadFinished - authors: " + authors);
         String[] authorsArr = authors.split(",");
         authorsTv.setLines(authorsArr.length);
         authorsTv.setText(authors.replace(",", "\n"));
@@ -258,6 +265,11 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         activity.setTitle(R.string.scan);
+    }
+
+    public void iprocessIsbnNotFound(String msg) {
+        bookEmptyTv.setText(msg);
+        eanTv.setEnabled(true);
     }
 
 //    private class messageReciever extends BroadcastReceiver {

@@ -208,14 +208,19 @@ public class MainActivity extends ActionBarActivity
     private class MessageReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
+            String msgKey = intent.getStringExtra(MESSAGE_KEY);
             Log.v(LOG_TAG, "messageReceiver - intent: " + intent);
-            if (intent.getStringExtra(MESSAGE_KEY) != null && intent.getStringExtra(MESSAGE_KEY).equals(DELETE_EVENT)) {
-                // FIXME: 27/09/2015 call method in AddBook that will execute two lines below
-                processBookDeleted();
-            } else if (intent.getStringExtra(MESSAGE_KEY) != null) {
-                // FIXME: 27/09/2015 call method in AddBook that will execute two lines below
+            if (msgKey != null) {
+                if (msgKey.equals(DELETE_EVENT)) {
+                    processBookDeleted();
+                } else if (msgKey != null) {
+                    // FIXME: 27/09/2015 call method in AddBook that will execute two lines below
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    AddBook addBook = (AddBook) fragmentManager.findFragmentByTag(ADD_BOOK);
+                    addBook.iprocessIsbnNotFound(msgKey);
 //                bookEmptyTv.setText(intent.getStringExtra(MESSAGE_KEY));
 //                eanTv.setEnabled(true);
+                }
             }
         }
     }
