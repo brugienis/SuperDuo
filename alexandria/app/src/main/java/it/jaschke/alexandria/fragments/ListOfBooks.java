@@ -100,6 +100,21 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
         return rootView;
     }
 
+    public void getBooksFromDB() {
+        Cursor cursor = getActivity().getContentResolver().query(
+                AlexandriaContract.BookEntry.CONTENT_URI,
+                null, // leaving "columns" null just returns all the columns.
+                null, // cols for "where" clause
+                null, // values for "where" clause
+                null  // sort order
+        );
+        Log.v(LOG_TAG, "getBooksFromDB - cursor.getCount(): " + cursor.getCount());
+
+        bookListAdapter = new BookListAdapter(getActivity(), cursor, 0);
+        bookList.setAdapter(bookListAdapter);
+    }
+
+
     private void restartLoader(){
         getLoaderManager().restartLoader(LOADER_ID, null, this);
     }

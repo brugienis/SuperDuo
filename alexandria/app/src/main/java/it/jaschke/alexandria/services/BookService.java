@@ -19,8 +19,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import it.jaschke.alexandria.fragments.AddBook;
 import it.jaschke.alexandria.R;
+import it.jaschke.alexandria.activities.MainActivity;
 import it.jaschke.alexandria.data.AlexandriaContract;
 import it.jaschke.alexandria.utilities.Utility;
 
@@ -62,9 +62,12 @@ public class BookService extends IntentService {
      * parameters.
      */
     private void deleteBook(String ean) {
-//        Log.e(LOG_TAG, "deleteBook - ean: " + ean);
+        Log.e(LOG_TAG, "deleteBook - ean: " + ean);
         if (ean != null) {
             getContentResolver().delete(AlexandriaContract.BookEntry.buildBookUri(Long.parseLong(ean)), null, null);
+            Intent messageIntent = new Intent(MainActivity.MESSAGE_EVENT);
+            messageIntent.putExtra(MainActivity.MESSAGE_KEY, MainActivity.DELETE_EVENT);
+            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(messageIntent);
         }
     }
 
@@ -179,8 +182,8 @@ public class BookService extends IntentService {
                     bookArray = bookJson.getJSONArray(ITEMS);
                 } else {
 //                    Log.e(LOG_TAG, "fetchBook - JSON doesn't have ITEMS: " + bookJsonString);
-                    Intent messageIntent = new Intent(AddBook.MESSAGE_EVENT);
-                    messageIntent.putExtra(AddBook.MESSAGE_KEY, getResources().getString(R.string.empty_book_data_isbn_not_found));
+                    Intent messageIntent = new Intent(MainActivity.MESSAGE_EVENT);
+                    messageIntent.putExtra(MainActivity.MESSAGE_KEY, getResources().getString(R.string.empty_book_data_isbn_not_found));
                     LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(messageIntent);
                     return;
                 }
@@ -227,8 +230,8 @@ public class BookService extends IntentService {
             } else {
                 message = getResources().getString(R.string.empty_book_data_no_network);
             }
-            Intent messageIntent = new Intent(AddBook.MESSAGE_EVENT);
-            messageIntent.putExtra(AddBook.MESSAGE_KEY, message);
+            Intent messageIntent = new Intent(MainActivity.MESSAGE_EVENT);
+            messageIntent.putExtra(MainActivity.MESSAGE_KEY, message);
             LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(messageIntent);
             return;
         }

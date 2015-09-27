@@ -1,5 +1,6 @@
 package it.jaschke.alexandria.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -32,8 +33,19 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
     private String ean;
     private String bookTitle;
     private ShareActionProvider shareActionProvider;
+    private Callbacks mCallbacks;
+
+    public interface Callbacks {
+        public void processBookDeleted();
+    }
 
     public BookDetail(){
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mCallbacks = (Callbacks) activity;
     }
 
     @Override
@@ -60,7 +72,9 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
                 bookIntent.putExtra(BookService.EAN, ean);
                 bookIntent.setAction(BookService.DELETE_BOOK);
                 getActivity().startService(bookIntent);
+                // FIXME: 26/09/2015 - call callback method on activity that will do popback and restartLoader
                 getActivity().getSupportFragmentManager().popBackStack();
+                mCallbacks.processBookDeleted();
             }
         });
         return rootView;

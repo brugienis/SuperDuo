@@ -4,13 +4,11 @@ import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Patterns;
@@ -51,8 +49,9 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
     private String mScanContents = "Contents:";
 
     private static final String NINE_SEVEN_EIGHT = "978";
-    public static final String MESSAGE_EVENT = "MESSAGE_EVENT";
-    public static final String MESSAGE_KEY = "MESSAGE_EXTRA";
+//    public static final String DELETE_EVENT = "DELETE_EVENT";
+//    public static final String MESSAGE_EVENT = "MESSAGE_EVENT";
+//    public static final String MESSAGE_KEY = "MESSAGE_EXTRA";
 
 //    private static final String SCAN_FORMAT = "scanFormat";
 //    private static final String SCAN_CONTENTS = "scanContents";
@@ -261,15 +260,16 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
         activity.setTitle(R.string.scan);
     }
 
-    private class messageReciever extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if(intent.getStringExtra(MESSAGE_KEY) != null) {
-                bookEmptyTv.setText(intent.getStringExtra(MESSAGE_KEY));
-                eanTv.setEnabled(true);
-            }
-        }
-    }
+//    private class messageReciever extends BroadcastReceiver {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            Log.v(LOG_TAG, "messageReciever - intent: " + intent);
+//            if(intent.getStringExtra(MESSAGE_KEY) != null) {
+//                bookEmptyTv.setText(intent.getStringExtra(MESSAGE_KEY));
+//                eanTv.setEnabled(true);
+//            }
+//        }
+//    }
 
     private void hideKeyboard() {
         InputMethodManager inputMethodManager =
@@ -277,18 +277,18 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
         inputMethodManager.hideSoftInputFromWindow(eanTv.getWindowToken(), 0);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//
+//        messageReciever = new messageReciever();
+//        IntentFilter filter = new IntentFilter(MESSAGE_EVENT);
+//        LocalBroadcastManager.getInstance(getActivity().getApplication()).registerReceiver(messageReciever, filter);
+//    }
 
-        messageReciever = new messageReciever();
-        IntentFilter filter = new IntentFilter(MESSAGE_EVENT);
-        LocalBroadcastManager.getInstance(getActivity().getApplication()).registerReceiver(messageReciever, filter);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        LocalBroadcastManager.getInstance(getActivity().getApplication()).unregisterReceiver(messageReciever);
-    }
+//    @Override
+//    public void onStop() {
+//        super.onStop();
+//        LocalBroadcastManager.getInstance(getActivity().getApplication()).unregisterReceiver(messageReciever);
+//    }
 }

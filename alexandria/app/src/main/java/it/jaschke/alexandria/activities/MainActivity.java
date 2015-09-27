@@ -1,38 +1,52 @@
 package it.jaschke.alexandria.activities;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import it.jaschke.alexandria.R;
+import it.jaschke.alexandria.api.Callback;
 import it.jaschke.alexandria.fragments.About;
 import it.jaschke.alexandria.fragments.AddBook;
 import it.jaschke.alexandria.fragments.BookDetail;
 import it.jaschke.alexandria.fragments.ListOfBooks;
 import it.jaschke.alexandria.fragments.NavigationDrawerFragment;
-import it.jaschke.alexandria.R;
-import it.jaschke.alexandria.api.Callback;
 
 
-public class MainActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks, Callback {
+public class MainActivity extends ActionBarActivity
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks,
+        Callback,
+        BookDetail.Callbacks{
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
     private NavigationDrawerFragment navigationDrawerFragment;
+    private BroadcastReceiver messageReciever;
+    public static final String DELETE_EVENT = "DELETE_EVENT";
+    public static final String MESSAGE_EVENT = "MESSAGE_EVENT";
+    public static final String MESSAGE_KEY = "MESSAGE_EXTRA";
 
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence title;
     public static boolean IS_TABLET = false;
+
+    private final static String LOG_TAG = MainActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,29 +67,39 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
                     (DrawerLayout) findViewById(R.id.drawer_layout));
     }
 
+
+    private static final String LIST_OF_BOOKS = "list_of_books";
+    private static final String ADD_BOOK = "add_book";
+    private static final String ABOUT = "about";
     @Override
     public void onNavigationDrawerItemSelected(int position) {
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment nextFragment;
+        String tag;
 
         switch (position){
             default:
             case 0:
                 nextFragment = new ListOfBooks();
+                tag = LIST_OF_BOOKS;
                 break;
             case 1:
                 nextFragment = new AddBook();
+                tag = ADD_BOOK;
                 break;
             case 2:
                 nextFragment = new About();
+                tag = ABOUT;
                 break;
 
         }
 
+        Log.v(LOG_TAG, "onNavigationDrawerItemSelected - tag/title: " + tag + "/" + title);
         fragmentManager.beginTransaction()
-                .replace(R.id.container, nextFragment)
+                .replace(R.id.container, nextFragment, tag)
                 .addToBackStack((String) title)
+//                .addToBackStack(tag)
                 .commit();
     }
 
@@ -156,5 +180,43 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
         super.onBackPressed();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    // FIXME: 27/09/2015 - create new if does not exist
+        messageReciever = new MessageReceiver();
+        IntentFilter filter = new IntentFilter(MESSAGE_EVENT);
+        LocalBroadcastManager.getInstance(getApplication()).registerReceiver(messageReciever, filter);
+    }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        LocalBroadcastManager.getInstance(getApplication()).unregisterReceiver(messageReciever);
+    }
+
+
+    @Override
+    public void processBookDeleted() {
+//    todo in onItemSelected() use tag to add navigationDrawerFragment.isDrawerOpen()HERE find it and call method in ListOfBooks to get a new cursor
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        ListOfBooks listOfBooks = (ListOfBooks) fragmentManager.findFragmentByTag(LIST_OF_BOOKS);
+        Log.v(LOG_TAG, "processBookDeleted - listOfBooks: " + listOfBooks);
+        listOfBooks.getBooksFromDB();
+    }
+
+    private class MessageReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.v(LOG_TAG, "messageReceiver - intent: " + intent);
+            if (intent.getStringExtra(MESSAGE_KEY) != null && intent.getStringExtra(MESSAGE_KEY).equals(DELETE_EVENT)) {
+                // FIXME: 27/09/2015 call method in AddBook that will execute two lines below
+                processBookDeleted();
+            } else if (intent.getStringExtra(MESSAGE_KEY) != null) {
+                // FIXME: 27/09/2015 call method in AddBook that will execute two lines below
+//                bookEmptyTv.setText(intent.getStringExtra(MESSAGE_KEY));
+//                eanTv.setEnabled(true);
+            }
+        }
+    }
 }
