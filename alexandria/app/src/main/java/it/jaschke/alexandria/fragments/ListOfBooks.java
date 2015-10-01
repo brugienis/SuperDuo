@@ -1,6 +1,7 @@
 package it.jaschke.alexandria.fragments;
 
 import android.app.Activity;
+import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
@@ -8,10 +9,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -27,6 +31,7 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
     private BookListAdapter bookListAdapter;
     private ListView bookList;
     private TextInputLayout searchTextInputLayout;
+    private View searchButtonVw;
     private int position = ListView.INVALID_POSITION;
     private EditText searchText;
 
@@ -58,7 +63,7 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
         View rootView = inflater.inflate(R.layout.fragment_list_of_books, container, false);
 
         searchText = (EditText) rootView.findViewById(R.id.searchText);
-        View searchButtonVw = rootView.findViewById(R.id.searchButton);
+        searchButtonVw = rootView.findViewById(R.id.searchButton);
 
         searchTextInputLayout = (TextInputLayout) rootView.findViewById(R.id.name_et_textinputlayout);
         searchText.requestFocus();
@@ -91,13 +96,27 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Cursor cursor = bookListAdapter.getCursor();
                 if (cursor != null && cursor.moveToPosition(position)) {
-                    ((Callback)getActivity())
-                            .onItemSelected(cursor.getString(cursor.getColumnIndex(AlexandriaContract.BookEntry._ID)));
+                    bookDetailsSelected(cursor.getString(cursor.getColumnIndex(AlexandriaContract.BookEntry._ID)));
                 }
             }
         });
 
         return rootView;
+    }
+
+    private ActionBar getActionBar() {
+        return ((ActionBarActivity) getActivity()).getSupportActionBar();
+    }
+
+    private void bookDetailsSelected(String ean) {
+        ((Callback)getActivity()).onItemSelected(ean);
+        hideKeyboard();
+    }
+
+    private void hideKeyboard() {
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(searchText.getWindowToken(), 0);
     }
 
     public void getBooksFromDB() {
@@ -108,6 +127,14 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
                 null, // values for "where" clause
                 null  // sort order
         );
+        searchText.requestFocus();
+        if (cursor.getCount() == 0) {
+            searchTextInputLayout.setHint("No books available");
+            searchText.setEnabled(false);
+            searchButtonVw.setEnabled(false);
+        } else {
+            searchTextInputLayout.setHint(getActivity().getResources().getString(R.string.title_input_hint));
+        }
         Log.v(LOG_TAG, "getBooksFromDB - cursor.getCount(): " + cursor.getCount());
 
         bookListAdapter = new BookListAdapter(getActivity(), cursor, 0);
