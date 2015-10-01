@@ -264,7 +264,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        activity.setTitle(R.string.scan);
+        activity.setTitle(R.string.title_scan);
     }
 
     public void iprocessIsbnNotFound(String msg) {

@@ -9,6 +9,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.ShareActionProvider;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -35,6 +36,8 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
     private ShareActionProvider shareActionProvider;
     private Callbacks mCallbacks;
 
+    private final static String LOG_TAG = BookDetail.class.getSimpleName();
+
     public interface Callbacks {
         public void processBookDeleted();
     }
@@ -46,6 +49,7 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mCallbacks = (Callbacks) activity;
+        Log.v(LOG_TAG, "onAttach - mCallbacks: " + mCallbacks);
     }
 
     @Override
@@ -74,7 +78,7 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
                 getActivity().startService(bookIntent);
                 // FIXME: 26/09/2015 - call callback method on activity that will do popback and restartLoader
                 getActivity().getSupportFragmentManager().popBackStack();
-                mCallbacks.processBookDeleted();
+//                mCallbacks.processBookDeleted();
             }
         });
         return rootView;

@@ -71,7 +71,7 @@ public class MainActivity extends ActionBarActivity
     private static final String TAG_LIST_OF_BOOKS = "List_of_books";
     private static final String TAG_ADD_BOOK = "add_book";
     private static final String TAG_ABOUT = "about";
-    private static final String BACK_STACK_NAME_BOOK_DETAIL = "Book Detail";
+//    private static final String BACK_STACK_NAME_BOOK_DETAIL = "Book Detail";
 
     private static final String TITLE_LIST_OF_BOOKS = "list of Books";
     private static final String TITLE_ADD_BOOK = "Scan/Add a Book";
@@ -187,20 +187,23 @@ public class MainActivity extends ActionBarActivity
         bookDetailFragment.setArguments(args);
 
         int id = R.id.container;
-        if(findViewById(R.id.right_container) != null){
+        if (findViewById(R.id.right_container) == null) {
+            setTitle(R.string.title_book_details);
+        } else {
             id = R.id.right_container;
         }
 
         String topBackStackEntryName = getCurrTopBackStackEntryName();
-        if (topBackStackEntryName != null && topBackStackEntryName.equals(BACK_STACK_NAME_BOOK_DETAIL)) {
-            Log.v(LOG_TAG, "onItemSelected - this fragment is already the current tag/backStackName: " + getSupportFragmentManager().getBackStackEntryCount() + "/" + BACK_STACK_NAME_BOOK_DETAIL);
+        Log.v(LOG_TAG, "onItemSelected - topBackStackEntryName: " + topBackStackEntryName);
+        if (topBackStackEntryName != null && topBackStackEntryName.equals(getResources().getString(R.string.title_book_details))) {
+            Log.v(LOG_TAG, "onItemSelected - this fragment is already the current tag/backStackName: " + getSupportFragmentManager().getBackStackEntryCount() + "/" + topBackStackEntryName);
             getSupportFragmentManager().beginTransaction()
                     .replace(id, bookDetailFragment)
                     .commit();
         } else {
             getSupportFragmentManager().beginTransaction()
                     .replace(id, bookDetailFragment)
-                    .addToBackStack(BACK_STACK_NAME_BOOK_DETAIL)
+                    .addToBackStack(getResources().getString(R.string.title_book_details))
                     .commit();
         }
 
@@ -220,23 +223,22 @@ public class MainActivity extends ActionBarActivity
     public void onBackPressed() {
         Log.v(LOG_TAG, "onBackPressed - start - cnt: " + getSupportFragmentManager().getBackStackEntryCount());
         int cnt = getSupportFragmentManager().getBackStackEntryCount();
-        for (int i = 0; i < cnt; i++) {
-            Log.v(LOG_TAG, "onBackPressed - name: " + i + ": " + getSupportFragmentManager().getBackStackEntryAt(i).getName());
+        String topBackStackEntryName = getCurrTopBackStackEntryName();
+        Log.v(LOG_TAG, "onBackPressed - start - name: " + topBackStackEntryName);
+        if (!IS_TABLET && topBackStackEntryName.equals(getResources().getString(R.string.title_book_details))) {
+            setTitle(R.string.title_list_of_books);
+            Log.v(LOG_TAG, "onBackPressed - title changed");
         }
         if (getSupportFragmentManager().getBackStackEntryCount() < 2){
             finish();
         }
-//        super.onBackPressed();
-//        Log.v(LOG_TAG, "onBackPressed - after super - cnt: " + getSupportFragmentManager().getBackStackEntryCount());
 
         getSupportFragmentManager().popBackStack();
         removeBookDetailFragment();
+//        setTitle(getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName());
 //        for (int i = 0; i < cnt; i++) {
 //            Log.v(LOG_TAG, "onBackPressed - name: " + i + ": " + getSupportFragmentManager().getBackStackEntryAt(i).getName());
 //        }
-        for (int i = 0; i < cnt; i++) {
-            Log.v(LOG_TAG, "onBackPressed - name: " + i + ": " + getSupportFragmentManager().getBackStackEntryAt(i).getName());
-        }
 
     }
 
@@ -245,7 +247,7 @@ public class MainActivity extends ActionBarActivity
             return;
         }
         int cnt = getSupportFragmentManager().getBackStackEntryCount();
-        if (getSupportFragmentManager().getBackStackEntryAt(cnt - 1).getName().equals(BACK_STACK_NAME_BOOK_DETAIL)) {
+        if (getSupportFragmentManager().getBackStackEntryAt(cnt - 1).getName().equals(getResources().getString(R.string.title_book_details))) {
             getSupportFragmentManager().beginTransaction()
                     .detach(bookDetailFragment)
 //                    .addToBackStack(BACK_STACK_NAME_BOOK_DETAIL)
@@ -274,7 +276,10 @@ public class MainActivity extends ActionBarActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         ListOfBooks listOfBooks = (ListOfBooks) fragmentManager.findFragmentByTag(TAG_LIST_OF_BOOKS);
         Log.v(LOG_TAG, "processBookDeleted - listOfBooks: " + listOfBooks);
-        listOfBooks.getBooksFromDB();
+        if (listOfBooks != null) {
+            listOfBooks.getBooksFromDB();
+            getSupportActionBar().setTitle(getResources().getString(R.string.title_list_of_books));
+        }
     }
 
     private class MessageReceiver extends BroadcastReceiver {
@@ -290,8 +295,6 @@ public class MainActivity extends ActionBarActivity
                     FragmentManager fragmentManager = getSupportFragmentManager();
                     AddBook addBook = (AddBook) fragmentManager.findFragmentByTag(TAG_ADD_BOOK);
                     addBook.iprocessIsbnNotFound(msgKey);
-//                bookEmptyTv.setText(intent.getStringExtra(MESSAGE_KEY));
-//                eanTv.setEnabled(true);
                 }
             }
         }

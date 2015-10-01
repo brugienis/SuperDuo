@@ -127,15 +127,21 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
                 null, // values for "where" clause
                 null  // sort order
         );
-        searchText.requestFocus();
+        Log.v(LOG_TAG, "getBooksFromDB - cursor.getCount(): " + cursor.getCount());
+        if (searchText != null) {
+            searchText.requestFocus();
+        }
         if (cursor.getCount() == 0) {
-            searchTextInputLayout.setHint("No books available");
+            Log.v(LOG_TAG, "getBooksFromDB - no data");
+            searchTextInputLayout.setHint("");
+            searchTextInputLayout.setError("No books available");
+//            searchText.setHint("No books available");
             searchText.setEnabled(false);
             searchButtonVw.setEnabled(false);
         } else {
+            Log.v(LOG_TAG, "getBooksFromDB - there is data");
             searchTextInputLayout.setHint(getActivity().getResources().getString(R.string.title_input_hint));
         }
-        Log.v(LOG_TAG, "getBooksFromDB - cursor.getCount(): " + cursor.getCount());
 
         bookListAdapter = new BookListAdapter(getActivity(), cursor, 0);
         bookList.setAdapter(bookListAdapter);
@@ -197,7 +203,7 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        activity.setTitle(R.string.books);
+        activity.setTitle(R.string.title_list_of_books);
     }
 
 

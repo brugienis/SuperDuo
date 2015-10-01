@@ -109,9 +109,9 @@ public class NavigationDrawerFragment extends Fragment {
                 android.R.layout.simple_list_item_activated_1,
                 android.R.id.text1,
                 new String[]{
-                        getString(R.string.books),
-                        getString(R.string.scan),
-                        getString(R.string.about),
+                        getString(R.string.title_list_of_books),
+                        getString(R.string.title_scan),
+                        getString(R.string.title_about),
                 }));
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return mDrawerListView;
