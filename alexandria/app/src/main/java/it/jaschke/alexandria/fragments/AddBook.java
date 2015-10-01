@@ -206,7 +206,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
      * by Maya Van Wagenen
      * ISBN-13: 978-01 475 125 43
      *
-     * 978-1118087886 OK
+     * 978-11 180 878 86 OK
      * 1118087887 problem
      */
     @Override
