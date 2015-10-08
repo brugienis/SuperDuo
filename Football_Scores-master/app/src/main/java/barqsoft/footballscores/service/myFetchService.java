@@ -30,11 +30,13 @@ import barqsoft.footballscores.R;
  */
 public class myFetchService extends IntentService
 {
-    public static final String LOG_TAG = "myFetchService";
+//    public static final String LOG_TAG = "myFetchService";
     public myFetchService()
     {
         super("myFetchService");
     }
+
+    private final static String LOG_TAG = myFetchService.class.getSimpleName();
 
     @Override
     protected void onHandleIntent(Intent intent)
@@ -54,7 +56,7 @@ public class myFetchService extends IntentService
 
         Uri fetch_build = Uri.parse(BASE_URL).buildUpon().
                 appendQueryParameter(QUERY_TIME_FRAME, timeFrame).build();
-        //Log.v(LOG_TAG, "The url we are looking at is: "+fetch_build.toString()); //log spam
+        Log.v(LOG_TAG, "getData - the url we are looking at is: " + fetch_build.toString()); //log spam
         HttpURLConnection m_connection = null;
         BufferedReader reader = null;
         String JSON_data = null;
@@ -77,6 +79,7 @@ public class myFetchService extends IntentService
 
             String line;
             while ((line = reader.readLine()) != null) {
+//                Log.v(LOG_TAG, "getData - line: " + line);
                 // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
                 // But it does make debugging a *lot* easier if you print out the completed
                 // buffer for debugging.
@@ -90,7 +93,8 @@ public class myFetchService extends IntentService
         }
         catch (Exception e)
         {
-            Log.e(LOG_TAG,"Exception here" + e.getMessage());
+            // FIXME: 7/10/2015 - getting {"error":"You reached your request limit. Get your free API token to use the API extensively."}
+            Log.e(LOG_TAG,"Exception here" + e);
         }
         finally {
             if(m_connection != null)
@@ -110,13 +114,17 @@ public class myFetchService extends IntentService
         }
         try {
             if (JSON_data != null) {
+//                Log.v(LOG_TAG, "getData - JSON_data: " + JSON_data.length() + " - "  + JSON_data);
                 //This bit is to check if the data contains any matches. If not, we call processJson on the dummy data
                 JSONArray matches = new JSONObject(JSON_data).getJSONArray("fixtures");
                 if (matches.length() == 0) {
+                    Log.v(LOG_TAG, "getData - no data - will use dummy data");
                     //if there is no data, call the function on dummy data
                     //this is expected behavior during the off season.
                     processJSONdata(getString(R.string.dummy_data), getApplicationContext(), false);
                     return;
+                } else {
+                    Log.v(LOG_TAG, "getData - using REAL data");
                 }
 
 
