@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,8 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     public static final int SCORES_LOADER = 0;
     private String[] fragmentdate = new String[1];
     private int last_selected_item = -1;
+
+    private final static String LOG_TAG = MainScreenFragment.class.getSimpleName();
 
     public MainScreenFragment()
     {
@@ -90,6 +93,7 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
             cursor.moveToNext();
         }
         //Log.v(FetchScoreTask.LOG_TAG,"Loader query: " + String.valueOf(i));
+        Log.v(LOG_TAG, "onLoadFinished - cursor.getCount(): " + cursor.getCount());
         mAdapter.swapCursor(cursor);
         //mAdapter.notifyDataSetChanged();
     }

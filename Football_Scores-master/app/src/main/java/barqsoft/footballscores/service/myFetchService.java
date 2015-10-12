@@ -41,8 +41,10 @@ public class myFetchService extends IntentService
     @Override
     protected void onHandleIntent(Intent intent)
     {
-        getData("n2");
-        getData("p2");
+//        getData("n2");
+//        getData("p2");
+        getData("n10");
+        getData("p10");
 
         return;
     }
@@ -185,7 +187,7 @@ public class myFetchService extends IntentService
 
         try {
             JSONArray matches = new JSONObject(JSONdata).getJSONArray(FIXTURES);
-
+            Log.v(LOG_TAG, "processJSONdata - isReal/matches.length(): " + isReal + "/" + matches.length());
 
             //ContentValues to be inserted
             Vector<ContentValues> values = new Vector <ContentValues> (matches.length());
@@ -195,7 +197,8 @@ public class myFetchService extends IntentService
                 JSONObject match_data = matches.getJSONObject(i);
                 League = match_data.getJSONObject(LINKS).getJSONObject(SOCCER_SEASON).
                         getString("href");
-                League = League.replace(SEASON_LINK,"");
+                League = League.replace(SEASON_LINK, "");
+                Log.v(LOG_TAG, "processJSONdata - League: " + League);
                 //This if statement controls which leagues we're interested in the data from.
                 //add leagues here in order to have them be added to the DB.
                 // If you are finding no data in the app, check that this contains all the leagues.
@@ -204,7 +207,9 @@ public class myFetchService extends IntentService
                         League.equals(SERIE_A)             ||
                         League.equals(BUNDESLIGA1)         ||
                         League.equals(BUNDESLIGA2)         ||
-                        League.equals(PRIMERA_DIVISION)     )
+                        League.equals(PRIMERA_DIVISION)    ||
+                        League.equals(SEGUNDA_DIVISION)
+                        )
                 {
                     match_id = match_data.getJSONObject(LINKS).getJSONObject(SELF).
                             getString("href");
@@ -232,6 +237,7 @@ public class myFetchService extends IntentService
                             Date fragmentdate = new Date(System.currentTimeMillis()+((i-2)*86400000));
                             SimpleDateFormat mformat = new SimpleDateFormat("yyyy-MM-dd");
                             mDate=mformat.format(fragmentdate);
+                            Log.v(LOG_TAG, "processJSONdata - mDate: " + mDate);
                         }
                     }
                     catch (Exception e)
