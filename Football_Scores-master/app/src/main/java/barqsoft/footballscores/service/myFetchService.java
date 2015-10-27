@@ -57,7 +57,9 @@ public class myFetchService extends IntentService
         //final String QUERY_MATCH_DAY = "matchday";
 
         Uri fetch_build = Uri.parse(BASE_URL).buildUpon().
-                appendQueryParameter(QUERY_TIME_FRAME, timeFrame).build();
+                appendQueryParameter(QUERY_TIME_FRAME, timeFrame).
+                appendQueryParameter("APPID", "a813e2098a3bc05b49ac25ece5e0eaf9").
+                build();
         Log.v(LOG_TAG, "getData - the url we are looking at is: " + fetch_build.toString()); //log spam
         HttpURLConnection m_connection = null;
         BufferedReader reader = null;
@@ -191,14 +193,15 @@ public class myFetchService extends IntentService
 
             //ContentValues to be inserted
             Vector<ContentValues> values = new Vector <ContentValues> (matches.length());
-            for(int i = 0;i < matches.length();i++)
-            {
+            for (int i = 0; i < matches.length(); i++) {
 
                 JSONObject match_data = matches.getJSONObject(i);
                 League = match_data.getJSONObject(LINKS).getJSONObject(SOCCER_SEASON).
                         getString("href");
                 League = League.replace(SEASON_LINK, "");
-                Log.v(LOG_TAG, "processJSONdata - League: " + League);
+                if (i == 0) {
+                    Log.v(LOG_TAG, "processJSONdata - League: " + League);
+                }
                 //This if statement controls which leagues we're interested in the data from.
                 //add leagues here in order to have them be added to the DB.
                 // If you are finding no data in the app, check that this contains all the leagues.

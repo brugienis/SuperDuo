@@ -24,7 +24,7 @@ public class PagerFragment extends Fragment
     public static final int NUM_PAGES = 5;
     public ViewPager mPagerHandler;
     private myPageAdapter mPagerAdapter;
-    private MainScreenFragment[] viewFragments = new MainScreenFragment[5];
+    private MainScreenFragment[] viewFragments = new MainScreenFragment[NUM_PAGES];
 
     private final static String LOG_TAG = PagerFragment.class.getSimpleName();
 
@@ -34,8 +34,7 @@ public class PagerFragment extends Fragment
         View rootView = inflater.inflate(R.layout.pager_fragment, container, false);
         mPagerHandler = (ViewPager) rootView.findViewById(R.id.pager);
         mPagerAdapter = new myPageAdapter(getChildFragmentManager());
-        for (int i = 0;i < NUM_PAGES;i++)
-        {
+        for (int i = 0; i < NUM_PAGES; i++) {
             Date fragmentdate = new Date(System.currentTimeMillis()+((i-2)*86400000));
             SimpleDateFormat mformat = new SimpleDateFormat("yyyy-MM-dd");
             viewFragments[i] = new MainScreenFragment();
