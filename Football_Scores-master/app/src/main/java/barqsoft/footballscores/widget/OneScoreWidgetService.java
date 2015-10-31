@@ -12,15 +12,15 @@ import barqsoft.footballscores.MainActivity;
 import barqsoft.footballscores.R;
 
 /**
- * Created by business on 14/10/2015.
+ * Created by business on 28/10/2015.
  */
-public class ScoresWidgetService extends IntentService {
+public class OneScoreWidgetService  extends IntentService {
 
     private static int testCnt;
 
-    private final static String LOG_TAG = ScoresWidgetService.class.getSimpleName();
+    private final static String LOG_TAG = OneScoreWidgetService.class.getSimpleName();
 
-    public ScoresWidgetService() {
+    public OneScoreWidgetService() {
         super("ScoresWidgetService");
         Log.v(LOG_TAG, "constructor end");
     }

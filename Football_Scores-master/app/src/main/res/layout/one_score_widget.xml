@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:elevation="4dp"
+              android:background="@drawable/list_item" >
+
+    <LinearLayout
+        android:orientation="horizontal" android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp" >
+
+        <TextView
+            android:id="@+id/home_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="@dimen/TeamNames"
+            android:gravity="center"
+            android:text="Home name"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/score_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="score"
+                android:layout_gravity="center"
+                android:gravity="center"/>
+
+            <TextView
+                android:id="@+id/data_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="data"
+                android:layout_gravity="center"
+                android:gravity="center"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/away_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="Away name"
+            android:textSize="@dimen/TeamNames"/>
+
+    </LinearLayout>
+
+</LinearLayout>
+
+<!--
+
+
+-->
