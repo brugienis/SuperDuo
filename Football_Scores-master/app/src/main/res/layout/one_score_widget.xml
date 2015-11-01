@@ -1,4 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:orientation="vertical"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:padding="@dimen/widget_margin"
+             android:background="@drawable/list_item" >
+
+    <LinearLayout
+        android:id="@+id/oneScoreWidget"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/home_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="#050001"
+            android:text="Home name"
+            android:textSize="@dimen/TeamNames"
+            android:layout_weight="10" />
+
+        <TextView
+            android:id="@+id/score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="score"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="#050001"
+            android:layout_weight="5" />
+
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="date"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="#050001"
+            android:layout_weight="5" />
+
+        <TextView
+            android:id="@+id/away_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="#050001"
+            android:text="Away name"
+            android:textSize="@dimen/TeamNames"
+            android:layout_weight="10"/> />
+
+    </LinearLayout>
+
+</FrameLayout>
+
+<!--
+
+
+
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
@@ -23,24 +87,28 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:orientation="vertical">
+            android:layout_weight="3"
+            android:orientation="horizontal"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp">
 
             <TextView
-                android:id="@+id/score_textview"
+                android:id="@+id/score"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="score"
                 android:layout_gravity="center"
-                android:gravity="center"/>
+                android:gravity="center"
+                android:layout_weight="50" />
 
             <TextView
-                android:id="@+id/data_textview"
+                android:id="@+id/date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="data"
+                android:text="date"
                 android:layout_gravity="center"
-                android:gravity="center"/>
+                android:gravity="center"
+                android:layout_weight="50" />
 
         </LinearLayout>
 
@@ -56,8 +124,6 @@
     </LinearLayout>
 
 </LinearLayout>
-
-<!--
 
 
 -->

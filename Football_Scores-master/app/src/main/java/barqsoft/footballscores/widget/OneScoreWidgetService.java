@@ -21,7 +21,7 @@ public class OneScoreWidgetService  extends IntentService {
     private final static String LOG_TAG = OneScoreWidgetService.class.getSimpleName();
 
     public OneScoreWidgetService() {
-        super("ScoresWidgetService");
+        super("OneScoreWidgetService");
         Log.v(LOG_TAG, "constructor end");
     }
 
@@ -31,16 +31,19 @@ public class OneScoreWidgetService  extends IntentService {
         // Retrieve all of the Today widget ids: these are the widgets we need to update
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this,
-                ScoresWidgetProvider.class));
+                OneScoreWidgetProvider.class));
 
         for (int appWidgetId : appWidgetIds) {
-            RemoteViews views = new RemoteViews(getPackageName(), R.layout.widget_detail_test);
-            views.setTextViewText(R.id.widgetText, "test: " + testCnt++);
+            RemoteViews views = new RemoteViews(getPackageName(), R.layout.one_score_widget);
+            views.setTextViewText(R.id.home_name, "Everton FC");
+            views.setTextViewText(R.id.score, "6 - 2");
+            views.setTextViewText(R.id.date, "01:00 " + testCnt++);
+            views.setTextViewText(R.id.away_name, "Sunderland AFC");
 
             // Create an Intent to launch MainActivity
             Intent launchIntent = new Intent(this, MainActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, launchIntent, 0);
-            views.setOnClickPendingIntent(R.id.widget, pendingIntent);
+            views.setOnClickPendingIntent(R.id.oneScoreWidget, pendingIntent);
 
 
             // Tell the AppWidgetManager to perform an update on the current app widget
