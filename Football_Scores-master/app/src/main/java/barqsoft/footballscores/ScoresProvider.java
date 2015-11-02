@@ -102,7 +102,8 @@ public class ScoresProvider extends ContentProvider
         //Log.v(FetchScoreTask.LOG_TAG,String.valueOf(match));
         switch (match)
         {
-            case MATCHES: retCursor = mOpenHelper.getReadableDatabase().query(
+            case MATCHES:
+                retCursor = mOpenHelper.getReadableDatabase().query(
                     DatabaseContract.SCORES_TABLE,
                     projection,null,null,null,null,sortOrder);
                 break;

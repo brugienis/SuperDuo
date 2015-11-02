@@ -75,6 +75,7 @@ public class OneScoreWidgetService  extends IntentService {
             String awayName;
             Integer awayScore;
             int time;
+            String timeStr;
             int matchDay;
             String date;
 
@@ -86,13 +87,14 @@ public class OneScoreWidgetService  extends IntentService {
                 awayName = cursor.getString(AWAY_IDX);
                 awayScore = cursor.getInt(AWAY_GOALS_IDX);
                 time = cursor.getInt(TIME_IDX);
+                timeStr = cursor.getString(TIME_IDX);
                 date = cursor.getString(DATE_IDX);
-                matchDay = cursor.getInt(MATCH_DAY_IDX);;
+                matchDay = cursor.getInt(MATCH_DAY_IDX);
 
                 scores = Utilies.getScores(homeScore, awayScore);
 
                 Log.v(LOG_TAG, "home: " + homeName + "; score: " + homeScore + "; away: " + awayName +
-                        "; score: " + awayScore + "; time: " + time + "; date: " + date + "; matchDay: " + matchDay);
+                        "; score: " + awayScore + "; time: " + time + "; timeStr: " + timeStr + "; date: " + date + "; matchDay: " + matchDay);
 
                 if (cursor.isLast()) {
                     cursor.close();
@@ -122,7 +124,8 @@ public class OneScoreWidgetService  extends IntentService {
 
                 views.setTextViewText(R.id.home_name, homeName);
 
-                views.setTextViewText(R.id.date, date + ": " + testCnt++);
+//                views.setTextViewText(R.id.date, date + ": " + testCnt++);
+                views.setTextViewText(R.id.date, timeStr + ": " + testCnt++);
 
                 views.setTextViewText(R.id.scores, scores);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
