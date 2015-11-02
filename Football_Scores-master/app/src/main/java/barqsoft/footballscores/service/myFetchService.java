@@ -43,8 +43,8 @@ public class myFetchService extends IntentService
     {
 //        getData("n2");
 //        getData("p2");
-        getData("n10");
-        getData("p10");
+        getData("n1");
+        getData("p1");
 
         return;
     }
@@ -221,7 +221,7 @@ public class myFetchService extends IntentService
                         //This if statement changes the match ID of the dummy data so that it all goes into the database
                         match_id=match_id+Integer.toString(i);
                     }
-
+                    // "date":"2015-10-23T16:30:00Z",
                     mDate = match_data.getString(MATCH_DATE);
                     mTime = mDate.substring(mDate.indexOf("T") + 1, mDate.indexOf("Z"));
                     mDate = mDate.substring(0,mDate.indexOf("T"));
@@ -253,6 +253,9 @@ public class myFetchService extends IntentService
                     Home_goals = match_data.getJSONObject(RESULT).getString(HOME_GOALS);
                     Away_goals = match_data.getJSONObject(RESULT).getString(AWAY_GOALS);
                     match_day = match_data.getString(MATCH_DAY);
+//                    if (i == 0) {
+                        Log.v(LOG_TAG, "processJSONdata - Home/Away/mDate/mTime/match_day: "  + Home + "/"  + Away+ "/" + mDate + "/" + mTime + "/" + match_day);
+//                    }
                     ContentValues match_values = new ContentValues();
                     match_values.put(DatabaseContract.scores_table.MATCH_ID,match_id);
                     match_values.put(DatabaseContract.scores_table.DATE_COL,mDate);
