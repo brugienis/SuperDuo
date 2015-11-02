@@ -54,7 +54,8 @@ public class OneScoreWidgetService  extends IntentService {
 
         SimpleDateFormat dayFormat = new SimpleDateFormat("yyyy-MM-dd");
         String currDate = dayFormat.format(System.currentTimeMillis());
-        Log.v(LOG_TAG, "onHandleIntent - currDate: " + currDate);
+        boolean isRtl = Utilies.isRTL();
+        Log.v(LOG_TAG, "onHandleIntent - currDate/isRtl: " + currDate + "/" + isRtl);
         Cursor cursor = getContentResolver().query(DatabaseContract.scores_table.buildScoreWithDate(),
                 SCORE_COLUMNS, null, new String[] {currDate}, DatabaseContract.scores_table.HOME_COL + " ASC");
 
