@@ -54,95 +54,73 @@ public class OneScoreWidgetService  extends IntentService {
 
         SimpleDateFormat dayFormat = new SimpleDateFormat("yyyy-MM-dd");
         String currDate = dayFormat.format(System.currentTimeMillis());
-//        boolean isRtl = Utilies.isRTL();
         boolean isRightToLeft = getResources().getBoolean(R.bool.is_right_to_left);
         Log.v(LOG_TAG, "onHandleIntent - currDate/isRightToLeft: " + currDate + "/" + isRightToLeft);
+        boolean noResultsFound = false;
         Cursor cursor = getContentResolver().query(DatabaseContract.scores_table.buildScoreWithDate(),
-                SCORE_COLUMNS, null, new String[] {currDate}, DatabaseContract.scores_table.HOME_COL + " ASC");
+                SCORE_COLUMNS, null, new String[] {currDate}, DatabaseContract.scores_table.HOME_COL + " DESC");
 
+        String homeName = "No results found";
+        int homeScore = -1;
+        String awayName = "No results found";
+        int awayScore = -1;
+        String timeStr = "";
+
+        String scores;
         if (cursor == null) {
-            Log.e(LOG_TAG, "cursor is NULL");
-            return;
-        }
-
-        if (cursor.getCount() == 0) {
+            Log.e(LOG_TAG, "onHandleIntent - cursor is NULL");
+            noResultsFound = true;
+        } else if (cursor.getCount() == 0) {
 //        if (!cursor.moveToFirst()) {
-            Log.e(LOG_TAG, "cursor there is no data");
+            Log.e(LOG_TAG, "onHandleIntent - cursor there is no data");
+            noResultsFound = true;
             cursor.close();
-            return;
         } else {
             cursor.moveToFirst();
-            String homeName;
-            Integer homeScore;
-            String awayName;
-            Integer awayScore;
-            int time;
-            String timeStr;
-            int matchDay;
-            String date;
-
-            String scores;
-//            cursor.moveToLast();
-            while (true) {
-                homeName = cursor.getString(HOME_IDX);
-                homeScore = cursor.getInt(HOME_GOALS_IDX);
-                awayName = cursor.getString(AWAY_IDX);
-                awayScore = cursor.getInt(AWAY_GOALS_IDX);
-                time = cursor.getInt(TIME_IDX);
-                timeStr = cursor.getString(TIME_IDX);
-                date = cursor.getString(DATE_IDX);
-                matchDay = cursor.getInt(MATCH_DAY_IDX);
-
-                scores = Utilies.getScores(homeScore, awayScore, isRightToLeft);
-
-                Log.v(LOG_TAG, "home: " + homeName + "; score: " + homeScore + "; away: " + awayName +
-                        "; score: " + awayScore + "; time: " + time + "; timeStr: " + timeStr + "; date: " + date + "; matchDay: " + matchDay);
-
-                if (cursor.isLast()) {
-                    cursor.close();
-                    break;
-                } else {
-                    cursor.moveToNext();
-                }
-            }
-
-            // Retrieve all of the Today widget ids: these are the widgets we need to update
-            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
-            int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this,
-                    OneScoreWidgetProvider.class));
-
-            for (int appWidgetId : appWidgetIds) {
-
-                RemoteViews views = new RemoteViews(getPackageName(), R.layout.one_score_widget);
-//            views.setTextViewText(R.id.home_name, "Everton FC");
-//            views.setTextViewText(R.id.score, "6 - 2");
-//            views.setTextViewText(R.id.date, "01:00 " + testCnt++);
-//            views.setTextViewText(R.id.away_name, "Sunderland AFC");
-
-                // Create an Intent to launch MainActivity
-                Intent launchIntent = new Intent(this, MainActivity.class);
-                PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, launchIntent, 0);
-                views.setOnClickPendingIntent(R.id.oneScoreWidget, pendingIntent);
-
-                views.setTextViewText(R.id.home_name, homeName);
-
-//                views.setTextViewText(R.id.date, date + ": " + testCnt++);
-                views.setTextViewText(R.id.time, timeStr + ": " + testCnt++);
-
-                views.setTextViewText(R.id.scores, scores);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
-                    views.setContentDescription(R.id.scores, scores);
-                }
-
-                views.setTextViewText(R.id.away_name, awayName);
-
-                Log.v(LOG_TAG, "scores: " + Utilies.getScores(homeScore, awayScore, isRightToLeft));
-
-                // Tell the AppWidgetManager to perform an update on the current app widget
-                appWidgetManager.updateAppWidget(appWidgetId, views);
-                Log.v(LOG_TAG, "onHandleIntent called - updateAppWidget called - appWidgetId: " + appWidgetId);
-            }
-            Log.v(LOG_TAG, "onHandleIntent end - action: " + intent.getAction());
+            homeName = cursor.getString(HOME_IDX);
+            homeScore = cursor.getInt(HOME_GOALS_IDX);
+            awayName = cursor.getString(AWAY_IDX);
+            awayScore = cursor.getInt(AWAY_GOALS_IDX);
+            timeStr = cursor.getString(TIME_IDX);
+            cursor.close();
         }
+
+        scores = Utilies.getScores(homeScore, awayScore, isRightToLeft);
+        Log.e(LOG_TAG, "onHandleIntent - homeScore/awayScore/scores: " + homeScore + "/" + awayScore + "/" + scores);
+
+        // Retrieve all of the Today widget ids: these are the widgets we need to update
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this,
+                OneScoreWidgetProvider.class));
+
+        Log.e(LOG_TAG, "onHandleIntent - processing widgets - count/noResultsFound: " + appWidgetIds.length + "/" + noResultsFound);
+        for (int appWidgetId : appWidgetIds) {
+
+            RemoteViews views = new RemoteViews(getPackageName(), R.layout.one_score_widget);
+
+            // Create an Intent to launch MainActivity
+            Intent launchIntent = new Intent(this, MainActivity.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, launchIntent, 0);
+            views.setOnClickPendingIntent(R.id.oneScoreWidget, pendingIntent);
+            Log.e(LOG_TAG, "onHandleIntent - onClick set");
+
+            views.setTextViewText(R.id.home_name, homeName);
+
+            views.setTextViewText(R.id.time, timeStr + ": " + testCnt++);
+
+            views.setTextViewText(R.id.scores, scores);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+                views.setContentDescription(R.id.scores, scores);
+            }
+
+            views.setTextViewText(R.id.away_name, awayName);
+
+            Log.v(LOG_TAG, "scores: " + Utilies.getScores(homeScore, awayScore, isRightToLeft));
+
+            // Tell the AppWidgetManager to perform an update on the current app widget
+            appWidgetManager.updateAppWidget(appWidgetId, views);
+            Log.v(LOG_TAG, "onHandleIntent called - updateAppWidget called - appWidgetId: " + appWidgetId);
+        }
+        Log.v(LOG_TAG, "onHandleIntent end - action: " + intent.getAction());
     }
 }

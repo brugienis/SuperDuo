@@ -54,7 +54,7 @@ public class Utilies
     }
 
     public static String getScores(int homeGoals,int awayGoals, boolean isRightToLeft) {
-        if(homeGoals < 0 || awayGoals < 0)  {
+        if (homeGoals < 0 || awayGoals < 0)  {
             return " - ";
         } else if (isRightToLeft) {
             return String.valueOf(awayGoals) + " - " + String.valueOf(homeGoals);
