@@ -29,17 +29,13 @@ public class OneScoreWidgetService  extends IntentService {
             DatabaseContract.scores_table.HOME_GOALS_COL,
             DatabaseContract.scores_table.AWAY_COL,
             DatabaseContract.scores_table.AWAY_GOALS_COL,
-            DatabaseContract.scores_table.TIME_COL,
-            DatabaseContract.scores_table.DATE_COL,
-            DatabaseContract.scores_table.MATCH_DAY
+            DatabaseContract.scores_table.TIME_COL
     };
     private static final int HOME_IDX = 0;
     private static final int HOME_GOALS_IDX = 1;
     private static final int AWAY_IDX = 2;
     private static final int AWAY_GOALS_IDX = 3;
     private static final int TIME_IDX = 4;
-    private static final int DATE_IDX = 5;
-    private static final int MATCH_DAY_IDX = 6;
 
     private final static String LOG_TAG = OneScoreWidgetService.class.getSimpleName();
 
@@ -55,10 +51,10 @@ public class OneScoreWidgetService  extends IntentService {
         SimpleDateFormat dayFormat = new SimpleDateFormat("yyyy-MM-dd");
         String currDate = dayFormat.format(System.currentTimeMillis());
         boolean isRightToLeft = getResources().getBoolean(R.bool.is_right_to_left);
-        Log.v(LOG_TAG, "onHandleIntent - currDate/isRightToLeft: " + currDate + "/" + isRightToLeft);
-        boolean noResultsFound = false;
+        // get the most recent results for today
         Cursor cursor = getContentResolver().query(DatabaseContract.scores_table.buildScoreWithDate(),
-                SCORE_COLUMNS, null, new String[] {currDate}, DatabaseContract.scores_table.HOME_COL + " DESC");
+                SCORE_COLUMNS, null, new String[]
+                        {currDate}, DatabaseContract.scores_table.HOME_COL + " DESC");
 
         String homeName = "No results found";
         int homeScore = -1;
@@ -69,11 +65,9 @@ public class OneScoreWidgetService  extends IntentService {
         String scores;
         if (cursor == null) {
             Log.e(LOG_TAG, "onHandleIntent - cursor is NULL");
-            noResultsFound = true;
         } else if (cursor.getCount() == 0) {
 //        if (!cursor.moveToFirst()) {
             Log.e(LOG_TAG, "onHandleIntent - cursor there is no data");
-            noResultsFound = true;
             cursor.close();
         } else {
             cursor.moveToFirst();
@@ -86,14 +80,12 @@ public class OneScoreWidgetService  extends IntentService {
         }
 
         scores = Utilies.getScores(homeScore, awayScore, isRightToLeft);
-        Log.e(LOG_TAG, "onHandleIntent - homeScore/awayScore/scores: " + homeScore + "/" + awayScore + "/" + scores);
 
         // Retrieve all of the Today widget ids: these are the widgets we need to update
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this,
                 OneScoreWidgetProvider.class));
 
-        Log.e(LOG_TAG, "onHandleIntent - processing widgets - count/noResultsFound: " + appWidgetIds.length + "/" + noResultsFound);
         for (int appWidgetId : appWidgetIds) {
 
             RemoteViews views = new RemoteViews(getPackageName(), R.layout.one_score_widget);
@@ -114,8 +106,6 @@ public class OneScoreWidgetService  extends IntentService {
             }
 
             views.setTextViewText(R.id.away_name, awayName);
-
-            Log.v(LOG_TAG, "scores: " + Utilies.getScores(homeScore, awayScore, isRightToLeft));
 
             // Tell the AppWidgetManager to perform an update on the current app widget
             appWidgetManager.updateAppWidget(appWidgetId, views);
