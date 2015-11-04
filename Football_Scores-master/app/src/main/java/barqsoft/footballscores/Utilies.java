@@ -1,7 +1,5 @@
 package barqsoft.footballscores;
 
-import java.util.Locale;
-
 /**
  * Created by yehya khaled on 3/3/2015.
  */
@@ -55,17 +53,14 @@ public class Utilies
         }
     }
 
-    public static String getScores(int home_goals,int awaygoals)
-    {
-        if(home_goals < 0 || awaygoals < 0)
-        {
+    public static String getScores(int homeGoals,int awayGoals, boolean isRightToLeft) {
+        if(homeGoals < 0 || awayGoals < 0)  {
             return " - ";
+        } else if (isRightToLeft) {
+            return String.valueOf(awayGoals) + " - " + String.valueOf(homeGoals);
+        } else
+            return String.valueOf(homeGoals) + " - " + String.valueOf(awayGoals);
         }
-        else
-        {
-            return String.valueOf(home_goals) + " - " + String.valueOf(awaygoals);
-        }
-    }
 
     public static int getTeamCrestByTeamName (String teamname)
     {
@@ -88,14 +83,14 @@ public class Utilies
     }
 
     // below from: http://stackoverflow.com/questions/18996183/identifyng-rtl-language-in-android - start
-    public static boolean isRTL() {
-        return isRTL(Locale.getDefault());
-    }
-
-    public static boolean isRTL(Locale locale) {
-        final int directionality = Character.getDirectionality(locale.getDisplayName().charAt(0));
-        return directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT ||
-                directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC;
-    }
+//    public static boolean isRTL() {
+//        return isRTL(Locale.getDefault());
+//    }
+//
+//    public static boolean isRTL(Locale locale) {
+//        final int directionality = Character.getDirectionality(locale.getDisplayName().charAt(0));
+//        return directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT ||
+//                directionality == Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC;
+//    }
     // below from: http://stackoverflow.com/questions/18996183/identifyng-rtl-language-in-android - end
 }

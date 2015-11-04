@@ -54,8 +54,9 @@ public class OneScoreWidgetService  extends IntentService {
 
         SimpleDateFormat dayFormat = new SimpleDateFormat("yyyy-MM-dd");
         String currDate = dayFormat.format(System.currentTimeMillis());
-        boolean isRtl = Utilies.isRTL();
-        Log.v(LOG_TAG, "onHandleIntent - currDate/isRtl: " + currDate + "/" + isRtl);
+//        boolean isRtl = Utilies.isRTL();
+        boolean isRightToLeft = getResources().getBoolean(R.bool.is_right_to_left);
+        Log.v(LOG_TAG, "onHandleIntent - currDate/isRightToLeft: " + currDate + "/" + isRightToLeft);
         Cursor cursor = getContentResolver().query(DatabaseContract.scores_table.buildScoreWithDate(),
                 SCORE_COLUMNS, null, new String[] {currDate}, DatabaseContract.scores_table.HOME_COL + " ASC");
 
@@ -92,7 +93,7 @@ public class OneScoreWidgetService  extends IntentService {
                 date = cursor.getString(DATE_IDX);
                 matchDay = cursor.getInt(MATCH_DAY_IDX);
 
-                scores = Utilies.getScores(homeScore, awayScore);
+                scores = Utilies.getScores(homeScore, awayScore, isRightToLeft);
 
                 Log.v(LOG_TAG, "home: " + homeName + "; score: " + homeScore + "; away: " + awayName +
                         "; score: " + awayScore + "; time: " + time + "; timeStr: " + timeStr + "; date: " + date + "; matchDay: " + matchDay);
@@ -126,7 +127,7 @@ public class OneScoreWidgetService  extends IntentService {
                 views.setTextViewText(R.id.home_name, homeName);
 
 //                views.setTextViewText(R.id.date, date + ": " + testCnt++);
-                views.setTextViewText(R.id.date, timeStr + ": " + testCnt++);
+                views.setTextViewText(R.id.time, timeStr + ": " + testCnt++);
 
                 views.setTextViewText(R.id.scores, scores);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
@@ -135,7 +136,7 @@ public class OneScoreWidgetService  extends IntentService {
 
                 views.setTextViewText(R.id.away_name, awayName);
 
-                Log.v(LOG_TAG, "scores: " + Utilies.getScores(homeScore, awayScore));
+                Log.v(LOG_TAG, "scores: " + Utilies.getScores(homeScore, awayScore, isRightToLeft));
 
                 // Tell the AppWidgetManager to perform an update on the current app widget
                 appWidgetManager.updateAppWidget(appWidgetId, views);
