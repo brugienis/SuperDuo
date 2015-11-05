@@ -53,14 +53,12 @@ public class Utilies
         }
     }
 
-    public static String getScores(int homeGoals,int awayGoals, boolean isRightToLeft) {
-        if (homeGoals < 0 || awayGoals < 0)  {
+    public static String getScores(int homeGoals,int awayGoals) {
+        if (homeGoals < 0 || awayGoals < 0) {
             return " - ";
-        } else if (isRightToLeft) {
-            return String.valueOf(awayGoals) + " - " + String.valueOf(homeGoals);
         } else
             return String.valueOf(homeGoals) + " - " + String.valueOf(awayGoals);
-        }
+    }
 
     public static int getTeamCrestByTeamName (String teamname)
     {

@@ -27,6 +27,7 @@ public class scoresAdapter extends CursorAdapter
     public static final int COL_MATCHTIME = 2;
     public double detail_match_id = 0;
     private String FOOTBALL_SCORES_HASHTAG = "#Football_Scores";
+//    private boolean isRightToLeft;
 
     private final static String LOG_TAG = scoresAdapter.class.getSimpleName();
 
@@ -36,23 +37,23 @@ public class scoresAdapter extends CursorAdapter
     }
 
     @Override
-    public View newView(Context context, Cursor cursor, ViewGroup parent)
-    {
+    public View newView(Context context, Cursor cursor, ViewGroup parent) {
+//        Log.v(LOG_TAG, "newView - start");
         View mItem = LayoutInflater.from(context).inflate(R.layout.scores_list_item, parent, false);
         ViewHolder mHolder = new ViewHolder(mItem);
         mItem.setTag(mHolder);
         //Log.v(FetchScoreTask.LOG_TAG,"new View inflated");
+//        isRightToLeft = context.getResources().getBoolean(R.bool.is_right_to_left);
         return mItem;
     }
 
     @Override
-    public void bindView(View view, final Context context, Cursor cursor)
-    {
+    public void bindView(View view, final Context context, Cursor cursor) {
         final ViewHolder mHolder = (ViewHolder) view.getTag();
         mHolder.home_name.setText(cursor.getString(COL_HOME));
         mHolder.away_name.setText(cursor.getString(COL_AWAY));
         mHolder.date.setText(cursor.getString(COL_MATCHTIME));
-        mHolder.score.setText(Utilies.getScores(cursor.getInt(COL_HOME_GOALS), cursor.getInt(COL_AWAY_GOALS), false));
+        mHolder.score.setText(Utilies.getScores(cursor.getInt(COL_HOME_GOALS), cursor.getInt(COL_AWAY_GOALS)));
         mHolder.match_id = cursor.getDouble(COL_ID);
         mHolder.home_crest.setImageResource(Utilies.getTeamCrestByTeamName(
                 cursor.getString(COL_HOME)));
@@ -60,9 +61,10 @@ public class scoresAdapter extends CursorAdapter
                 cursor.getString(COL_AWAY)
         ));
 
-        Log.v(LOG_TAG, "home: " + cursor.getString(COL_HOME) + "; score: " + cursor.getInt(COL_HOME_GOALS) + "; away: " + cursor.getString(COL_AWAY) +
-                "; score: " + cursor.getInt(COL_AWAY_GOALS) + //"; time: " + time +
-                "; date: " + cursor.getString(COL_MATCHTIME));
+        Log.v(LOG_TAG, "; ID: " + cursor.getString(0) + "; real date: " + cursor.getString(1) + "; date(time): " + cursor.getString(COL_MATCHTIME) +
+                "; home: " + cursor.getString(COL_HOME) + "; score: " + cursor.getInt(COL_HOME_GOALS) + "; away: " + cursor.getString(COL_AWAY) +
+                "; score: " + cursor.getInt(COL_AWAY_GOALS)//"; time: " + time
+                );
 
         //Log.v(FetchScoreTask.LOG_TAG,mHolder.home_name.getText() + " Vs. " + mHolder.away_name.getText() +" id " + String.valueOf(mHolder.match_id));
         //Log.v(FetchScoreTask.LOG_TAG,String.valueOf(detail_match_id));

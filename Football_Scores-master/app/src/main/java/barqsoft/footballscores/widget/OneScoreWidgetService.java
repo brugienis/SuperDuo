@@ -50,7 +50,7 @@ public class OneScoreWidgetService  extends IntentService {
 
         SimpleDateFormat dayFormat = new SimpleDateFormat("yyyy-MM-dd");
         String currDate = dayFormat.format(System.currentTimeMillis());
-        boolean isRightToLeft = getResources().getBoolean(R.bool.is_right_to_left);
+//        boolean isRightToLeft = getResources().getBoolean(R.bool.is_right_to_left);
         // get the most recent results for today
         Cursor cursor = getContentResolver().query(DatabaseContract.scores_table.buildScoreWithDate(),
                 SCORE_COLUMNS, null, new String[]
@@ -79,7 +79,7 @@ public class OneScoreWidgetService  extends IntentService {
             cursor.close();
         }
 
-        scores = Utilies.getScores(homeScore, awayScore, isRightToLeft);
+        scores = Utilies.getScores(homeScore, awayScore);
 
         // Retrieve all of the Today widget ids: these are the widgets we need to update
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
