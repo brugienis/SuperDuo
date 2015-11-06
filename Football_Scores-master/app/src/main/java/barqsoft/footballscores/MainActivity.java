@@ -10,9 +10,10 @@ import android.view.MenuItem;
 public class MainActivity extends ActionBarActivity {
     public static int selectedMatchId;
     public static int currentFragment = 2;
-    public static String LOG_TAG = "MainActivity";
     private final String saveTag = "Save Test";
     private PagerFragment mMyMain;
+
+    private final static String LOG_TAG = MainActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

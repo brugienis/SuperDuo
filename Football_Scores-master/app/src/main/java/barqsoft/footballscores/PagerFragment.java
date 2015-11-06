@@ -21,8 +21,10 @@ import java.util.Date;
  */
 public class PagerFragment extends Fragment {
 
+    // FIXME: 6/11/2015 - below change back to 5
     public static final int NUM_PAGES = 7;
-    public static final int TODAYS_PAGE = NUM_PAGES / 2;
+    public static final int TODAYS_PAGE = NUM_PAGES / 2;    /* number of pages or tabs */
+    /* about ViewPager - http://developer.android.com/training/implementing-navigation/lateral.html */
     public ViewPager mPagerHandler;
     private MyPageAdapter mPagerAdapter;
     private MainScreenFragment[] mViewFragments = new MainScreenFragment[NUM_PAGES];
@@ -31,7 +33,9 @@ public class PagerFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         View rootView = inflater.inflate(R.layout.pager_fragment, container, false);
+
         mPagerHandler = (ViewPager) rootView.findViewById(R.id.pager);
         mPagerAdapter = new MyPageAdapter(getChildFragmentManager());
 

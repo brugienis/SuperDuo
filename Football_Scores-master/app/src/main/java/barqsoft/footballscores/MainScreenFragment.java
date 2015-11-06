@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import barqsoft.footballscores.service.myFetchService;
+import barqsoft.footballscores.service.MyFetchService;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -32,7 +32,7 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     }
 
     private void updateScores() {
-        Intent service_start = new Intent(getActivity(), myFetchService.class);
+        Intent service_start = new Intent(getActivity(), MyFetchService.class);
         getActivity().startService(service_start);
     }
 
@@ -43,6 +43,7 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
+        Log.v(LOG_TAG, "onCreateView - start");
         updateScores();
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         final ListView scoreList = (ListView) rootView.findViewById(R.id.scores_list);
@@ -64,6 +65,7 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+        Log.v(LOG_TAG, "onCreateLoader - start");
         return new CursorLoader(getActivity(), DatabaseContract.scores_table
                 .buildScoreWithDate(),
                 null, null, mFragmentDate, null);
@@ -81,12 +83,12 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
         }
         */
 
-        int i = 0;
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            i++;
-            cursor.moveToNext();
-        }
+//        int i = 0;
+//        cursor.moveToFirst();
+//        while (!cursor.isAfterLast()) {
+//            i++;
+//            cursor.moveToNext();
+//        }
         //Log.v(FetchScoreTask.LOG_TAG,"Loader query: " + String.valueOf(i));
         Log.v(LOG_TAG, "onLoadFinished - cursor.getCount(): " + cursor.getCount());
         mAdapter.swapCursor(cursor);
