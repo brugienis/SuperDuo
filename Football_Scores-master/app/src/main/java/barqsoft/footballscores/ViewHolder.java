@@ -9,20 +9,20 @@ import android.widget.TextView;
  */
 public class ViewHolder
 {
-    public TextView home_name;
-    public TextView away_name;
+    public TextView homeName;
+    public TextView awayName;
     public TextView score;
     public TextView date;
-    public ImageView home_crest;
-    public ImageView away_crest;
-    public double match_id;
+    public ImageView homeCrest;
+    public ImageView awayCrest;
+    public double matchId;
     public ViewHolder(View view)
     {
-        home_name = (TextView) view.findViewById(R.id.home_name);
-        away_name = (TextView) view.findViewById(R.id.away_name);
+        homeName = (TextView) view.findViewById(R.id.home_name);
+        awayName = (TextView) view.findViewById(R.id.away_name);
         score     = (TextView) view.findViewById(R.id.score_textview);
         date      = (TextView) view.findViewById(R.id.data_textview);
-        home_crest = (ImageView) view.findViewById(R.id.home_crest);
-        away_crest = (ImageView) view.findViewById(R.id.away_crest);
+        homeCrest = (ImageView) view.findViewById(R.id.home_crest);
+        awayCrest = (ImageView) view.findViewById(R.id.away_crest);
     }
 }

@@ -19,58 +19,59 @@ import java.util.Date;
 /**
  * Created by yehya khaled on 2/27/2015.
  */
-public class PagerFragment extends Fragment
-{
+public class PagerFragment extends Fragment {
+
     public static final int NUM_PAGES = 7;
-//    public static final int NUM_PAGES = 2;
+    public static final int TODAYS_PAGE = NUM_PAGES / 2;
     public ViewPager mPagerHandler;
-    private myPageAdapter mPagerAdapter;
-    private MainScreenFragment[] viewFragments = new MainScreenFragment[NUM_PAGES];
+    private MyPageAdapter mPagerAdapter;
+    private MainScreenFragment[] mViewFragments = new MainScreenFragment[NUM_PAGES];
 
     private final static String LOG_TAG = PagerFragment.class.getSimpleName();
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.pager_fragment, container, false);
         mPagerHandler = (ViewPager) rootView.findViewById(R.id.pager);
-        mPagerAdapter = new myPageAdapter(getChildFragmentManager());
+        mPagerAdapter = new MyPageAdapter(getChildFragmentManager());
+
         for (int i = 0; i < NUM_PAGES; i++) {
 //            Date fragmentdate = new Date(System.currentTimeMillis() + ((i-2) * 86400000));
-            Date fragmentdate = new Date(System.currentTimeMillis() + ((i - 5) * 86400000));
+            Date fragmentdate = new Date(System.currentTimeMillis() + ((i - TODAYS_PAGE) * 86400000));
             SimpleDateFormat mformat = new SimpleDateFormat("yyyy-MM-dd");
-            viewFragments[i] = new MainScreenFragment();
-            viewFragments[i].setFragmentDate(mformat.format(fragmentdate));
+            mViewFragments[i] = new MainScreenFragment();
+            mViewFragments[i].setFragmentDate(mformat.format(fragmentdate));
             Log.v(LOG_TAG, "onCreateView - date: " + mformat.format(fragmentdate));
         }
+
         mPagerHandler.setAdapter(mPagerAdapter);
-        mPagerHandler.setCurrentItem(MainActivity.current_fragment);
+        mPagerHandler.setCurrentItem(MainActivity.currentFragment);
         return rootView;
     }
-    private class myPageAdapter extends FragmentStatePagerAdapter
-    {
+
+    private class MyPageAdapter extends FragmentStatePagerAdapter {
+
         @Override
-        public Fragment getItem(int i)
-        {
-            return viewFragments[i];
+        public Fragment getItem(int i) {
+            return mViewFragments[i];
         }
 
         @Override
-        public int getCount()
-        {
+        public int getCount() {
             return NUM_PAGES;
         }
 
-        public myPageAdapter(FragmentManager fm)
-        {
+        public MyPageAdapter(FragmentManager fm) {
             super(fm);
         }
+
         // Returns the page title for the top indicator
         @Override
-        public CharSequence getPageTitle(int position)
-        {
-            return getDayName(getActivity(),System.currentTimeMillis()+((position-2)*86400000));
+        public CharSequence getPageTitle(int position) {
+//            return getDayName(getActivity(), System.currentTimeMillis() + ((position - 2) * 86400000));
+            return getDayName(getActivity(), System.currentTimeMillis() + ((position - TODAYS_PAGE) * 86400000));
         }
+
         public String getDayName(Context context, long dateInMillis) {
             // If the date is today, return the localized version of "Today" instead of the actual
             // day name.
@@ -81,15 +82,11 @@ public class PagerFragment extends Fragment
             int currentJulianDay = Time.getJulianDay(System.currentTimeMillis(), t.gmtoff);
             if (julianDay == currentJulianDay) {
                 return context.getString(R.string.today);
-            } else if ( julianDay == currentJulianDay +1 ) {
+            } else if (julianDay == currentJulianDay + 1) {
                 return context.getString(R.string.tomorrow);
-            }
-             else if ( julianDay == currentJulianDay -1)
-            {
+            } else if (julianDay == currentJulianDay - 1) {
                 return context.getString(R.string.yesterday);
-            }
-            else
-            {
+            } else {
                 Time time = new Time();
                 time.setToNow();
                 // Otherwise, the format is just the day of the week (e.g "Wednesday".

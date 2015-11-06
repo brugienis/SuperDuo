@@ -269,7 +269,7 @@ public class myFetchService extends IntentService
                     match_values.put(DatabaseContract.scores_table.MATCH_DAY,match_day);
                     //log spam
 
-                    //Log.v(LOG_TAG,match_id);
+                    //Log.v(LOG_TAG,matchId);
                     //Log.v(LOG_TAG,mDate);
                     //Log.v(LOG_TAG,mTime);
                     //Log.v(LOG_TAG,Home);
