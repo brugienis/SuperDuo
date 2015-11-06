@@ -51,7 +51,7 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
-        Log.v(LOG_TAG, "onCreateView - start");
+        Log.v(LOG_TAG, "onCreateView - start - mFragmentDate: " + mFragmentDate[0]);
         updateScores();
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         final ListView scoreList = (ListView) rootView.findViewById(R.id.scores_list);
@@ -105,7 +105,7 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
         mAdapter.swapCursor(cursor);
         //mAdapter.notifyDataSetChanged();
 //        int colCnt = cursor.getColumnCount();
-//        Log.v(LOG_TAG, "onLoadFinished - cursor.getCount()/colCnt: " + cursor.getCount() + "/" + colCnt);
+        Log.v(LOG_TAG, "onLoadFinished - cursor.getCount()/colCnt: " + cursor.getCount() + "/" + mFragmentDate[0]);
         // FIXME: 6/11/2015 test below when there are some data for today's date
         if (cursor.getCount() > 0 && currDate.equals(mFragmentDate[0])) {
             Log.v(LOG_TAG, "onLoadFinished - currDate/mFragmentDate: " + currDate + "/" + mFragmentDate[0]);
