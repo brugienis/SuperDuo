@@ -9,6 +9,8 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import barqsoft.footballscores.MainScreenFragment;
+
 /**
  * Created by business on 28/10/2015.
  */
@@ -27,8 +29,9 @@ public class OneScoreWidgetProvider extends AppWidgetProvider {
     public void onReceive(@NonNull Context context, @NonNull Intent intent) {
         super.onReceive(context, intent);
         Log.v(LOG_TAG, "onReceive called - action: " + intent.getAction());
-//        if (SunshineSyncAdapter.ACTION_DATA_UPDATED.equals(intent.getAction())) {
-//            context.startService(new Intent(context, ScoresWidgetService.class));
-//        }
+        if (MainScreenFragment.ACTION_TODAYS_DATA_UPDATED.equals(intent.getAction())) {
+            context.startService(new Intent(context, OneScoreWidgetService.class));
+            Log.v(LOG_TAG, "onReceive got request ACTION_TODAYS_DATA_UPDATED");
+        }
     }
 }

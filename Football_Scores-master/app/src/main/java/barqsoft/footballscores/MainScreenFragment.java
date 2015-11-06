@@ -1,5 +1,6 @@
 package barqsoft.footballscores;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -14,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import java.text.SimpleDateFormat;
+
 import barqsoft.footballscores.service.MyFetchService;
 
 /**
@@ -23,12 +26,17 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
 
     private String[] mFragmentDate = new String[1];
     private ScoresAdapter mAdapter;
+    private String currDate;
     private static final int SCORES_LOADER = 0;
+    public static final String ACTION_TODAYS_DATA_UPDATED =
+            "barqsoft.footballscores.ACTION_TODAYS_DATA_UPDATED";
 //    private int lastSelectedItem = -1;
 
     private final static String LOG_TAG = MainScreenFragment.class.getSimpleName();
 
     public MainScreenFragment() {
+        SimpleDateFormat dayFormat = new SimpleDateFormat("yyyy-MM-dd");
+        currDate = dayFormat.format(System.currentTimeMillis());
     }
 
     private void updateScores() {
@@ -63,12 +71,16 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
         return rootView;
     }
 
+    /*
+    start loading data from the DB for the selected date and sort it on the 'time' column
+    in ascending order.
+     */
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         Log.v(LOG_TAG, "onCreateLoader - start");
         return new CursorLoader(getActivity(), DatabaseContract.scores_table
                 .buildScoreWithDate(),
-                null, null, mFragmentDate, null);
+                null, null, mFragmentDate, DatabaseContract.scores_table.TIME_COL + " ASC");
     }
 
     @Override
@@ -90,9 +102,15 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
 //            cursor.moveToNext();
 //        }
         //Log.v(FetchScoreTask.LOG_TAG,"Loader query: " + String.valueOf(i));
-        Log.v(LOG_TAG, "onLoadFinished - cursor.getCount(): " + cursor.getCount());
         mAdapter.swapCursor(cursor);
         //mAdapter.notifyDataSetChanged();
+//        int colCnt = cursor.getColumnCount();
+//        Log.v(LOG_TAG, "onLoadFinished - cursor.getCount()/colCnt: " + cursor.getCount() + "/" + colCnt);
+        // FIXME: 6/11/2015 test below when there are some data for today's date
+        if (cursor.getCount() > 0 && currDate.equals(mFragmentDate[0])) {
+            Log.v(LOG_TAG, "onLoadFinished - currDate/mFragmentDate: " + currDate + "/" + mFragmentDate[0]);
+            updateWidgets();
+        }
     }
 
     @Override
@@ -100,5 +118,12 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
         mAdapter.swapCursor(null);
     }
 
-
+    private void updateWidgets() {
+        Log.v(LOG_TAG, "updateWidgets - sending broadcast ACTION_TODAYS_DATA_UPDATED");
+        Context context = getActivity().getApplication();
+        // Setting the package ensures that only components in our app will receive the broadcast
+        Intent dataUpdatedIntent = new Intent(ACTION_TODAYS_DATA_UPDATED)
+                .setPackage(context.getPackageName());
+        context.sendBroadcast(dataUpdatedIntent);
+    }
 }
