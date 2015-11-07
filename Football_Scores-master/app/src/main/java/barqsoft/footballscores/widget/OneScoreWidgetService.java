@@ -22,7 +22,7 @@ import barqsoft.footballscores.Utilies;
  */
 public class OneScoreWidgetService  extends IntentService {
 
-    private static int testCnt;
+//    private static int testCnt;
 
     private static final String[] SCORE_COLUMNS = {
             DatabaseContract.scores_table.HOME_COL,
@@ -54,7 +54,7 @@ public class OneScoreWidgetService  extends IntentService {
         // get the most recent results for today
         Cursor cursor = getContentResolver().query(DatabaseContract.scores_table.buildScoreWithDate(),
                 SCORE_COLUMNS, null, new String[]
-                        {currDate}, DatabaseContract.scores_table.HOME_COL + " DESC");
+                        {currDate}, DatabaseContract.scores_table.TIME_COL + " DESC");
 
         String homeName = "No results found";
         int homeScore = -1;
@@ -98,7 +98,7 @@ public class OneScoreWidgetService  extends IntentService {
 
             views.setTextViewText(R.id.home_name, homeName);
 
-            views.setTextViewText(R.id.time, timeStr + ": " + testCnt++);
+            views.setTextViewText(R.id.time, timeStr);
 
             views.setTextViewText(R.id.scores, scores);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
