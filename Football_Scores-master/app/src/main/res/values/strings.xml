@@ -35,6 +35,7 @@
 
     <string name="title_widget_detail">Scores Details</string>
     <string name="title_widget_one_score">One Score Details</string>
+    <string name="title_widget_scores_collection">Scores Collection</string>
 
     <string name="widget_text">This is a widget probably.</string>
     <string name="api_key">e2317cc188124d47bf8ea3100fd6098e</string>

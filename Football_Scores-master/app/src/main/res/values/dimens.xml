@@ -13,8 +13,6 @@
     <dimen name="widget_one_score_min_resize_width">220dp</dimen>
     <dimen name="widget_one_score_min_resize_height">@dimen/widget_one_score_default_height</dimen>
 
-    <dimen name="widget_scores_collection_default_width">280dp</dimen>
+    <dimen name="widget_scores_collection_default_width">286dp</dimen>
     <dimen name="widget_scores_collection_default_height">180dp</dimen>
-    <dimen name="widget_scores_collection_min_resize_width">220dp</dimen>
-    <dimen name="widget_scores_collection_min_resize_height">@dimen/widget_scores_collection_default_height</dimen>
 </resources>
