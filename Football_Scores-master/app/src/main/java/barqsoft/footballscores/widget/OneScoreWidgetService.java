@@ -51,33 +51,37 @@ public class OneScoreWidgetService  extends IntentService {
         SimpleDateFormat dayFormat = new SimpleDateFormat("yyyy-MM-dd");
         String currDate = dayFormat.format(System.currentTimeMillis());
 //        boolean isRightToLeft = getResources().getBoolean(R.bool.is_right_to_left);
-        // get the most recent results for today
+        // get the most recent results for today with scores
         Cursor cursor = getContentResolver().query(DatabaseContract.scores_table.buildScoreWithDate(),
                 SCORE_COLUMNS, null, new String[]
                         {currDate}, DatabaseContract.scores_table.TIME_COL + " DESC");
 
-        String homeName = "No results found";
+        // FIXME: 9/11/2015 move to strings and show 'retrieving' at the start and 'not found' if not found
+        String homeName = getResources().getString(R.string.retrieving_scores);
+        String awayName  = getResources().getString(R.string.retrieving_scores);
         int homeScore = -1;
-        String awayName = "No results found";
         int awayScore = -1;
         String timeStr = "";
 
         String scores;
-        if (cursor == null) {
+        if (cursor == null || cursor.getCount() == 0) {
             Log.e(LOG_TAG, "onHandleIntent - cursor is NULL");
-        } else if (cursor.getCount() == 0) {
-//        if (!cursor.moveToFirst()) {
-            Log.e(LOG_TAG, "onHandleIntent - cursor there is no data");
-            cursor.close();
+            homeName = awayName = getResources().getString(R.string.empty_scores_list);
         } else {
             cursor.moveToFirst();
-            homeName = cursor.getString(HOME_IDX);
-            homeScore = cursor.getInt(HOME_GOALS_IDX);
-            awayName = cursor.getString(AWAY_IDX);
-            awayScore = cursor.getInt(AWAY_GOALS_IDX);
-            timeStr = cursor.getString(TIME_IDX);
-            cursor.close();
+            while (!cursor.isBeforeFirst()) {
+                homeName = cursor.getString(HOME_IDX);
+                homeScore = cursor.getInt(HOME_GOALS_IDX);
+                awayName = cursor.getString(AWAY_IDX);
+                awayScore = cursor.getInt(AWAY_GOALS_IDX);
+                timeStr = cursor.getString(TIME_IDX);
+                if (homeScore > -1) {
+                    break;
+                }
+            }
         }
+
+        cursor.close();
 
         scores = Utilies.getScores(homeScore, awayScore);
 

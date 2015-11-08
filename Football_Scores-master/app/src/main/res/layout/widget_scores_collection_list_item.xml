@@ -9,7 +9,7 @@
 
     <TextView
         android:id="@+id/home_name"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
@@ -18,30 +18,38 @@
         android:textSize="@dimen/TeamNames"
         android:layout_weight="10" />
 
-    <TextView
-        android:id="@+id/scores"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="scores"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:textColor="#050001"
-        android:layout_weight="5" />
+        android:orientation="vertical"
+        android:layout_weight="5" >
+
+        <TextView
+            android:id="@+id/scores"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="scores"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="#050001"
+            android:layout_weight="5" />
 
 
-    <TextView
-        android:id="@+id/time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="time"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:textColor="#050001"
-        android:layout_weight="5" />
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="time"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="#050001"
+            android:layout_weight="5" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/away_name"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"

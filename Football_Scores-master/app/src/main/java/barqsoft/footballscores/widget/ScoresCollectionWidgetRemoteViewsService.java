@@ -13,6 +13,7 @@ import android.widget.RemoteViewsService;
 import java.text.SimpleDateFormat;
 
 import barqsoft.footballscores.DatabaseContract;
+import barqsoft.footballscores.MainActivity;
 import barqsoft.footballscores.R;
 import barqsoft.footballscores.Utilies;
 
@@ -63,7 +64,7 @@ public class ScoresCollectionWidgetRemoteViewsService extends RemoteViewsService
                 String currDate = dayFormat.format(System.currentTimeMillis());
                 mCursor = getContentResolver().query(DatabaseContract.scores_table.buildScoreWithDate(),
                         SCORE_COLUMNS, null, new String[]
-                                {currDate}, DatabaseContract.scores_table.TIME_COL + " DESC");
+                                {currDate}, DatabaseContract.scores_table.TIME_COL + " ASC");
                 Binder.restoreCallingIdentity(identityToken);
             }
 
@@ -117,7 +118,7 @@ public class ScoresCollectionWidgetRemoteViewsService extends RemoteViewsService
 
                 final Intent fillInIntent = new Intent();
 
-                fillInIntent.putExtra("ROW_ID", mCursor.getString(ID_IDX));
+                fillInIntent.putExtra(MainActivity.WIDGET_SELECTED_ROW_ID, mCursor.getInt(ID_IDX));
                 views.setOnClickFillInIntent(R.id.widget_list_item, fillInIntent);
                 return views;
             }

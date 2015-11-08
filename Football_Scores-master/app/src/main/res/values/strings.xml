@@ -44,5 +44,6 @@
     <string name="dash">-</string>
     <string name="HomeTeam">-Home Team</string>
     <string name="AwayTeam">-Away Team</string>
+    <string name="retrieving_scores">Retrieving results</string>
     <string name="empty_scores_list">No Results Found</string>
 </resources>

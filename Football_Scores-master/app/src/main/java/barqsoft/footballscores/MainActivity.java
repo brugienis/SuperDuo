@@ -8,10 +8,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainActivity extends ActionBarActivity {
+
     public static int selectedMatchId;
     public static int currentFragment = 2;
     private final String saveTag = "Save Test";
     private PagerFragment mMyMain;
+    public static final String WIDGET_SELECTED_ROW_ID = "widget_selected_row_id";
+    public int widgetSelectedRowId = -1;
 
     private final static String LOG_TAG = MainActivity.class.getSimpleName();
 
@@ -19,7 +22,11 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.d(LOG_TAG, "Reached MainActivity onCreate");
+        Intent intent = getIntent();
+        if (intent.hasExtra(WIDGET_SELECTED_ROW_ID)) {
+            widgetSelectedRowId = intent.getIntExtra(WIDGET_SELECTED_ROW_ID, -1);
+        }
+        Log.d(LOG_TAG, "onCreate - widgetSelectedRowId: " + widgetSelectedRowId);
         if (savedInstanceState == null) {
             mMyMain = new PagerFragment();
             getSupportFragmentManager().beginTransaction()
