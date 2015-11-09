@@ -30,6 +30,7 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     private static final int SCORES_LOADER = 0;
     public static final String ACTION_TODAYS_DATA_UPDATED =
             "barqsoft.footballscores.ACTION_TODAYS_DATA_UPDATED";
+    private ListView scoreList;
 //    private int lastSelectedItem = -1;
 
     private final static String LOG_TAG = MainScreenFragment.class.getSimpleName();
@@ -54,7 +55,7 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
         Log.v(LOG_TAG, "onCreateView - start - mFragmentDate: " + mFragmentDate[0]);
         updateScores();
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        final ListView scoreList = (ListView) rootView.findViewById(R.id.scores_list);
+        scoreList = (ListView) rootView.findViewById(R.id.scores_list);
         mAdapter = new ScoresAdapter(getActivity(), null, 0);
         scoreList.setAdapter(mAdapter);
         getLoaderManager().initLoader(SCORES_LOADER, null, this);
@@ -72,9 +73,9 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     }
 
     /*
-    start loading data from the DB for the selected date and sort it on the 'time' column
-    in ascending order.
-     */
+        start loading data from the DB for the selected date and sort it on the 'time' column
+        in ascending order.
+         */
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         Log.v(LOG_TAG, "onCreateLoader - start");
@@ -110,6 +111,13 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
         if (cursor.getCount() > 0 && currDate.equals(mFragmentDate[0])) {
             Log.v(LOG_TAG, "onLoadFinished - currDate/mFragmentDate: " + currDate + "/" + mFragmentDate[0]);
             updateWidgets();
+            int selectedRow = ((MainActivity) getActivity()).getWidgetSelectedRowIdx();
+            if (selectedRow > -1) {
+                Log.v(LOG_TAG, "onLoadFinished - scrolling to : " + selectedRow);
+//                scoreList.smoothScrollToPosition(selectedRow);
+                scoreList.setSelection(selectedRow);
+                ((MainActivity) getActivity()).clearWidgetSelectedRowIdx();
+            }
         }
     }
 
@@ -125,5 +133,9 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
         Intent dataUpdatedIntent = new Intent(ACTION_TODAYS_DATA_UPDATED)
                 .setPackage(context.getPackageName());
         context.sendBroadcast(dataUpdatedIntent);
+    }
+
+    public void scrollToSelectedPosition() {
+        // TODO: 9/11/2015 add code - onCreateView() - make listView a field. Here do getListView().setSelection(21); or getListView().smoothScrollToPosition(21); 
     }
 }

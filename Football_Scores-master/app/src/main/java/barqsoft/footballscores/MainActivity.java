@@ -10,11 +10,18 @@ import android.view.MenuItem;
 public class MainActivity extends ActionBarActivity {
 
     public static int selectedMatchId;
-    public static int currentFragment = 2;
+//    public static int currentFragment = 2;
     private final String saveTag = "Save Test";
     private PagerFragment mMyMain;
     public static final String WIDGET_SELECTED_ROW_ID = "widget_selected_row_id";
-    public int widgetSelectedRowId = -1;
+    public static final String WIDGET_SELECTED_ROW_IDX = "widget_selected_row_idx";
+    private int widgetSelectedRowId = -1;
+    private int widgetSelectedRowIdx = -1;
+    // FIXME: 9/11/2015 unclutter below fields. Makr fields private and create getters
+    private static final int NUM_PAGES = 7;
+
+    private static final int TODAYS_PAGE = NUM_PAGES / 2;    /* number of pages or tabs */
+    public static int currentFragment = TODAYS_PAGE;
 
     private final static String LOG_TAG = MainActivity.class.getSimpleName();
 
@@ -25,8 +32,9 @@ public class MainActivity extends ActionBarActivity {
         Intent intent = getIntent();
         if (intent.hasExtra(WIDGET_SELECTED_ROW_ID)) {
             widgetSelectedRowId = intent.getIntExtra(WIDGET_SELECTED_ROW_ID, -1);
+            widgetSelectedRowIdx = intent.getIntExtra(WIDGET_SELECTED_ROW_IDX, -1);
         }
-        Log.d(LOG_TAG, "onCreate - widgetSelectedRowId: " + widgetSelectedRowId);
+        Log.d(LOG_TAG, "onCreate - widgetSelectedRowIdx/widgetSelectedRowId: " + widgetSelectedRowIdx + "/" + widgetSelectedRowId);
         if (savedInstanceState == null) {
             mMyMain = new PagerFragment();
             getSupportFragmentManager().beginTransaction()
@@ -80,5 +88,25 @@ public class MainActivity extends ActionBarActivity {
         selectedMatchId = savedInstanceState.getInt("Selected_match");
         mMyMain = (PagerFragment) getSupportFragmentManager().getFragment(savedInstanceState, "mMyMain");
         super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    public static int getNumPages() {
+        return NUM_PAGES;
+    }
+
+    public int getWidgetSelectedRowId() {
+        return widgetSelectedRowId;
+    }
+
+    public int getWidgetSelectedRowIdx() {
+        return widgetSelectedRowIdx;
+    }
+
+    public void clearWidgetSelectedRowIdx() {
+        widgetSelectedRowIdx = -1;
+    }
+
+    public static int getTodaysPage() {
+        return TODAYS_PAGE;
     }
 }

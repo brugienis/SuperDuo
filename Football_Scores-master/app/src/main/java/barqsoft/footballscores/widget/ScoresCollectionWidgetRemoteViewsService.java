@@ -119,6 +119,7 @@ public class ScoresCollectionWidgetRemoteViewsService extends RemoteViewsService
                 final Intent fillInIntent = new Intent();
 
                 fillInIntent.putExtra(MainActivity.WIDGET_SELECTED_ROW_ID, mCursor.getInt(ID_IDX));
+                fillInIntent.putExtra(MainActivity.WIDGET_SELECTED_ROW_IDX, position);
                 views.setOnClickFillInIntent(R.id.widget_list_item, fillInIntent);
                 return views;
             }

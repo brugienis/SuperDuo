@@ -22,14 +22,12 @@ import java.util.Date;
 public class PagerFragment extends Fragment {
 
     // FIXME: 6/11/2015 - below change back to 5
-    public static final int NUM_PAGES = 7;
-    public static final int TODAYS_PAGE = NUM_PAGES / 2;    /* number of pages or tabs */
     private static final long TWENTY_FOUR_HOURS_IN_MILLIS = 86400000L;
     /* ViewPager - see : http://developer.android.com/training/implementing-navigation/lateral.html */
     public ViewPager mPagerHandler;
     private MyPageAdapter mPagerAdapter;
     private SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd");
-    private MainScreenFragment[] mViewFragments = new MainScreenFragment[NUM_PAGES];
+    private MainScreenFragment[] mViewFragments = new MainScreenFragment[MainActivity.getNumPages()];
     private Date fragmentDate;
 
     private final static String LOG_TAG = PagerFragment.class.getSimpleName();
@@ -42,13 +40,13 @@ public class PagerFragment extends Fragment {
         mPagerHandler = (ViewPager) rootView.findViewById(R.id.pager);
         mPagerAdapter = new MyPageAdapter(getChildFragmentManager());
 
-        for (int i = 0; i < NUM_PAGES; i++) {
+        for (int i = 0; i < MainActivity.getNumPages(); i++) {
 //            Date fragmentDate = new Date(System.currentTimeMillis() + ((i-2) * 86400000));
-            fragmentDate = new Date(System.currentTimeMillis() + ((i - TODAYS_PAGE) * TWENTY_FOUR_HOURS_IN_MILLIS));
+            fragmentDate = new Date(System.currentTimeMillis() + ((i - MainActivity.getTodaysPage()) * TWENTY_FOUR_HOURS_IN_MILLIS));
             mViewFragments[i] = new MainScreenFragment();
             mViewFragments[i].setFragmentDate(mFormat.format(fragmentDate));
             Log.v(LOG_TAG, "onCreateView - date: " + mFormat.format(fragmentDate));
-            if ((i - TODAYS_PAGE) == 0) {
+            if ((i - MainActivity.getTodaysPage()) == 0) {
                 Log.v(LOG_TAG, "onCreateView - today's date: " + mFormat.format(fragmentDate));
             }
         }
@@ -67,7 +65,7 @@ public class PagerFragment extends Fragment {
 
         @Override
         public int getCount() {
-            return NUM_PAGES;
+            return MainActivity.getNumPages();
         }
 
         public MyPageAdapter(FragmentManager fm) {
@@ -78,7 +76,7 @@ public class PagerFragment extends Fragment {
         @Override
         public CharSequence getPageTitle(int position) {
 //            return getDayName(getActivity(), System.currentTimeMillis() + ((position - 2) * 86400000));
-            return getDayName(getActivity(), System.currentTimeMillis() + ((position - TODAYS_PAGE) * 86400000));
+            return getDayName(getActivity(), System.currentTimeMillis() + ((position - MainActivity.getTodaysPage()) * 86400000));
         }
 
         public String getDayName(Context context, long dateInMillis) {
