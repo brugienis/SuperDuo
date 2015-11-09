@@ -13,11 +13,11 @@ public class MainActivity extends ActionBarActivity {
 //    public static int currentFragment = 2;
     private final String saveTag = "Save Test";
     private PagerFragment mMyMain;
-    public static final String WIDGET_SELECTED_ROW_ID = "widget_selected_row_id";
+    public static final String WIDGET_SELECTED_MATCH_ID = "widget_selected_match_id";
     public static final String WIDGET_SELECTED_ROW_IDX = "widget_selected_row_idx";
-    private int widgetSelectedRowId = -1;
+    private int widgetSelectedMatchId;
     private int widgetSelectedRowIdx = -1;
-    // FIXME: 9/11/2015 unclutter below fields. Makr fields private and create getters
+    // FIXME: 9/11/2015 unclutter below fields. Make fields private and create getters
     private static final int NUM_PAGES = 7;
 
     private static final int TODAYS_PAGE = NUM_PAGES / 2;    /* number of pages or tabs */
@@ -30,11 +30,11 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Intent intent = getIntent();
-        if (intent.hasExtra(WIDGET_SELECTED_ROW_ID)) {
-            widgetSelectedRowId = intent.getIntExtra(WIDGET_SELECTED_ROW_ID, -1);
+        if (intent.hasExtra(WIDGET_SELECTED_MATCH_ID)) {
+            widgetSelectedMatchId = (int) intent.getDoubleExtra(WIDGET_SELECTED_MATCH_ID, -1);
             widgetSelectedRowIdx = intent.getIntExtra(WIDGET_SELECTED_ROW_IDX, -1);
         }
-        Log.d(LOG_TAG, "onCreate - widgetSelectedRowIdx/widgetSelectedRowId: " + widgetSelectedRowIdx + "/" + widgetSelectedRowId);
+        Log.d(LOG_TAG, "onCreate - widgetSelectedRowIdx/widgetSelectedMatchId: " + widgetSelectedRowIdx + "/" + widgetSelectedMatchId);
         if (savedInstanceState == null) {
             mMyMain = new PagerFragment();
             getSupportFragmentManager().beginTransaction()
@@ -94,8 +94,8 @@ public class MainActivity extends ActionBarActivity {
         return NUM_PAGES;
     }
 
-    public int getWidgetSelectedRowId() {
-        return widgetSelectedRowId;
+    public int  getWidgetSelectedMatchId() {
+        return widgetSelectedMatchId;
     }
 
     public int getWidgetSelectedRowIdx() {

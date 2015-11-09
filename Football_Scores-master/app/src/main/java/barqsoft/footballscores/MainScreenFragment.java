@@ -106,7 +106,7 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
         mAdapter.swapCursor(cursor);
         //mAdapter.notifyDataSetChanged();
 //        int colCnt = cursor.getColumnCount();
-        Log.v(LOG_TAG, "onLoadFinished - cursor.getCount()/colCnt: " + cursor.getCount() + "/" + mFragmentDate[0]);
+//        Log.v(LOG_TAG, "onLoadFinished - cursor.getCount()/colCnt: " + cursor.getCount() + "/" + mFragmentDate[0]);
         // FIXME: 6/11/2015 test below when there are some data for today's date
         if (cursor.getCount() > 0 && currDate.equals(mFragmentDate[0])) {
             Log.v(LOG_TAG, "onLoadFinished - currDate/mFragmentDate: " + currDate + "/" + mFragmentDate[0]);
@@ -117,6 +117,10 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
 //                scoreList.smoothScrollToPosition(selectedRow);
                 scoreList.setSelection(selectedRow);
                 ((MainActivity) getActivity()).clearWidgetSelectedRowIdx();
+
+                mAdapter.mDetailMatchId = ((MainActivity) getActivity()).getWidgetSelectedMatchId();
+                MainActivity.selectedMatchId = ((MainActivity) getActivity()).getWidgetSelectedMatchId();
+                mAdapter.notifyDataSetChanged();
             }
         }
     }

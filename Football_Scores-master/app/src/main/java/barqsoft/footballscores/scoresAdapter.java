@@ -61,7 +61,7 @@ public class ScoresAdapter extends CursorAdapter {
                 cursor.getString(COL_AWAY)
         ));
 
-        Log.v(LOG_TAG, "; ID: " + cursor.getString(0) + "; real date: " + cursor.getString(1) + "; date(time): " + cursor.getString(COL_MATCHTIME) +
+        Log.v(LOG_TAG, "; ID: " + cursor.getString(0) + "; mDetailMatchId: " + mDetailMatchId + "; matchId: " + cursor.getDouble(COL_ID) + "; real date: " + cursor.getString(1) + "; date(time): " + cursor.getString(COL_MATCHTIME) +
                 "; home: " + cursor.getString(COL_HOME) + "; score: " + cursor.getInt(COL_HOME_GOALS) + "; away: " + cursor.getString(COL_AWAY) +
                 "; score: " + cursor.getInt(COL_AWAY_GOALS)//"; time: " + time
         );

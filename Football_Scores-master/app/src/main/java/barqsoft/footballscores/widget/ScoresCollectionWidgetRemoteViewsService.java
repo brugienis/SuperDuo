@@ -29,7 +29,8 @@ public class ScoresCollectionWidgetRemoteViewsService extends RemoteViewsService
             DatabaseContract.scores_table.HOME_GOALS_COL,
             DatabaseContract.scores_table.AWAY_COL,
             DatabaseContract.scores_table.AWAY_GOALS_COL,
-            DatabaseContract.scores_table.TIME_COL
+            DatabaseContract.scores_table.TIME_COL,
+            DatabaseContract.scores_table.MATCH_ID
     };
     private static final int ID_IDX = 0;
     private static final int HOME_IDX = 1;
@@ -37,6 +38,7 @@ public class ScoresCollectionWidgetRemoteViewsService extends RemoteViewsService
     private static final int AWAY_IDX = 3;
     private static final int AWAY_GOALS_IDX = 4;
     private static final int TIME_IDX = 5;
+    private static final int MATCH_ID_IDX = 6;
 
     private final static String LOG_TAG = ScoresCollectionWidgetRemoteViewsService.class.getSimpleName();
 
@@ -118,7 +120,7 @@ public class ScoresCollectionWidgetRemoteViewsService extends RemoteViewsService
 
                 final Intent fillInIntent = new Intent();
 
-                fillInIntent.putExtra(MainActivity.WIDGET_SELECTED_ROW_ID, mCursor.getInt(ID_IDX));
+                fillInIntent.putExtra(MainActivity.WIDGET_SELECTED_MATCH_ID, mCursor.getDouble(MATCH_ID_IDX));
                 fillInIntent.putExtra(MainActivity.WIDGET_SELECTED_ROW_IDX, position);
                 views.setOnClickFillInIntent(R.id.widget_list_item, fillInIntent);
                 return views;
