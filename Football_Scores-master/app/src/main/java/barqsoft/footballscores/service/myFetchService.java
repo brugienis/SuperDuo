@@ -48,6 +48,10 @@ public class MyFetchService extends IntentService {
 
     private void getData(String timeFrame) {
         //Creating fetch URL
+        String APIKey = getString(R.string.api_key);
+        if (APIKey.trim().length() == 0) {
+            throw new RuntimeException(LOG_TAG + ".getData - empty 'api_key' in strings.xml");
+        }
         final String BASE_URL = "http://api.football-data.org/alpha/fixtures"; //Base URL
         final String QUERY_TIME_FRAME = "timeFrame"; //Time Frame parameter to determine days
         //final String QUERY_MATCH_DAY = "matchday";
@@ -64,7 +68,7 @@ public class MyFetchService extends IntentService {
             URL fetch = new URL(fetchBuild.toString());
             connection = (HttpURLConnection) fetch.openConnection();
             connection.setRequestMethod("GET");
-            connection.addRequestProperty("X-Auth-Token", getString(R.string.api_key));
+            connection.addRequestProperty("X-Auth-Token", APIKey.trim());
             connection.connect();
 
             // Read the input stream into a String
