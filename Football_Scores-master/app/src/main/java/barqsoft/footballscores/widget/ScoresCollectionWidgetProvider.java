@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.TaskStackBuilder;
+import android.util.Log;
 import android.widget.RemoteViews;
 
 import barqsoft.footballscores.MainActivity;
@@ -21,7 +22,11 @@ import barqsoft.footballscores.R;
  */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class ScoresCollectionWidgetProvider extends AppWidgetProvider {
+
+    private final static String LOG_TAG = ScoresCollectionWidgetProvider.class.getSimpleName();
+
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+        Log.v(LOG_TAG, "onUpdate start");
         // Perform this loop procedure for each App Widget that belongs to this provider
         for (int appWidgetId : appWidgetIds) {
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_scores_collection);
@@ -47,12 +52,15 @@ public class ScoresCollectionWidgetProvider extends AppWidgetProvider {
             // Tell the AppWidgetManager to perform an update on the current app widget
             appWidgetManager.updateAppWidget(appWidgetId, views);
         }
+        Log.v(LOG_TAG, "onUpdate end");
     }
 
     @Override
     public void onReceive(@NonNull Context context, @NonNull Intent intent) {
         super.onReceive(context, intent);
+        Log.v(LOG_TAG, "onReceive called - action: " + intent.getAction());
         if (MainScreenFragment.ACTION_TODAYS_DATA_UPDATED.equals(intent.getAction())) {
+            Log.v(LOG_TAG, "onReceive got request ACTION_TODAYS_DATA_UPDATED");
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             int[] appWidgetIds = appWidgetManager.getAppWidgetIds(
                     new ComponentName(context, getClass()));

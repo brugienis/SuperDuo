@@ -104,19 +104,30 @@ public class ScoresCollectionWidgetRemoteViewsService extends RemoteViewsService
                 timeStr = mCursor.getString(TIME_IDX);
 
                 scores = Utilies.getScores(homeScore, awayScore);
+
                 RemoteViews views = new RemoteViews(getPackageName(),
                         R.layout.widget_scores_collection_list_item);
 
                 views.setTextViewText(R.id.home_name, homeName);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+                    views.setContentDescription(R.id.home_name, getString(R.string.home_team_cont_desc, homeName));
+                }
 
                 views.setTextViewText(R.id.time, timeStr);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+                    views.setContentDescription(R.id.time, getString(R.string.time_cont_desc, timeStr));
+                }
 
                 views.setTextViewText(R.id.scores, scores);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+                    views.setContentDescription(R.id.scores, getString(R.string.scores_cont_desc, scores));
                     views.setContentDescription(R.id.scores, scores);
                 }
 
                 views.setTextViewText(R.id.away_name, awayName);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+                    views.setContentDescription(R.id.away_name, getString(R.string.away_team_cont_desc, awayName));
+                }
 
                 final Intent fillInIntent = new Intent();
 

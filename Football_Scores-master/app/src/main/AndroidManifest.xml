@@ -69,7 +69,7 @@
             android:label="@string/title_widget_scores_collection" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="com.example.android.sunshine.app.ACTION_DATA_UPDATED" />
+                <action android:name="barqsoft.footballscores.ACTION_TODAYS_DATA_UPDATED" />
             </intent-filter>
             <meta-data android:name="android.appwidget.provider"
                        android:resource="@xml/widget_info_scores_collection" />
