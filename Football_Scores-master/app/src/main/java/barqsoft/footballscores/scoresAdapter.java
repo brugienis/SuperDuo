@@ -3,6 +3,7 @@ package barqsoft.footballscores;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Build;
 import android.support.v4.widget.CursorAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -47,19 +48,42 @@ public class ScoresAdapter extends CursorAdapter {
         return mItem;
     }
 
+    String homeName;
+    int homeScore;
+    String awayName;
+    int awayScore;
+    String timeStr;
+    String scores;
+    int matchDay;
+    int league;
+    String matchDayKind;
     @Override
     public void bindView(View view, final Context context, Cursor cursor) {
         final ViewHolder mHolder = (ViewHolder) view.getTag();
-        mHolder.homeName.setText(cursor.getString(COL_HOME));
-        mHolder.awayName.setText(cursor.getString(COL_AWAY));
-        mHolder.date.setText(cursor.getString(COL_MATCHTIME));
-        mHolder.score.setText(Utilies.getScores(cursor.getInt(COL_HOME_GOALS), cursor.getInt(COL_AWAY_GOALS)));
+        homeName = cursor.getString(COL_HOME);
+        awayName = cursor.getString(COL_AWAY);
+        timeStr = cursor.getString(COL_MATCHTIME);
+        homeScore = cursor.getInt(COL_HOME_GOALS);
+        awayScore = cursor.getInt(COL_AWAY_GOALS);
+        scores = Utilies.getScores(homeScore, awayScore);
+
+        mHolder.homeName.setText(homeName);
+        mHolder.awayName.setText(awayName);
+        mHolder.date.setText(timeStr);
+        mHolder.score.setText(scores);
         mHolder.matchId = cursor.getDouble(COL_ID);
         mHolder.homeCrest.setImageResource(Utilies.getTeamCrestByTeamName(
                 cursor.getString(COL_HOME)));
         mHolder.awayCrest.setImageResource(Utilies.getTeamCrestByTeamName(
                 cursor.getString(COL_AWAY)
         ));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+            mHolder.homeName.setContentDescription(context.getString(R.string.home_team_cont_desc, homeName));
+            mHolder.awayName.setContentDescription(context.getString(R.string.away_team_cont_desc, awayName));
+            mHolder.date.setContentDescription(context.getString(R.string.time_cont_desc, timeStr));
+            mHolder.score.setContentDescription(context.getString(R.string.scores_cont_desc, scores));
+        }
 
         Log.v(LOG_TAG, "; ID: " + cursor.getString(0) + "; mDetailMatchId: " + mDetailMatchId + "; matchId: " + cursor.getDouble(COL_ID) + "; real date: " + cursor.getString(1) + "; date(time): " + cursor.getString(COL_MATCHTIME) +
                 "; home: " + cursor.getString(COL_HOME) + "; score: " + cursor.getInt(COL_HOME_GOALS) + "; away: " + cursor.getString(COL_AWAY) +
@@ -72,16 +96,25 @@ public class ScoresAdapter extends CursorAdapter {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v = vi.inflate(R.layout.detail_fragment, null);
         ViewGroup container = (ViewGroup) view.findViewById(R.id.details_fragment_container);
+
         if (mHolder.matchId == mDetailMatchId) {
             //Log.v(FetchScoreTask.LOG_TAG,"will insert extraView");
+            matchDay = cursor.getInt(COL_MATCHDAY);
+            league = cursor.getInt(COL_LEAGUE);
+            matchDayKind = Utilies.getMatchDay(matchDay, league);
 
             container.addView(v, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT
                     , ViewGroup.LayoutParams.MATCH_PARENT));
-            TextView matchDay = (TextView) v.findViewById(R.id.matchday_textview);
-            matchDay.setText(Utilies.getMatchDay(cursor.getInt(COL_MATCHDAY),
-                    cursor.getInt(COL_LEAGUE)));
-            TextView league = (TextView) v.findViewById(R.id.league_textview);
-            league.setText(Utilies.getLeague(cursor.getInt(COL_LEAGUE)));
+            TextView matchDayTv = (TextView) v.findViewById(R.id.matchday_textview);
+            matchDayTv.setText(matchDayKind);
+
+            TextView leagueTv = (TextView) v.findViewById(R.id.league_textview);
+            leagueTv.setText(Utilies.getLeague(league));
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+                matchDayTv.setContentDescription(context.getString(R.string.match_day_cont_desc, matchDayKind));
+                leagueTv.setContentDescription(context.getString(R.string.league_cont_desc, league));
+            }
             Button shareButton = (Button) v.findViewById(R.id.share_button);
             shareButton.setOnClickListener(new View.OnClickListener() {
                 @Override

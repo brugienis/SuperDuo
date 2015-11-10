@@ -52,5 +52,10 @@
     <string name="away_team_cont_desc">Away team: <xliff:g id="away_name">%1$s</xliff:g></string>
     <string name="time_cont_desc">Away team: <xliff:g id="time">%1$s</xliff:g></string>
     <string name="scores_cont_desc">Away team: <xliff:g id="scores">%1$s</xliff:g></string>
+    <string name="match_day_cont_desc">Match day: <xliff:g id="match_day">%1$s</xliff:g></string>
+    <string name="league_cont_desc">Leage name: <xliff:g id="league">%1$s</xliff:g></string>
+    <string name="home_crest_cont_desc">Home crest</string>
+    <string name="away_crest_cont_desc">Away crest</string>
+    <string name="share_button_cont_desc">Share button</string>
 
 </resources>
