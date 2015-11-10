@@ -14,7 +14,6 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:textColor="#050001"
-        android:text="Home name"
         android:textSize="@dimen/TeamNames"
         android:layout_weight="10" />
 
@@ -28,7 +27,6 @@
             android:id="@+id/scores"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="scores"
             android:layout_gravity="center"
             android:gravity="center"
             android:textColor="#050001"
@@ -39,7 +37,6 @@
             android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="time"
             android:layout_gravity="center"
             android:gravity="center"
             android:textColor="#050001"
@@ -54,7 +51,6 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:textColor="#050001"
-        android:text="Away name"
         android:textSize="@dimen/TeamNames"
         android:layout_weight="10" />
 

@@ -56,7 +56,6 @@ public class MyFetchService extends IntentService {
                 appendQueryParameter(QUERY_TIME_FRAME, timeFrame).
                 appendQueryParameter("APPID", "a813e2098a3bc05b49ac25ece5e0eaf9").
                 build();
-        Log.v(LOG_TAG, "getData - the url we are looking at is: " + fetchBuild.toString()); //log spam
         HttpURLConnection connection = null;
         BufferedReader reader = null;
         String JSONData = null;
