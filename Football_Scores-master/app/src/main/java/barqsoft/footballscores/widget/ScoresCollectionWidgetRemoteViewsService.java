@@ -37,7 +37,7 @@ public class ScoresCollectionWidgetRemoteViewsService extends RemoteViewsService
     private static final int AWAY_GOALS_IDX = 4;
     private static final int TIME_IDX = 5;
     private static final int MATCH_ID_IDX = 6;
-    private static final long TWENTY_FOUR_HOURS_IN_MILLIS = 86400000L;
+    private static final String ASC = " ASC";
 
     private final static String LOG_TAG = ScoresCollectionWidgetRemoteViewsService.class.getSimpleName();
 
@@ -61,12 +61,10 @@ public class ScoresCollectionWidgetRemoteViewsService extends RemoteViewsService
                 // data. Therefore we need to clear (and finally restore) the calling identity so
                 // that calls use our process and permission
                 final long identityToken = Binder.clearCallingIdentity();
-//                SimpleDateFormat dayFormat = new SimpleDateFormat("yyyy-MM-dd");
-//                String currDate = dayFormat.format(System.currentTimeMillis() + MainActivity.getDefaultDayAdjustment() * TWENTY_FOUR_HOURS_IN_MILLIS);
                 String currDate = MainActivity.getDefaultPageDayInMillis();
                 mCursor = getContentResolver().query(DatabaseContract.scores_table.buildScoreWithDate(),
                         SCORE_COLUMNS, null, new String[]
-                                {currDate}, DatabaseContract.scores_table.TIME_COL + " ASC");
+                                {currDate}, DatabaseContract.scores_table.TIME_COL + ASC);
                 Binder.restoreCallingIdentity(identityToken);
             }
 

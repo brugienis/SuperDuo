@@ -38,12 +38,9 @@ public class ScoresAdapter extends CursorAdapter {
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-//        Log.v(LOG_TAG, "newView - start");
         View mItem = LayoutInflater.from(context).inflate(R.layout.scores_list_item, parent, false);
         ViewHolder mHolder = new ViewHolder(mItem);
         mItem.setTag(mHolder);
-        //Log.v(FetchScoreTask.LOG_TAG,"new View inflated");
-//        isRightToLeft = context.getResources().getBoolean(R.bool.is_right_to_left);
         return mItem;
     }
 
@@ -76,13 +73,6 @@ public class ScoresAdapter extends CursorAdapter {
             mHolder.score.setContentDescription(context.getString(R.string.scores_cont_desc, scores));
         }
 
-//        Log.v(LOG_TAG, "; ID: " + cursor.getString(0) + "; mDetailMatchId: " + mDetailMatchId + "; matchId: " + cursor.getDouble(COL_ID) + "; real date: " + cursor.getString(1) + "; date(time): " + cursor.getString(COL_MATCHTIME) +
-//                "; home: " + cursor.getString(COL_HOME) + "; score: " + cursor.getInt(COL_HOME_GOALS) + "; away: " + cursor.getString(COL_AWAY) +
-//                "; score: " + cursor.getInt(COL_AWAY_GOALS)//"; time: " + time
-//        );
-
-        //Log.v(FetchScoreTask.LOG_TAG,mHolder.homeName.getText() + " Vs. " + mHolder.awayName.getText() +" id " + String.valueOf(mHolder.matchId));
-        //Log.v(FetchScoreTask.LOG_TAG,String.valueOf(mDetailMatchId));
         LayoutInflater vi = (LayoutInflater) context.getApplicationContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v = vi.inflate(R.layout.detail_fragment, null);

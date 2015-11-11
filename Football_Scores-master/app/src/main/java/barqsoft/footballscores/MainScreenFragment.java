@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,7 +47,6 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
-        Log.v(LOG_TAG, "onCreateView - start - mFragmentDate: " + mFragmentDate[0]);
         updateScores();
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         scoreList = (ListView) rootView.findViewById(R.id.scores_list);
@@ -68,49 +66,25 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
         return rootView;
     }
 
+    private static final String ASC = " ASC";
     /*
         start loading data from the DB for the selected date and sort it on the 'time' column
         in ascending order.
-         */
+    */
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        Log.v(LOG_TAG, "onCreateLoader - start");
         return new CursorLoader(getActivity(), DatabaseContract.scores_table
                 .buildScoreWithDate(),
-                null, null, mFragmentDate, DatabaseContract.scores_table.TIME_COL + " ASC");
+                null, null, mFragmentDate, DatabaseContract.scores_table.TIME_COL + ASC);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        //Log.v(FetchScoreTask.LOG_TAG,"loader finished");
-        //cursor.moveToFirst();
-        /*
-        while (!cursor.isAfterLast())
-        {
-            Log.v(FetchScoreTask.LOG_TAG,cursor.getString(1));
-            cursor.moveToNext();
-        }
-        */
-
-//        int i = 0;
-//        cursor.moveToFirst();
-//        while (!cursor.isAfterLast()) {
-//            i++;
-//            cursor.moveToNext();
-//        }
-        //Log.v(FetchScoreTask.LOG_TAG,"Loader query: " + String.valueOf(i));
         mAdapter.swapCursor(cursor);
-        //mAdapter.notifyDataSetChanged();
-//        int colCnt = cursor.getColumnCount();
-//        Log.v(LOG_TAG, "onLoadFinished - cursor.getCount()/colCnt: " + cursor.getCount() + "/" + mFragmentDate[0]);
-        // FIXME: 6/11/2015 test below when there are some data for today's date
         if (cursor.getCount() > 0 && currDate.equals(mFragmentDate[0])) {
-            Log.v(LOG_TAG, "onLoadFinished - currDate/mFragmentDate: " + currDate + "/" + mFragmentDate[0]);
             updateWidgets();
             int selectedRow = ((MainActivity) getActivity()).getWidgetSelectedRowIdx();
             if (selectedRow > -1) {
-                Log.v(LOG_TAG, "onLoadFinished - scrolling to : " + selectedRow);
-//                scoreList.smoothScrollToPosition(selectedRow);
                 scoreList.setSelection(selectedRow);
                 ((MainActivity) getActivity()).clearWidgetSelectedRowIdx();
 
@@ -127,7 +101,6 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     }
 
     private void updateWidgets() {
-        Log.v(LOG_TAG, "updateWidgets - sending broadcast ACTION_TODAYS_DATA_UPDATED");
         Context context = getActivity().getApplication();
         // Setting the package ensures that only components in our app will receive the broadcast
         Intent dataUpdatedIntent = new Intent(ACTION_TODAYS_DATA_UPDATED)

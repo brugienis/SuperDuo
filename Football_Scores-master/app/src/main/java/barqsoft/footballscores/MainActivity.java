@@ -3,7 +3,6 @@ package barqsoft.footballscores;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -13,8 +12,8 @@ public class MainActivity extends ActionBarActivity {
 
     public static int selectedMatchId;
 //    public static int currentFragment = 2;
-    private final String saveTag = "Save Test";
-    private PagerFragment mMyMain;
+//    private final String saveTag = "Save Test";
+    private PagerFragment mPagerFragment;
     public static final String WIDGET_SELECTED_MATCH_ID = "widget_selected_match_id";
     public static final String WIDGET_SELECTED_ROW_IDX = "widget_selected_row_idx";
     private int widgetSelectedMatchId;
@@ -40,11 +39,10 @@ public class MainActivity extends ActionBarActivity {
             widgetSelectedMatchId = (int) intent.getDoubleExtra(WIDGET_SELECTED_MATCH_ID, -1);
             widgetSelectedRowIdx = intent.getIntExtra(WIDGET_SELECTED_ROW_IDX, -1);
         }
-        Log.d(LOG_TAG, "onCreate - widgetSelectedRowIdx/widgetSelectedMatchId: " + widgetSelectedRowIdx + "/" + widgetSelectedMatchId);
         if (savedInstanceState == null) {
-            mMyMain = new PagerFragment();
+            mPagerFragment = new PagerFragment();
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, mMyMain)
+                    .add(R.id.container, mPagerFragment)
                     .commit();
         }
     }
@@ -74,25 +72,23 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private static final String PAGER_CURRENT = "Pager_Current";
+    private static final String SELECTED_MATCH = "Selected_match";
+    private static final String PAGER_FRAGMENT = "Selected_match";
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        Log.v(saveTag, "will save");
-        Log.v(saveTag, "fragment: " + String.valueOf(mMyMain.mPagerHandler.getCurrentItem()));
-        Log.v(saveTag, "selected id: " + selectedMatchId);
-        outState.putInt("Pager_Current", mMyMain.mPagerHandler.getCurrentItem());
-        outState.putInt("Selected_match", selectedMatchId);
-        getSupportFragmentManager().putFragment(outState, "mMyMain", mMyMain);
+        outState.putInt(PAGER_CURRENT, mPagerFragment.mPagerHandler.getCurrentItem());
+        outState.putInt(SELECTED_MATCH, selectedMatchId);
+        getSupportFragmentManager().putFragment(outState, PAGER_FRAGMENT, mPagerFragment);
         super.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        Log.v(saveTag, "will retrive");
-        Log.v(saveTag, "fragment: " + String.valueOf(savedInstanceState.getInt("Pager_Current")));
-        Log.v(saveTag, "selected id: " + savedInstanceState.getInt("Selected_match"));
-        currentFragment = savedInstanceState.getInt("Pager_Current");
-        selectedMatchId = savedInstanceState.getInt("Selected_match");
-        mMyMain = (PagerFragment) getSupportFragmentManager().getFragment(savedInstanceState, "mMyMain");
+        currentFragment = savedInstanceState.getInt(PAGER_CURRENT);
+        selectedMatchId = savedInstanceState.getInt(SELECTED_MATCH);
+        mPagerFragment = (PagerFragment) getSupportFragmentManager().getFragment(savedInstanceState,
+                PAGER_FRAGMENT);
         super.onRestoreInstanceState(savedInstanceState);
     }
 
@@ -114,10 +110,6 @@ public class MainActivity extends ActionBarActivity {
 
     public static int getTodaysPage() {
         return TODAYS_PAGE;
-    }
-
-    public static int getDefaultDayAdjustment() {
-        return DEFAULT_DAY_ADJUSTMENT;
     }
 
     /*

@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.format.Time;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +25,7 @@ public class PagerFragment extends Fragment {
     public ViewPager mPagerHandler;
     private MyPageAdapter mPagerAdapter;
     private SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE");
     private MainScreenFragment[] mViewFragments = new MainScreenFragment[MainActivity.getNumPages()];
     private Date fragmentDate;
 
@@ -40,14 +40,9 @@ public class PagerFragment extends Fragment {
         mPagerAdapter = new MyPageAdapter(getChildFragmentManager());
 
         for (int i = 0; i < MainActivity.getNumPages(); i++) {
-//            Date fragmentDate = new Date(System.currentTimeMillis() + ((i-2) * 86400000));
             fragmentDate = new Date(System.currentTimeMillis() + ((i - MainActivity.getTodaysPage()) * TWENTY_FOUR_HOURS_IN_MILLIS));
             mViewFragments[i] = new MainScreenFragment();
             mViewFragments[i].setFragmentDate(mFormat.format(fragmentDate));
-            Log.v(LOG_TAG, "onCreateView - date: " + mFormat.format(fragmentDate));
-            if ((i - MainActivity.getTodaysPage()) == 0) {
-                Log.v(LOG_TAG, "onCreateView - getTodaysPage/today's date: " + MainActivity.getTodaysPage() + "/" + mFormat.format(fragmentDate));
-            }
         }
 
         mPagerHandler.setAdapter(mPagerAdapter);
@@ -96,7 +91,6 @@ public class PagerFragment extends Fragment {
                 Time time = new Time();
                 time.setToNow();
                 // Otherwise, the format is just the day of the week (e.g "Wednesday".
-                SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE");
                 return dayFormat.format(dateInMillis);
             }
         }

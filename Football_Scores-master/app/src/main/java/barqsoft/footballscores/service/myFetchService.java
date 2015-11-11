@@ -38,8 +38,6 @@ public class MyFetchService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-//        getData("n2");
-//        getData("p2");
         getData("n1");
         getData("p1");
 
@@ -94,7 +92,6 @@ public class MyFetchService extends IntentService {
             }
             JSONData = buffer.toString();
         } catch (Exception e) {
-            // FIXME: 7/10/2015 - getting {"error":"You reached your request limit. Get your free API token to use the API extensively."}
             Log.e(LOG_TAG, "Exception here" + e);
         } finally {
             if (connection != null) {
@@ -110,20 +107,14 @@ public class MyFetchService extends IntentService {
         }
         try {
             if (JSONData != null) {
-//                Log.v(LOG_TAG, "getData - JSONData: " + JSONData.length() + " - "  + JSONData);
                 //This bit is to check if the data contains any matches. If not, we call processJson on the dummy data
                 JSONArray matches = new JSONObject(JSONData).getJSONArray("fixtures");
                 if (matches.length() == 0) {
-                    Log.v(LOG_TAG, "getData - no data - will use dummy data");
                     //if there is no data, call the function on dummy data
                     //this is expected behavior during the off season.
                     processJSONData(getString(R.string.dummy_data), getApplicationContext(), false);
                     return;
-                } else {
-                    Log.v(LOG_TAG, "getData - using REAL data");
                 }
-
-
                 processJSONData(JSONData, getApplicationContext(), true);
             } else {
                 //Could not Connect
@@ -135,7 +126,6 @@ public class MyFetchService extends IntentService {
     }
 
     private void processJSONData(String JSONData, Context mContext, boolean isReal) {
-        //JSON data
         // This set of league codes is for the 2015/2016 season. In fall of 2016, they will need to
         // be updated. Feel free to use the codes
         final String BUNDESLIGA1 = "394";
@@ -179,7 +169,6 @@ public class MyFetchService extends IntentService {
 
         try {
             JSONArray matches = new JSONObject(JSONData).getJSONArray(FIXTURES);
-            Log.v(LOG_TAG, "processJSONData - isReal/matches.length(): " + isReal + "/" + matches.length());
 
             //ContentValues to be inserted
             Vector<ContentValues> values = new Vector<ContentValues>(matches.length());
@@ -189,9 +178,6 @@ public class MyFetchService extends IntentService {
                 league = matchData.getJSONObject(LINKS).getJSONObject(SOCCER_SEASON).
                         getString("href");
                 league = league.replace(SEASON_LINK, "");
-                if (i == 0) {
-                    Log.v(LOG_TAG, "processJSONData - league: " + league);
-                }
                 //This if statement controls which leagues we're interested in the data from.
                 //add leagues here in order to have them be added to the DB.
                 // If you are finding no data in the app, check that this contains all the leagues.
@@ -241,9 +227,7 @@ public class MyFetchService extends IntentService {
                     homeGoals = matchData.getJSONObject(RESULT).getString(HOME_GOALS);
                     awayGoals = matchData.getJSONObject(RESULT).getString(AWAY_GOALS);
                     matchDay = matchData.getString(MATCH_DAY);
-//                    if (i == 0) {
-                    Log.v(LOG_TAG, "processJSONData - home/away/date/time/matchDay: " + home + "/" + away + "/" + date + "/" + time + "/" + matchDay);
-//                    }
+
                     ContentValues matchValues = new ContentValues();
                     matchValues.put(DatabaseContract.scores_table.MATCH_ID, matchId);
                     matchValues.put(DatabaseContract.scores_table.DATE_COL, date);
@@ -254,15 +238,6 @@ public class MyFetchService extends IntentService {
                     matchValues.put(DatabaseContract.scores_table.AWAY_GOALS_COL, awayGoals);
                     matchValues.put(DatabaseContract.scores_table.LEAGUE_COL, league);
                     matchValues.put(DatabaseContract.scores_table.MATCH_DAY, matchDay);
-                    //log spam
-
-                    //Log.v(LOG_TAG,matchId);
-                    //Log.v(LOG_TAG,date);
-                    //Log.v(LOG_TAG,time);
-                    //Log.v(LOG_TAG,home);
-                    //Log.v(LOG_TAG,away);
-                    //Log.v(LOG_TAG,homeGoals);
-                    //Log.v(LOG_TAG,awayGoals);
 
                     values.add(matchValues);
                 }
@@ -271,8 +246,6 @@ public class MyFetchService extends IntentService {
             values.toArray(insertData);
             mContext.getContentResolver().bulkInsert(
                     DatabaseContract.BASE_CONTENT_URI, insertData);
-
-            //Log.v(LOG_TAG,"Succesfully Inserted : " + String.valueOf(inserted_data));
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage());
         }

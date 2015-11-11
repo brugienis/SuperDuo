@@ -34,26 +34,23 @@ public class OneScoreWidgetService  extends IntentService {
     private static final int AWAY_IDX = 2;
     private static final int AWAY_GOALS_IDX = 3;
     private static final int TIME_IDX = 4;
+    private static final String DESC = " DESC";
 
     private final static String LOG_TAG = OneScoreWidgetService.class.getSimpleName();
 
     public OneScoreWidgetService() {
-        super("OneScoreWidgetService");
-        Log.v(LOG_TAG, "constructor end");
+        super(LOG_TAG);
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        Log.v(LOG_TAG, "onHandleIntent start - action: " + intent.getAction());
-
         String currDate = MainActivity.getDefaultPageDayInMillis();
 
         // get the most recent results for default day with scores
         Cursor cursor = getContentResolver().query(DatabaseContract.scores_table.buildScoreWithDate(),
                 SCORE_COLUMNS, null, new String[]
-                        {currDate}, DatabaseContract.scores_table.TIME_COL + " DESC");
+                        {currDate}, DatabaseContract.scores_table.TIME_COL + DESC);
 
-        // FIXME: 9/11/2015 move to strings and show 'retrieving' at the start and 'not found' if not found
         String homeName = getResources().getString(R.string.retrieving_scores);
         String awayName  = getResources().getString(R.string.retrieving_scores);
         int homeScore = -1;
@@ -62,7 +59,6 @@ public class OneScoreWidgetService  extends IntentService {
 
         String scores;
         if (cursor == null || cursor.getCount() == 0) {
-            Log.e(LOG_TAG, "onHandleIntent - cursor is NULL");
             homeName = awayName = getResources().getString(R.string.empty_scores_list);
         } else {
             cursor.moveToFirst();
@@ -98,7 +94,6 @@ public class OneScoreWidgetService  extends IntentService {
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, launchIntent, 0);
 //            views.setOnClickPendingIntent(R.id.oneScoreWidget, pendingIntent);
             views.setOnClickPendingIntent(R.id.widget_one_score_list_item, pendingIntent);
-            Log.e(LOG_TAG, "onHandleIntent - onClick set");
 
             views.setTextViewText(R.id.home_name, homeName);
             views.setTextViewText(R.id.time, timeStr);
@@ -114,8 +109,6 @@ public class OneScoreWidgetService  extends IntentService {
 
             // Tell the AppWidgetManager to perform an update on the current app widget
             appWidgetManager.updateAppWidget(appWidgetId, views);
-            Log.v(LOG_TAG, "onHandleIntent called - updateAppWidget called - appWidgetId: " + appWidgetId);
         }
-        Log.v(LOG_TAG, "onHandleIntent end - action: " + intent.getAction());
     }
 }
