@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Build;
 import android.support.v4.widget.CursorAdapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,24 +47,16 @@ public class ScoresAdapter extends CursorAdapter {
         return mItem;
     }
 
-    String homeName;
-    int homeScore;
-    String awayName;
-    int awayScore;
-    String timeStr;
-    String scores;
-    int matchDay;
-    int league;
-    String matchDayKind;
     @Override
     public void bindView(View view, final Context context, Cursor cursor) {
         final ViewHolder mHolder = (ViewHolder) view.getTag();
-        homeName = cursor.getString(COL_HOME);
-        awayName = cursor.getString(COL_AWAY);
-        timeStr = cursor.getString(COL_MATCHTIME);
-        homeScore = cursor.getInt(COL_HOME_GOALS);
-        awayScore = cursor.getInt(COL_AWAY_GOALS);
-        scores = Utilies.getScores(homeScore, awayScore);
+
+        String homeName = cursor.getString(COL_HOME);
+        String awayName = cursor.getString(COL_AWAY);
+        String timeStr = cursor.getString(COL_MATCHTIME);
+        int homeScore = cursor.getInt(COL_HOME_GOALS);
+        int awayScore = cursor.getInt(COL_AWAY_GOALS);
+        String scores = Utilies.getScores(homeScore, awayScore);
 
         mHolder.homeName.setText(homeName);
         mHolder.awayName.setText(awayName);
@@ -85,10 +76,10 @@ public class ScoresAdapter extends CursorAdapter {
             mHolder.score.setContentDescription(context.getString(R.string.scores_cont_desc, scores));
         }
 
-        Log.v(LOG_TAG, "; ID: " + cursor.getString(0) + "; mDetailMatchId: " + mDetailMatchId + "; matchId: " + cursor.getDouble(COL_ID) + "; real date: " + cursor.getString(1) + "; date(time): " + cursor.getString(COL_MATCHTIME) +
-                "; home: " + cursor.getString(COL_HOME) + "; score: " + cursor.getInt(COL_HOME_GOALS) + "; away: " + cursor.getString(COL_AWAY) +
-                "; score: " + cursor.getInt(COL_AWAY_GOALS)//"; time: " + time
-        );
+//        Log.v(LOG_TAG, "; ID: " + cursor.getString(0) + "; mDetailMatchId: " + mDetailMatchId + "; matchId: " + cursor.getDouble(COL_ID) + "; real date: " + cursor.getString(1) + "; date(time): " + cursor.getString(COL_MATCHTIME) +
+//                "; home: " + cursor.getString(COL_HOME) + "; score: " + cursor.getInt(COL_HOME_GOALS) + "; away: " + cursor.getString(COL_AWAY) +
+//                "; score: " + cursor.getInt(COL_AWAY_GOALS)//"; time: " + time
+//        );
 
         //Log.v(FetchScoreTask.LOG_TAG,mHolder.homeName.getText() + " Vs. " + mHolder.awayName.getText() +" id " + String.valueOf(mHolder.matchId));
         //Log.v(FetchScoreTask.LOG_TAG,String.valueOf(mDetailMatchId));
@@ -99,9 +90,9 @@ public class ScoresAdapter extends CursorAdapter {
 
         if (mHolder.matchId == mDetailMatchId) {
             //Log.v(FetchScoreTask.LOG_TAG,"will insert extraView");
-            matchDay = cursor.getInt(COL_MATCHDAY);
-            league = cursor.getInt(COL_LEAGUE);
-            matchDayKind = Utilies.getMatchDay(matchDay, league);
+            int matchDay = cursor.getInt(COL_MATCHDAY);
+            int league = cursor.getInt(COL_LEAGUE);
+            String matchDayKind = Utilies.getMatchDay(matchDay, league);
 
             container.addView(v, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT
                     , ViewGroup.LayoutParams.MATCH_PARENT));

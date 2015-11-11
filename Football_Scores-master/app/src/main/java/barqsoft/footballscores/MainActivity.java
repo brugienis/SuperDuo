@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.text.SimpleDateFormat;
+
 public class MainActivity extends ActionBarActivity {
 
     public static int selectedMatchId;
@@ -17,11 +19,15 @@ public class MainActivity extends ActionBarActivity {
     public static final String WIDGET_SELECTED_ROW_IDX = "widget_selected_row_idx";
     private int widgetSelectedMatchId;
     private int widgetSelectedRowIdx = -1;
-    // FIXME: 9/11/2015 unclutter below fields. Make fields private and create getters
+    private static final long TWENTY_FOUR_HOURS_IN_MILLIS = 86400000L;
+    private static SimpleDateFormat dayFormat = new SimpleDateFormat("yyyy-MM-dd");
+    // FIXME: 6/11/2015 - below change back to 5
     private static final int NUM_PAGES = 7;
-
     private static final int TODAYS_PAGE = NUM_PAGES / 2;    /* number of pages or tabs */
-    public static int currentFragment = TODAYS_PAGE;
+
+    private static final int DEFAULT_DAY_ADJUSTMENT = -2;
+//    public static int currentFragment = TODAYS_PAGE;
+    public static int currentFragment = TODAYS_PAGE + DEFAULT_DAY_ADJUSTMENT;
 
     private final static String LOG_TAG = MainActivity.class.getSimpleName();
 
@@ -108,5 +114,20 @@ public class MainActivity extends ActionBarActivity {
 
     public static int getTodaysPage() {
         return TODAYS_PAGE;
+    }
+
+    public static int getDefaultDayAdjustment() {
+        return DEFAULT_DAY_ADJUSTMENT;
+    }
+
+    /*
+        Return default page's date in milliseconds.
+
+        DEFAULT_DAY_ADJUSTMENT = 0  today's date
+        DEFAULT_DAY_ADJUSTMENT = -1  yesterday's date
+        DEFAULT_DAY_ADJUSTMENT = 0  tomorrow's date
+     */
+    public static String getDefaultPageDayInMillis() {
+        return dayFormat.format(System.currentTimeMillis() + DEFAULT_DAY_ADJUSTMENT * TWENTY_FOUR_HOURS_IN_MILLIS);
     }
 }

@@ -10,8 +10,6 @@ import android.os.Build;
 import android.util.Log;
 import android.widget.RemoteViews;
 
-import java.text.SimpleDateFormat;
-
 import barqsoft.footballscores.DatabaseContract;
 import barqsoft.footballscores.MainActivity;
 import barqsoft.footballscores.R;
@@ -48,10 +46,9 @@ public class OneScoreWidgetService  extends IntentService {
     protected void onHandleIntent(Intent intent) {
         Log.v(LOG_TAG, "onHandleIntent start - action: " + intent.getAction());
 
-        SimpleDateFormat dayFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String currDate = dayFormat.format(System.currentTimeMillis());
-//        boolean isRightToLeft = getResources().getBoolean(R.bool.is_right_to_left);
-        // get the most recent results for today with scores
+        String currDate = MainActivity.getDefaultPageDayInMillis();
+
+        // get the most recent results for default day with scores
         Cursor cursor = getContentResolver().query(DatabaseContract.scores_table.buildScoreWithDate(),
                 SCORE_COLUMNS, null, new String[]
                         {currDate}, DatabaseContract.scores_table.TIME_COL + " DESC");
@@ -99,7 +96,8 @@ public class OneScoreWidgetService  extends IntentService {
             // Create an Intent to launch MainActivity
             Intent launchIntent = new Intent(this, MainActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, launchIntent, 0);
-            views.setOnClickPendingIntent(R.id.oneScoreWidget, pendingIntent);
+//            views.setOnClickPendingIntent(R.id.oneScoreWidget, pendingIntent);
+            views.setOnClickPendingIntent(R.id.widget_one_score_list_item, pendingIntent);
             Log.e(LOG_TAG, "onHandleIntent - onClick set");
 
             views.setTextViewText(R.id.home_name, homeName);

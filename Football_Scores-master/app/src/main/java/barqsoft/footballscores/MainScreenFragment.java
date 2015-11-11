@@ -15,8 +15,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import java.text.SimpleDateFormat;
-
 import barqsoft.footballscores.service.MyFetchService;
 
 /**
@@ -31,13 +29,11 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     public static final String ACTION_TODAYS_DATA_UPDATED =
             "barqsoft.footballscores.ACTION_TODAYS_DATA_UPDATED";
     private ListView scoreList;
-//    private int lastSelectedItem = -1;
 
     private final static String LOG_TAG = MainScreenFragment.class.getSimpleName();
 
     public MainScreenFragment() {
-        SimpleDateFormat dayFormat = new SimpleDateFormat("yyyy-MM-dd");
-        currDate = dayFormat.format(System.currentTimeMillis());
+        currDate = MainActivity.getDefaultPageDayInMillis();
     }
 
     private void updateScores() {
@@ -137,9 +133,5 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
         Intent dataUpdatedIntent = new Intent(ACTION_TODAYS_DATA_UPDATED)
                 .setPackage(context.getPackageName());
         context.sendBroadcast(dataUpdatedIntent);
-    }
-
-    public void scrollToSelectedPosition() {
-        // TODO: 9/11/2015 add code - onCreateView() - make listView a field. Here do getListView().setSelection(21); or getListView().smoothScrollToPosition(21); 
     }
 }

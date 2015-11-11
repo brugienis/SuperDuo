@@ -21,7 +21,6 @@ import java.util.Date;
  */
 public class PagerFragment extends Fragment {
 
-    // FIXME: 6/11/2015 - below change back to 5
     private static final long TWENTY_FOUR_HOURS_IN_MILLIS = 86400000L;
     /* ViewPager - see : http://developer.android.com/training/implementing-navigation/lateral.html */
     public ViewPager mPagerHandler;
@@ -47,7 +46,7 @@ public class PagerFragment extends Fragment {
             mViewFragments[i].setFragmentDate(mFormat.format(fragmentDate));
             Log.v(LOG_TAG, "onCreateView - date: " + mFormat.format(fragmentDate));
             if ((i - MainActivity.getTodaysPage()) == 0) {
-                Log.v(LOG_TAG, "onCreateView - today's date: " + mFormat.format(fragmentDate));
+                Log.v(LOG_TAG, "onCreateView - getTodaysPage/today's date: " + MainActivity.getTodaysPage() + "/" + mFormat.format(fragmentDate));
             }
         }
 
