@@ -81,7 +81,9 @@ public class OneScoreWidgetService  extends IntentService {
             }
         }
 
-        cursor.close();
+        if (cursor != null) {
+            cursor.close();
+        }
 
         scores = Utilies.getScores(homeScore, awayScore);
 
@@ -92,7 +94,7 @@ public class OneScoreWidgetService  extends IntentService {
 
         for (int appWidgetId : appWidgetIds) {
 
-            RemoteViews views = new RemoteViews(getPackageName(), R.layout.one_score_widget);
+            RemoteViews views = new RemoteViews(getPackageName(), R.layout.widget_one_score);
 
             // Create an Intent to launch MainActivity
             Intent launchIntent = new Intent(this, MainActivity.class);

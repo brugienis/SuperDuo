@@ -48,7 +48,7 @@
                 <action android:name="barqsoft.footballscores.ACTION_TODAYS_DATA_UPDATED" />
             </intent-filter>
             <meta-data android:name="android.appwidget.provider"
-                       android:resource="@xml/one_score_widget_info" />
+                       android:resource="@xml/widget_info_one_score" />
         </receiver>
 
         <receiver
