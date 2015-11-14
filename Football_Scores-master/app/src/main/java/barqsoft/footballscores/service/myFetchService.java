@@ -29,19 +29,22 @@ import barqsoft.footballscores.R;
  * Created by yehya khaled on 3/2/2015.
  */
 public class MyFetchService extends IntentService {
+    
+    private SimpleDateFormat matchDate = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss");
+    private SimpleDateFormat new_date = new SimpleDateFormat("yyyy-MM-dd:HH:mm");
+    private SimpleDateFormat mformat = new SimpleDateFormat("yyyy-MM-dd");
+    private static final long TWENTY_FOUR_HOURS_IN_MILLIS = 86400000L;
+
+    private final static String LOG_TAG = MyFetchService.class.getSimpleName();
 
     public MyFetchService() {
         super("myFetchService");
     }
 
-    private final static String LOG_TAG = MyFetchService.class.getSimpleName();
-
     @Override
     protected void onHandleIntent(Intent intent) {
-        getData("n1");
-        getData("p1");
-
-        return;
+        getData("n10");
+        getData("p10");
     }
 
     private void getData(String timeFrame) {
@@ -61,6 +64,7 @@ public class MyFetchService extends IntentService {
         HttpURLConnection connection = null;
         BufferedReader reader = null;
         String JSONData = null;
+        Log.v(LOG_TAG, "getData - fetchBuild: " + fetchBuild);
         //Opening Connection
         try {
             URL fetch = new URL(fetchBuild.toString());
@@ -71,7 +75,7 @@ public class MyFetchService extends IntentService {
 
             // Read the input stream into a String
             InputStream inputStream = connection.getInputStream();
-            StringBuffer buffer = new StringBuffer();
+            StringBuilder buffer = new StringBuilder();
             if (inputStream == null) {
                 // Nothing to do.
                 return;
@@ -84,13 +88,14 @@ public class MyFetchService extends IntentService {
                 // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
                 // But it does make debugging a *lot* easier if you print out the completed
                 // buffer for debugging.
-                buffer.append(line + "\n");
+                buffer.append(line).append("\n");
             }
             if (buffer.length() == 0) {
                 // Stream was empty.  No point in parsing.
                 return;
             }
             JSONData = buffer.toString();
+            // FIXME: 11/11/2015 think how to handle exceptions here
         } catch (Exception e) {
             Log.e(LOG_TAG, "Exception here" + e);
         } finally {
@@ -131,14 +136,14 @@ public class MyFetchService extends IntentService {
         final String BUNDESLIGA1 = "394";
         final String BUNDESLIGA2 = "395";
         final String LIGUE1 = "396";
-        final String LIGUE2 = "397";
+//        final String LIGUE2 = "397";
         final String PREMIER_LEAGUE = "398";
         final String PRIMERA_DIVISION = "399";
         final String SEGUNDA_DIVISION = "400";
         final String SERIE_A = "401";
-        final String PRIMERA_LIGA = "402";
-        final String Bundesliga3 = "403";
-        final String EREDIVISIE = "404";
+//        final String PRIMERA_LIGA = "402";
+//        final String Bundesliga3 = "403";
+//        final String EREDIVISIE = "404";
 
 
         final String SEASON_LINK = "http://api.football-data.org/alpha/soccerseasons/";
@@ -171,7 +176,7 @@ public class MyFetchService extends IntentService {
             JSONArray matches = new JSONObject(JSONData).getJSONArray(FIXTURES);
 
             //ContentValues to be inserted
-            Vector<ContentValues> values = new Vector<ContentValues>(matches.length());
+            Vector<ContentValues> values = new Vector<>(matches.length());
             for (int i = 0; i < matches.length(); i++) {
 
                 JSONObject matchData = matches.getJSONObject(i);
@@ -201,23 +206,20 @@ public class MyFetchService extends IntentService {
                     date = matchData.getString(MATCH_DATE);
                     time = date.substring(date.indexOf("T") + 1, date.indexOf("Z"));
                     date = date.substring(0, date.indexOf("T"));
-                    SimpleDateFormat match_date = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss");
-                    match_date.setTimeZone(TimeZone.getTimeZone("UTC"));
+                    matchDate.setTimeZone(TimeZone.getTimeZone("UTC"));
                     try {
-                        Date parseddate = match_date.parse(date + time);
-                        SimpleDateFormat new_date = new SimpleDateFormat("yyyy-MM-dd:HH:mm");
+                        Date parsedDate = matchDate.parse(date + time);
                         new_date.setTimeZone(TimeZone.getDefault());
-                        date = new_date.format(parseddate);
+                        date = new_date.format(parsedDate);
                         time = date.substring(date.indexOf(":") + 1);
                         date = date.substring(0, date.indexOf(":"));
 
                         if (!isReal) {
                             //This if statement changes the dummy data's date to match our current date range.
-                            Date fragmentdate = new Date(System.currentTimeMillis() + ((i - 2) * 86400000));
-                            SimpleDateFormat mformat = new SimpleDateFormat("yyyy-MM-dd");
+                            Date fragmentdate = new Date(System.currentTimeMillis() + ((i - 2) * TWENTY_FOUR_HOURS_IN_MILLIS));
                             date = mformat.format(fragmentdate);
-                            Log.v(LOG_TAG, "processJSONData - date: " + date);
                         }
+                        // FIXME: 11/11/2015 think what to do
                     } catch (Exception e) {
                         Log.d(LOG_TAG, "error here!");
                         Log.e(LOG_TAG, e.getMessage());

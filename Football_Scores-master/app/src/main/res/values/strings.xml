@@ -55,5 +55,6 @@
     <string name="home_crest_cont_desc">Home crest</string>
     <string name="away_crest_cont_desc">Away crest</string>
     <string name="share_button_cont_desc">Share button</string>
+    <string name="scores_collection_header_cont_desc">Football Scores Widget<xliff:g id="results_found">%1$s</xliff:g></string>
 
 </resources>

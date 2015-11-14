@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Binder;
 import android.os.Build;
+import android.util.Log;
 import android.widget.AdapterView;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
@@ -38,6 +39,8 @@ public class ScoresCollectionWidgetRemoteViewsService extends RemoteViewsService
     private static final int TIME_IDX = 5;
     private static final int MATCH_ID_IDX = 6;
     private static final String ASC = " ASC";
+    // FIXME: 12/11/2015 remove after tests
+    private static int cnt;
 
     private final static String LOG_TAG = ScoresCollectionWidgetRemoteViewsService.class.getSimpleName();
 
@@ -65,6 +68,7 @@ public class ScoresCollectionWidgetRemoteViewsService extends RemoteViewsService
                 mCursor = getContentResolver().query(DatabaseContract.scores_table.buildScoreWithDate(),
                         SCORE_COLUMNS, null, new String[]
                                 {currDate}, DatabaseContract.scores_table.TIME_COL + ASC);
+                Log.v(LOG_TAG, "onDataSetChanged - count: " + mCursor.getCount());
                 Binder.restoreCallingIdentity(identityToken);
             }
 
@@ -99,7 +103,11 @@ public class ScoresCollectionWidgetRemoteViewsService extends RemoteViewsService
                 RemoteViews views = new RemoteViews(getPackageName(),
                         R.layout.widget_scores_collection_list_item);
 
-                views.setTextViewText(R.id.home_name, homeName);
+                if (position == 0) {
+                    views.setTextViewText(R.id.home_name, homeName + cnt++);
+                } else {
+                    views.setTextViewText(R.id.home_name, homeName);
+                }
                 views.setTextViewText(R.id.time, timeStr);
                 views.setTextViewText(R.id.scores, scores);
                 views.setTextViewText(R.id.away_name, awayName);

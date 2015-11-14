@@ -12,10 +12,11 @@
         android:layout_height="@dimen/abc_action_bar_default_height_material"
         android:background="@color/orange13" >
         <ImageView
+            android:id="@+id/widget_scores_collection_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/app_name"
             android:layout_gravity="center"
+            android:contentDescription="@string/app_name"
             android:src="@drawable/ic_launcher"/>
     </FrameLayout>
     <FrameLayout
@@ -41,3 +42,7 @@
     </FrameLayout>
 
 </LinearLayout>
+
+<!--
+
+-->

@@ -14,5 +14,5 @@
     <dimen name="widget_one_score_min_resize_height">@dimen/widget_one_score_default_height</dimen>
 
     <dimen name="widget_scores_collection_default_width">286dp</dimen>
-    <dimen name="widget_scores_collection_default_height">180dp</dimen>
+    <dimen name="widget_scores_collection_default_height">110dp</dimen>
 </resources>

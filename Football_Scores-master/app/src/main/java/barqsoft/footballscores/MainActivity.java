@@ -21,10 +21,10 @@ public class MainActivity extends ActionBarActivity {
     private static final long TWENTY_FOUR_HOURS_IN_MILLIS = 86400000L;
     private static SimpleDateFormat dayFormat = new SimpleDateFormat("yyyy-MM-dd");
     // FIXME: 6/11/2015 - below change back to 5
-    private static final int NUM_PAGES = 7;
+    private static final int NUM_PAGES = 9;
     private static final int TODAYS_PAGE = NUM_PAGES / 2;    /* number of pages or tabs */
 
-    private static final int DEFAULT_DAY_ADJUSTMENT = -2;
+    private static final int DEFAULT_DAY_ADJUSTMENT = 2;
 //    public static int currentFragment = TODAYS_PAGE;
     public static int currentFragment = TODAYS_PAGE + DEFAULT_DAY_ADJUSTMENT;
 

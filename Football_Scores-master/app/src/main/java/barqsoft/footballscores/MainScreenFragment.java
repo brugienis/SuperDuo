@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,8 +37,8 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     }
 
     private void updateScores() {
-        Intent service_start = new Intent(getActivity(), MyFetchService.class);
-        getActivity().startService(service_start);
+        Intent intent = new Intent(getActivity(), MyFetchService.class);
+        getActivity().startService(intent);
     }
 
     public void setFragmentDate(String date) {
@@ -73,6 +74,7 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     */
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+        Log.v(LOG_TAG, "onCreateLoader - date: " + mFragmentDate[0]);
         return new CursorLoader(getActivity(), DatabaseContract.scores_table
                 .buildScoreWithDate(),
                 null, null, mFragmentDate, DatabaseContract.scores_table.TIME_COL + ASC);
@@ -81,6 +83,7 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         mAdapter.swapCursor(cursor);
+        Log.v(LOG_TAG, "onLoadFinished - date/count: " + mFragmentDate[0] + "/" + cursor.getCount());
         if (cursor.getCount() > 0 && currDate.equals(mFragmentDate[0])) {
             updateWidgets();
             int selectedRow = ((MainActivity) getActivity()).getWidgetSelectedRowIdx();

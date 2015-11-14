@@ -35,6 +35,8 @@ public class OneScoreWidgetService  extends IntentService {
     private static final int AWAY_GOALS_IDX = 3;
     private static final int TIME_IDX = 4;
     private static final String DESC = " DESC";
+    // FIXME: 12/11/2015 remove after tests
+    private static int cnt;
 
     private final static String LOG_TAG = OneScoreWidgetService.class.getSimpleName();
 
@@ -50,6 +52,7 @@ public class OneScoreWidgetService  extends IntentService {
         Cursor cursor = getContentResolver().query(DatabaseContract.scores_table.buildScoreWithDate(),
                 SCORE_COLUMNS, null, new String[]
                         {currDate}, DatabaseContract.scores_table.TIME_COL + DESC);
+        Log.v(LOG_TAG, "onHandleIntent - count: " + cursor.getCount());
 
         String homeName = getResources().getString(R.string.retrieving_scores);
         String awayName  = getResources().getString(R.string.retrieving_scores);
@@ -61,8 +64,12 @@ public class OneScoreWidgetService  extends IntentService {
         if (cursor == null || cursor.getCount() == 0) {
             homeName = awayName = getResources().getString(R.string.empty_scores_list);
         } else {
-            cursor.moveToFirst();
-            while (!cursor.isBeforeFirst()) {
+//            cursor.moveToFirst();
+            while (true) {
+                cursor.moveToNext();
+                if (cursor.isAfterLast()) {
+                    break;
+                }
                 homeName = cursor.getString(HOME_IDX);
                 homeScore = cursor.getInt(HOME_GOALS_IDX);
                 awayName = cursor.getString(AWAY_IDX);
@@ -71,7 +78,8 @@ public class OneScoreWidgetService  extends IntentService {
                 if (homeScore > -1) {
                     break;
                 }
-            }
+                Log.v(LOG_TAG, "onHandleIntent - processed: " + homeName + " - " + timeStr + " - " + awayName);
+            };
         }
 
         if (cursor != null) {
@@ -84,6 +92,7 @@ public class OneScoreWidgetService  extends IntentService {
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this,
                 OneScoreWidgetProvider.class));
+        Log.v(LOG_TAG, "onHandleIntent - appWidgetIds cnt: " + appWidgetIds.length);
 
         for (int appWidgetId : appWidgetIds) {
 
@@ -95,7 +104,7 @@ public class OneScoreWidgetService  extends IntentService {
 //            views.setOnClickPendingIntent(R.id.oneScoreWidget, pendingIntent);
             views.setOnClickPendingIntent(R.id.widget_one_score_list_item, pendingIntent);
 
-            views.setTextViewText(R.id.home_name, homeName);
+            views.setTextViewText(R.id.home_name, homeName + cnt++);
             views.setTextViewText(R.id.time, timeStr);
             views.setTextViewText(R.id.scores, scores);
             views.setTextViewText(R.id.away_name, awayName);
@@ -109,6 +118,7 @@ public class OneScoreWidgetService  extends IntentService {
 
             // Tell the AppWidgetManager to perform an update on the current app widget
             appWidgetManager.updateAppWidget(appWidgetId, views);
+            Log.v(LOG_TAG, "onHandleIntent - appWidgetId: " + appWidgetId + " updated");
         }
     }
 }
