@@ -77,7 +77,8 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
         Log.v(LOG_TAG, "onCreateLoader - date: " + mFragmentDate[0]);
         return new CursorLoader(getActivity(), DatabaseContract.scores_table
                 .buildScoreWithDate(),
-                null, null, mFragmentDate, DatabaseContract.scores_table.TIME_COL + ASC);
+                null, null, mFragmentDate, DatabaseContract.scores_table.TIME_COL + ASC +
+                " ," + DatabaseContract.scores_table.HOME_COL + ASC);
     }
 
     @Override

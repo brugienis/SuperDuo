@@ -24,7 +24,7 @@ public class MainActivity extends ActionBarActivity {
     private static final int NUM_PAGES = 9;
     private static final int TODAYS_PAGE = NUM_PAGES / 2;    /* number of pages or tabs */
 
-    private static final int DEFAULT_DAY_ADJUSTMENT = 2;
+    private static final int DEFAULT_DAY_ADJUSTMENT = 0;
 //    public static int currentFragment = TODAYS_PAGE;
     public static int currentFragment = TODAYS_PAGE + DEFAULT_DAY_ADJUSTMENT;
 

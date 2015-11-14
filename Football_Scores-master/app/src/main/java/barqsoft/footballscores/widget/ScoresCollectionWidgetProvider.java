@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.widget.RemoteViews;
 
 import barqsoft.footballscores.MainActivity;
+import barqsoft.footballscores.MainScreenFragment;
 import barqsoft.footballscores.R;
 
 /**
@@ -61,16 +63,14 @@ public class ScoresCollectionWidgetProvider extends AppWidgetProvider {
     public void onReceive(@NonNull Context context, @NonNull Intent intent) {
         super.onReceive(context, intent);
         Log.v(LOG_TAG, "onReceive - start - intent: " + intent.getAction());
-//        if (MainScreenFragment.ACTION_TODAYS_DATA_UPDATED.equals(intent.getAction())
-//                || "android.appwidget.action.APPWIDGET_UPDATE".equals(intent.getAction())
-//                ) {
-//            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-//            int[] appWidgetIds = appWidgetManager.getAppWidgetIds(
-//                    new ComponentName(context, getClass()));
-//            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_list);
-//            Log.v(LOG_TAG, "onReceive - end - notifyAppWidgetViewDataChanged called: " + intent.getAction());
-//        }
-//        Log.v(LOG_TAG, "onReceive - end");
+        if (MainScreenFragment.ACTION_TODAYS_DATA_UPDATED.equals(intent.getAction())) {
+            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+            int[] appWidgetIds = appWidgetManager.getAppWidgetIds(
+                    new ComponentName(context, getClass()));
+            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_list);
+            Log.v(LOG_TAG, "onReceive - end - notifyAppWidgetViewDataChanged called: " + intent.getAction());
+        }
+        Log.v(LOG_TAG, "onReceive - end");
     }
 
     /**
@@ -80,7 +80,7 @@ public class ScoresCollectionWidgetProvider extends AppWidgetProvider {
      */
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     private void setRemoteAdapter(int appWidgetId, Context context, @NonNull final RemoteViews views) {
-        views.setRemoteAdapter(appWidgetId, R.id.widget_list,
+        views.setRemoteAdapter(R.id.widget_list,
                 new Intent(context, ScoresCollectionWidgetRemoteViewsService.class));
     }
 

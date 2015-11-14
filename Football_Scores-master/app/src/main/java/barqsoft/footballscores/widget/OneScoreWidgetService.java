@@ -50,8 +50,9 @@ public class OneScoreWidgetService  extends IntentService {
 
         // get the most recent results for default day with scores
         Cursor cursor = getContentResolver().query(DatabaseContract.scores_table.buildScoreWithDate(),
-                SCORE_COLUMNS, null, new String[]
-                        {currDate}, DatabaseContract.scores_table.TIME_COL + DESC);
+                SCORE_COLUMNS, null, new String[]{currDate},
+                DatabaseContract.scores_table.TIME_COL + DESC +
+                " ," + DatabaseContract.scores_table.HOME_COL + DESC);
         Log.v(LOG_TAG, "onHandleIntent - count: " + cursor.getCount());
 
         String homeName = getResources().getString(R.string.retrieving_scores);

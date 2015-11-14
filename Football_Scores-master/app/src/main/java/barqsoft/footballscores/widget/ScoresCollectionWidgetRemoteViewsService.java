@@ -54,21 +54,26 @@ public class ScoresCollectionWidgetRemoteViewsService extends RemoteViewsService
                 // Nothing to do
             }
 
+            /*
+                This method is called by the app hosting the widget (e.g., the launcher)
+                However, our ContentProvider is not exported so it doesn't have access to the
+                data. Therefore we need to clear (and finally restore) the calling identity so
+                that calls use our process and permission.
+
+                The data from DB is sorted by time and hone columns in ascending order.
+             */
             @Override
             public void onDataSetChanged() {
                 if (mCursor != null) {
                     mCursor.close();
                 }
-                // This method is called by the app hosting the widget (e.g., the launcher)
-                // However, our ContentProvider is not exported so it doesn't have access to the
-                // data. Therefore we need to clear (and finally restore) the calling identity so
-                // that calls use our process and permission
                 final long identityToken = Binder.clearCallingIdentity();
                 String currDate = MainActivity.getDefaultPageDayInMillis();
                 mCursor = getContentResolver().query(DatabaseContract.scores_table.buildScoreWithDate(),
                         SCORE_COLUMNS, null, new String[]
-                                {currDate}, DatabaseContract.scores_table.TIME_COL + ASC);
-                Log.v(LOG_TAG, "onDataSetChanged - count: " + mCursor.getCount());
+                                {currDate}, DatabaseContract.scores_table.TIME_COL + ASC +
+                                " ," + DatabaseContract.scores_table.HOME_COL + ASC);
+//                Log.v(LOG_TAG, "onDataSetChanged - count: " + mCursor.getCount());
                 Binder.restoreCallingIdentity(identityToken);
             }
 
@@ -99,6 +104,7 @@ public class ScoresCollectionWidgetRemoteViewsService extends RemoteViewsService
                 String timeStr = mCursor.getString(TIME_IDX);
 
                 String scores = Utilies.getScores(homeScore, awayScore);
+                Log.v(LOG_TAG, "getViewAt - processed: " + position + ": " + homeName + " - " + timeStr + " - " + awayName);
 
                 RemoteViews views = new RemoteViews(getPackageName(),
                         R.layout.widget_scores_collection_list_item);
