@@ -1,19 +1,26 @@
 package barqsoft.footballscores;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.text.format.Time;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import barqsoft.footballscores.service.MyFetchService;
 
 /**
  * Created by yehya khaled on 2/27/2015.
@@ -28,11 +35,15 @@ public class PagerFragment extends Fragment {
     private SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE");
     private MainScreenFragment[] mViewFragments = new MainScreenFragment[MainActivity.getNumPages()];
     private Date fragmentDate;
+    private BroadcastReceiver messageReceiver;
+    public static final String MESSAGE_EVENT = "MESSAGE_EVENT";
 
     private final static String LOG_TAG = PagerFragment.class.getSimpleName();
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        updateScores();
 
         View rootView = inflater.inflate(R.layout.pager_fragment, container, false);
 
@@ -48,6 +59,38 @@ public class PagerFragment extends Fragment {
         mPagerHandler.setAdapter(mPagerAdapter);
         mPagerHandler.setCurrentItem(MainActivity.currentFragment);
         return rootView;
+    }
+
+    private void updateScores() {
+        Intent intent = new Intent(getActivity(), MyFetchService.class);
+        getActivity().startService(intent);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        messageReceiver = new MessageReceiver();
+        IntentFilter filter = new IntentFilter(MESSAGE_EVENT);
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(messageReceiver, filter);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(messageReceiver);
+    }
+
+    private class MessageReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            reloadData();
+        }
+    }
+
+    public void reloadData() {
+        Log.v(LOG_TAG, "reloadData");
+        int currentPage = mPagerHandler.getCurrentItem();
+        mViewFragments[currentPage].reloadData();
     }
 
     private class MyPageAdapter extends FragmentStatePagerAdapter {

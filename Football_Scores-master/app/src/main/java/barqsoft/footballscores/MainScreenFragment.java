@@ -15,8 +15,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import barqsoft.footballscores.service.MyFetchService;
-
 /**
  * A placeholder fragment containing a simple view.
  */
@@ -29,6 +27,7 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     public static final String ACTION_TODAYS_DATA_UPDATED =
             "barqsoft.footballscores.ACTION_TODAYS_DATA_UPDATED";
     private ListView scoreList;
+    private static final String ASC = " ASC";
 
     private final static String LOG_TAG = MainScreenFragment.class.getSimpleName();
 
@@ -36,10 +35,10 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
         currDate = MainActivity.getDefaultPageDayInMillis();
     }
 
-    private void updateScores() {
-        Intent intent = new Intent(getActivity(), MyFetchService.class);
-        getActivity().startService(intent);
-    }
+//    private void updateScores() {
+//        Intent intent = new Intent(getActivity(), MyFetchService.class);
+//        getActivity().startService(intent);
+//    }
 
     public void setFragmentDate(String date) {
         mFragmentDate[0] = date;
@@ -48,7 +47,7 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
-        updateScores();
+//        updateScores();
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         scoreList = (ListView) rootView.findViewById(R.id.scores_list);
         mAdapter = new ScoresAdapter(getActivity(), null, 0);
@@ -67,7 +66,6 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
         return rootView;
     }
 
-    private static final String ASC = " ASC";
     /*
         start loading data from the DB for the selected date and sort it on the 'time' column
         in ascending order.
@@ -110,5 +108,11 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
         Intent dataUpdatedIntent = new Intent(ACTION_TODAYS_DATA_UPDATED)
                 .setPackage(context.getPackageName());
         context.sendBroadcast(dataUpdatedIntent);
+    }
+
+    public void reloadData() {
+        Log.v(LOG_TAG, "reloadData - start: " + mFragmentDate[0]);
+        getLoaderManager().initLoader(SCORES_LOADER, null, this);
+        Log.v(LOG_TAG, "reloadData - end");
     }
 }
