@@ -32,17 +32,8 @@ public class PagerFragment extends Fragment {
     private SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE");
     private MainScreenFragment[] mViewFragments = new MainScreenFragment[MainActivity.getNumPages()];
     private Date fragmentDate;
-//    private BroadcastReceiver messageReceiver;
-//    public static final String MESSAGE_EVENT = "MESSAGE_EVENT";
 
     private final static String LOG_TAG = PagerFragment.class.getSimpleName();
-
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        // Retain this fragment across configuration changes.
-//        setRetainInstance(true);
-//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -54,18 +45,11 @@ public class PagerFragment extends Fragment {
 
         mPagerHandler = (ViewPager) rootView.findViewById(R.id.pager);
         mPagerAdapter = new MyPageAdapter(getChildFragmentManager());
-        MainScreenFragment mainScreenFragment;
 
-        synchronized (this) {
             for (int i = 0; i < MainActivity.getNumPages(); i++) {
                 fragmentDate = new Date(System.currentTimeMillis() + ((i - MainActivity.getTodaysPage()) * TWENTY_FOUR_HOURS_IN_MILLIS));
-                mainScreenFragment = new MainScreenFragment();
-//                mViewFragments[i] = new MainScreenFragment();
-                mViewFragments[i] = mainScreenFragment;
+                mViewFragments[i] = new MainScreenFragment();
                 mViewFragments[i].setFragmentDate(mFormat.format(fragmentDate));
-//                Log.v(LOG_TAG, "onCreateView - loop - mViewFragment: " + mViewFragments[i].hashCode());
-                Log.v(LOG_TAG, "onCreateView - loop - mViewFragment: " +mainScreenFragment.hashCode());
-            }
         }
 
         mPagerHandler.setAdapter(mPagerAdapter);
@@ -77,43 +61,6 @@ public class PagerFragment extends Fragment {
     private void updateScores() {
         Intent intent = new Intent(getActivity(), MyFetchService.class);
         getActivity().startService(intent);
-    }
-
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        messageReceiver = new MessageReceiver();
-//        IntentFilter filter = new IntentFilter(MESSAGE_EVENT);
-//        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(messageReceiver, filter);
-//    }
-//
-//    @Override
-//    public void onStop() {
-//        super.onStop();
-//        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(messageReceiver);
-//    }
-
-//    private class MessageReceiver extends BroadcastReceiver {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            reloadData();
-//        }
-//    }
-
-    public void reloadData() {
-        Log.v(LOG_TAG, "reloadData mViewFragments: " + mViewFragments.hashCode());
-        int cnt = 0;
-        int currentPage = mPagerHandler.getCurrentItem();
-        synchronized (this) {
-            for (MainScreenFragment mainScreenFragment : mViewFragments) {
-                Log.v(LOG_TAG, "reloadData - mViewFragment: " + cnt + "/" + mainScreenFragment.hashCode() + "/" + mainScreenFragment.getActivity());
-                cnt++;
-            }
-        }
-        Log.v(LOG_TAG, "reloadData - mViewFragment: " + currentPage + "/" + mViewFragments[currentPage].hashCode());
-//        Log.v(LOG_TAG, "reloadData - mPagerAdapter: " + currentPage + "/" + mPagerAdapter.getItem(currentPage).hashCode());
-        //mPagerAdapter
-        mViewFragments[currentPage].reloadData();
     }
 
     private class MyPageAdapter extends FragmentStatePagerAdapter {

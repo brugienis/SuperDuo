@@ -1,11 +1,7 @@
 package barqsoft.footballscores;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,9 +25,6 @@ public class MainActivity extends ActionBarActivity {
     private static final int NUM_PAGES = 13;
     private static final int TODAYS_PAGE = NUM_PAGES / 2;    /* number of pages or tabs */
     private static final int DEFAULT_DAY_ADJUSTMENT = -2;    static int currentFragment = TODAYS_PAGE + DEFAULT_DAY_ADJUSTMENT;
-
-    private BroadcastReceiver messageReceiver;
-    public static final String MESSAGE_EVENT = "MESSAGE_EVENT";
 
     private final static String LOG_TAG = MainActivity.class.getSimpleName();
 
@@ -75,27 +68,6 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        messageReceiver = new MessageReceiver();
-        IntentFilter filter = new IntentFilter(MESSAGE_EVENT);
-        LocalBroadcastManager.getInstance(getApplication()).registerReceiver(messageReceiver, filter);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        LocalBroadcastManager.getInstance(getApplication()).unregisterReceiver(messageReceiver);
-    }
-
-    private class MessageReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            mPagerFragment.reloadData();
-        }
     }
 
     @Override
