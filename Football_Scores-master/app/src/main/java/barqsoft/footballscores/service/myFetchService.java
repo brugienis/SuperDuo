@@ -24,7 +24,7 @@ import java.util.TimeZone;
 import java.util.Vector;
 
 import barqsoft.footballscores.DatabaseContract;
-import barqsoft.footballscores.PagerFragment;
+import barqsoft.footballscores.MainActivity;
 import barqsoft.footballscores.R;
 
 /**
@@ -47,7 +47,7 @@ public class MyFetchService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         getData("n10");
         getData("p10");
-        Intent messageIntent = new Intent(PagerFragment.MESSAGE_EVENT);
+        Intent messageIntent = new Intent(MainActivity.MESSAGE_EVENT);
 //        messageIntent.putExtra(MainActivity.MESSAGE_KEY, MainActivity.DELETE_EVENT);
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(messageIntent);
     }

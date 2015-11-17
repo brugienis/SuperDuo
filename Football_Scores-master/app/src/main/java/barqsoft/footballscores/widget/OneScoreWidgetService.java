@@ -53,7 +53,7 @@ public class OneScoreWidgetService  extends IntentService {
                 SCORE_COLUMNS, null, new String[]{currDate},
                 DatabaseContract.scores_table.TIME_COL + DESC +
                 " ," + DatabaseContract.scores_table.HOME_COL + DESC);
-        Log.v(LOG_TAG, "onHandleIntent - count: " + cursor.getCount());
+//        Log.v(LOG_TAG, "onHandleIntent - count: " + cursor.getCount());
 
         String homeName = getResources().getString(R.string.retrieving_scores);
         String awayName  = getResources().getString(R.string.retrieving_scores);
@@ -79,7 +79,7 @@ public class OneScoreWidgetService  extends IntentService {
                 if (homeScore > -1) {
                     break;
                 }
-                Log.v(LOG_TAG, "onHandleIntent - processed: " + homeName + " - " + timeStr + " - " + awayName);
+//                Log.v(LOG_TAG, "onHandleIntent - processed: " + homeName + " - " + timeStr + " - " + awayName);
             };
         }
 
@@ -93,7 +93,7 @@ public class OneScoreWidgetService  extends IntentService {
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this,
                 OneScoreWidgetProvider.class));
-        Log.v(LOG_TAG, "onHandleIntent - appWidgetIds cnt: " + appWidgetIds.length);
+//        Log.v(LOG_TAG, "onHandleIntent - appWidgetIds cnt: " + appWidgetIds.length);
 
         for (int appWidgetId : appWidgetIds) {
 
@@ -119,7 +119,7 @@ public class OneScoreWidgetService  extends IntentService {
 
             // Tell the AppWidgetManager to perform an update on the current app widget
             appWidgetManager.updateAppWidget(appWidgetId, views);
-            Log.v(LOG_TAG, "onHandleIntent - appWidgetId: " + appWidgetId + " updated");
+//            Log.v(LOG_TAG, "onHandleIntent - appWidgetId: " + appWidgetId + " updated");
         }
     }
 }

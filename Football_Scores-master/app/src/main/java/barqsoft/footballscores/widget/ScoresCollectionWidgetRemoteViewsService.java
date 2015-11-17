@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Binder;
 import android.os.Build;
-import android.util.Log;
 import android.widget.AdapterView;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
@@ -104,7 +103,7 @@ public class ScoresCollectionWidgetRemoteViewsService extends RemoteViewsService
                 String timeStr = mCursor.getString(TIME_IDX);
 
                 String scores = Utilies.getScores(homeScore, awayScore);
-                Log.v(LOG_TAG, "getViewAt - processed: " + position + ": " + homeName + " - " + timeStr + " - " + awayName);
+//                Log.v(LOG_TAG, "getViewAt - processed: " + position + ": " + homeName + " - " + timeStr + " - " + awayName);
 
                 RemoteViews views = new RemoteViews(getPackageName(),
                         R.layout.widget_scores_collection_list_item);

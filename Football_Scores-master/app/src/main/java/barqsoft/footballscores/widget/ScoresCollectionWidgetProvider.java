@@ -28,7 +28,7 @@ public class ScoresCollectionWidgetProvider extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // Perform this loop procedure for each App Widget that belongs to this provider
-        Log.v(LOG_TAG, "onUpdate - start");
+//        Log.v(LOG_TAG, "onUpdate - start");
         for (int appWidgetId : appWidgetIds) {
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_scores_collection);
 
@@ -52,25 +52,25 @@ public class ScoresCollectionWidgetProvider extends AppWidgetProvider {
 
             // Tell the AppWidgetManager to perform an update on the current app widget
             appWidgetManager.updateAppWidget(appWidgetId, views);
-            Log.v(LOG_TAG, "onUpdate - start - updateAppWidget called");
+//            Log.v(LOG_TAG, "onUpdate - start - updateAppWidget called");
             appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widget_list);
         }
-        Log.v(LOG_TAG, "onUpdate - end");
+//        Log.v(LOG_TAG, "onUpdate - end");
         super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
 
     @Override
     public void onReceive(@NonNull Context context, @NonNull Intent intent) {
         super.onReceive(context, intent);
-        Log.v(LOG_TAG, "onReceive - start - intent: " + intent.getAction());
+//        Log.v(LOG_TAG, "onReceive - start - intent: " + intent.getAction());
         if (MainScreenFragment.ACTION_TODAYS_DATA_UPDATED.equals(intent.getAction())) {
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             int[] appWidgetIds = appWidgetManager.getAppWidgetIds(
                     new ComponentName(context, getClass()));
             appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_list);
-            Log.v(LOG_TAG, "onReceive - end - notifyAppWidgetViewDataChanged called: " + intent.getAction());
+//            Log.v(LOG_TAG, "onReceive - end - notifyAppWidgetViewDataChanged called: " + intent.getAction());
         }
-        Log.v(LOG_TAG, "onReceive - end");
+//        Log.v(LOG_TAG, "onReceive - end");
     }
 
     /**

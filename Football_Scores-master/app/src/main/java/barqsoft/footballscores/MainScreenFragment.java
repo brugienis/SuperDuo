@@ -42,17 +42,20 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
 
     public void setFragmentDate(String date) {
         mFragmentDate[0] = date;
+        Log.v(LOG_TAG, "setFragmentDate - start - hashCode: " + hashCode() + "/" + mFragmentDate[0] + "/" + getActivity());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
+        Log.v(LOG_TAG, "onCreateView - start - hashCode: " + hashCode() + "/" + mFragmentDate[0] + "/" + getActivity());
 //        updateScores();
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         scoreList = (ListView) rootView.findViewById(R.id.scores_list);
         mAdapter = new ScoresAdapter(getActivity(), null, 0);
         scoreList.setAdapter(mAdapter);
         getLoaderManager().initLoader(SCORES_LOADER, null, this);
+        Log.v(LOG_TAG, "onCreateView - after initLoader - hashCode: " + hashCode() + "/" + mFragmentDate[0] + "/" + getActivity());
         mAdapter.mDetailMatchId = MainActivity.selectedMatchId;
         scoreList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -81,8 +84,8 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+//        Log.v(LOG_TAG, "onLoadFinished - date/count: " + mFragmentDate[0] + "/" + cursor.getCount());
         mAdapter.swapCursor(cursor);
-        Log.v(LOG_TAG, "onLoadFinished - date/count: " + mFragmentDate[0] + "/" + cursor.getCount());
         if (cursor.getCount() > 0 && currDate.equals(mFragmentDate[0])) {
             updateWidgets();
             int selectedRow = ((MainActivity) getActivity()).getWidgetSelectedRowIdx();
@@ -102,6 +105,16 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
         mAdapter.swapCursor(null);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.v(LOG_TAG, "onResume - reloadData: " + reloadData + "/" + hashCode() + "/" + getActivity());
+        if (reloadData) {
+            getLoaderManager().initLoader(SCORES_LOADER, null, this);
+            reloadData = false;
+        }
+    }
+
     private void updateWidgets() {
         Context context = getActivity().getApplication();
         // Setting the package ensures that only components in our app will receive the broadcast
@@ -110,9 +123,14 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
         context.sendBroadcast(dataUpdatedIntent);
     }
 
+    private boolean reloadData;
+
     public void reloadData() {
-        Log.v(LOG_TAG, "reloadData - start: " + mFragmentDate[0]);
-        getLoaderManager().initLoader(SCORES_LOADER, null, this);
+        Log.v(LOG_TAG, "reloadData - start: " + mFragmentDate[0] + "/" + hashCode() + "/" + getActivity());
+        reloadData = true;
+//        if (getActivity() != null) {
+//            getLoaderManager().initLoader(SCORES_LOADER, null, this);
+//        }
         Log.v(LOG_TAG, "reloadData - end");
     }
 }

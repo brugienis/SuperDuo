@@ -1,7 +1,11 @@
 package barqsoft.footballscores;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,9 +15,10 @@ import java.text.SimpleDateFormat;
 public class MainActivity extends ActionBarActivity {
 
     public static int selectedMatchId;
-//    public static int currentFragment = 2;
-//    private final String saveTag = "Save Test";
     private PagerFragment mPagerFragment;
+    private static final String PAGER_CURRENT = "Pager_Current";
+    private static final String SELECTED_MATCH = "Selected_match";
+    private static final String PAGER_FRAGMENT = "Selected_match";
     public static final String WIDGET_SELECTED_MATCH_ID = "widget_selected_match_id";
     public static final String WIDGET_SELECTED_ROW_IDX = "widget_selected_row_idx";
     private int widgetSelectedMatchId;
@@ -23,10 +28,10 @@ public class MainActivity extends ActionBarActivity {
     // FIXME: 6/11/2015 - below change back to 5
     private static final int NUM_PAGES = 13;
     private static final int TODAYS_PAGE = NUM_PAGES / 2;    /* number of pages or tabs */
+    private static final int DEFAULT_DAY_ADJUSTMENT = -2;    static int currentFragment = TODAYS_PAGE + DEFAULT_DAY_ADJUSTMENT;
 
-    private static final int DEFAULT_DAY_ADJUSTMENT = -2;
-//    public static int currentFragment = TODAYS_PAGE;
-    public static int currentFragment = TODAYS_PAGE + DEFAULT_DAY_ADJUSTMENT;
+    private BroadcastReceiver messageReceiver;
+    public static final String MESSAGE_EVENT = "MESSAGE_EVENT";
 
     private final static String LOG_TAG = MainActivity.class.getSimpleName();
 
@@ -72,9 +77,27 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private static final String PAGER_CURRENT = "Pager_Current";
-    private static final String SELECTED_MATCH = "Selected_match";
-    private static final String PAGER_FRAGMENT = "Selected_match";
+    @Override
+    public void onResume() {
+        super.onResume();
+        messageReceiver = new MessageReceiver();
+        IntentFilter filter = new IntentFilter(MESSAGE_EVENT);
+        LocalBroadcastManager.getInstance(getApplication()).registerReceiver(messageReceiver, filter);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        LocalBroadcastManager.getInstance(getApplication()).unregisterReceiver(messageReceiver);
+    }
+
+    private class MessageReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            mPagerFragment.reloadData();
+        }
+    }
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(PAGER_CURRENT, mPagerFragment.mPagerHandler.getCurrentItem());
@@ -115,9 +138,9 @@ public class MainActivity extends ActionBarActivity {
     /*
         Return default page's date in milliseconds.
 
-        DEFAULT_DAY_ADJUSTMENT = 0  today's date
+        DEFAULT_DAY_ADJUSTMENT = 0   today's date
         DEFAULT_DAY_ADJUSTMENT = -1  yesterday's date
-        DEFAULT_DAY_ADJUSTMENT = 0  tomorrow's date
+        DEFAULT_DAY_ADJUSTMENT = 1   tomorrow's date
      */
     public static String getDefaultPageDayInMillis() {
         return dayFormat.format(System.currentTimeMillis() + DEFAULT_DAY_ADJUSTMENT * TWENTY_FOUR_HOURS_IN_MILLIS);
