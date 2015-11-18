@@ -5,7 +5,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
+import android.os.Handler;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,7 +30,8 @@ import barqsoft.footballscores.R;
  * Created by yehya khaled on 3/2/2015.
  */
 public class MyFetchService extends IntentService {
-    
+
+    Handler mMainThreadHandler = null;
     private SimpleDateFormat matchDate = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss");
     private SimpleDateFormat new_date = new SimpleDateFormat("yyyy-MM-dd:HH:mm");
     private SimpleDateFormat mformat = new SimpleDateFormat("yyyy-MM-dd");
@@ -38,7 +40,8 @@ public class MyFetchService extends IntentService {
     private final static String LOG_TAG = MyFetchService.class.getSimpleName();
 
     public MyFetchService() {
-        super("myFetchService");
+        super(MyFetchService.class.getName());
+        mMainThreadHandler = new Handler();
     }
 
     @Override
@@ -64,7 +67,7 @@ public class MyFetchService extends IntentService {
         HttpURLConnection connection = null;
         BufferedReader reader = null;
         String JSONData = null;
-        Log.v(LOG_TAG, "getData - fetchBuild: " + fetchBuild);
+//        Log.v(LOG_TAG, "getData - fetchBuild: " + fetchBuild);
         //Opening Connection
         try {
             URL fetch = new URL(fetchBuild.toString());
@@ -95,9 +98,9 @@ public class MyFetchService extends IntentService {
                 return;
             }
             JSONData = buffer.toString();
-            // FIXME: 11/11/2015 think how to handle exceptions here
         } catch (Exception e) {
-            Log.e(LOG_TAG, "Exception here" + e);
+//            Log.e(LOG_TAG, "Exception here" + e);
+            sendMessage(getResources().getString(R.string.problem_downloading_data));
         } finally {
             if (connection != null) {
                 connection.disconnect();
@@ -105,8 +108,8 @@ public class MyFetchService extends IntentService {
             if (reader != null) {
                 try {
                     reader.close();
-                } catch (IOException e) {
-                    Log.e(LOG_TAG, "Error Closing Stream");
+                } catch (IOException ignoreException) {
+//                    Log.e(LOG_TAG, "Error Closing Stream");
                 }
             }
         }
@@ -122,11 +125,11 @@ public class MyFetchService extends IntentService {
                 }
                 processJSONData(JSONData, getApplicationContext(), true);
             } else {
-                //Could not Connect
-                Log.d(LOG_TAG, "Could not connect to server.");
+//                Log.d(LOG_TAG, "Could not connect to server.");
+                sendMessage(getResources().getString(R.string.could_not_connect_to_server));
             }
         } catch (Exception e) {
-            Log.e(LOG_TAG, e.getMessage());
+            sendMessage(getResources().getString(R.string.problem_processing_downloaded_raw_data));
         }
     }
 
@@ -220,10 +223,8 @@ public class MyFetchService extends IntentService {
                             Date fragmentdate = new Date(System.currentTimeMillis() + ((i - 2) * TWENTY_FOUR_HOURS_IN_MILLIS));
                             date = mformat.format(fragmentdate);
                         }
-                        // FIXME: 11/11/2015 think what to do
                     } catch (Exception e) {
-                        Log.d(LOG_TAG, "error here!");
-                        Log.e(LOG_TAG, e.getMessage());
+                        sendMessage(getResources().getString(R.string.error_processing_datetime_json_data));
                     }
                     home = matchData.getString(HOME_TEAM);
                     away = matchData.getString(AWAY_TEAM);
@@ -250,9 +251,18 @@ public class MyFetchService extends IntentService {
             mContext.getContentResolver().bulkInsert(
                     DatabaseContract.BASE_CONTENT_URI, insertData);
         } catch (JSONException e) {
-            Log.e(LOG_TAG, e.getMessage());
+            sendMessage(getResources().getString(R.string.problem_processing_downloaded_json_data));
         }
 
+    }
+
+    private void sendMessage(final String msg) {
+        mMainThreadHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }
 
