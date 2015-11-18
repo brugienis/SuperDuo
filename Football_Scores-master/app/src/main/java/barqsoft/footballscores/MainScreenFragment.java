@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,7 +71,7 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     */
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        Log.v(LOG_TAG, "onCreateLoader - date: " + mFragmentDate[0]);
+//        Log.v(LOG_TAG, "onCreateLoader - date: " + mFragmentDate[0]);
         return new CursorLoader(getActivity(), DatabaseContract.scores_table
                 .buildScoreWithDate(),
                 null, null, mFragmentDate, DatabaseContract.scores_table.TIME_COL + ASC +

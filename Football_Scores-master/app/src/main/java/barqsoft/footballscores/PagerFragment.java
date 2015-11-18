@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.format.Time;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,8 +36,6 @@ public class PagerFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.v(LOG_TAG, "onCreateView - start - activity: " + getActivity() + "/" + mViewFragments.hashCode());
-
         updateScores();
 
         View rootView = inflater.inflate(R.layout.pager_fragment, container, false);
@@ -54,7 +51,6 @@ public class PagerFragment extends Fragment {
 
         mPagerHandler.setAdapter(mPagerAdapter);
         mPagerHandler.setCurrentItem(MainActivity.currentFragment);
-        Log.v(LOG_TAG, "onCreateView - end: " + getActivity());
         return rootView;
     }
 
