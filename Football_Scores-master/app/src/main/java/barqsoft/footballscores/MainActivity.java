@@ -23,11 +23,16 @@ public class MainActivity extends ActionBarActivity {
     private static SimpleDateFormat dayFormat = new SimpleDateFormat("yyyy-MM-dd");
     // FIXME: 6/11/2015 - below change back to 5
     private static final int NUM_PAGES = 13;
-    private static final int TODAYS_PAGE = NUM_PAGES / 2;    /* number of pages or tabs */
-    private static final int DEFAULT_DAY_ADJUSTMENT = -2;    static int currentFragment = TODAYS_PAGE + DEFAULT_DAY_ADJUSTMENT;
+    private static final int TODAYS_PAGE = NUM_PAGES / 2;   /* number of pages or tabs */
+    private static final int DEFAULT_DAY_ADJUSTMENT = 1;    /* -1 yesterday, 0 today, 1 tomorrow, etc. */
+    static int currentFragment = TODAYS_PAGE + DEFAULT_DAY_ADJUSTMENT;
 
     private final static String LOG_TAG = MainActivity.class.getSimpleName();
 
+    /**
+        If app opened by a click on the ScoresCollection widget, extract clicked match Id and index
+         of the touched row. When current page becomes visible, the row will be visible.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,18 +96,30 @@ public class MainActivity extends ActionBarActivity {
         return NUM_PAGES;
     }
 
+    /**
+        Returns the selected widget's match Id
+     */
     public int  getWidgetSelectedMatchId() {
         return widgetSelectedMatchId;
     }
 
+    /**
+       Returns the selected widget's row
+     */
     public int getWidgetSelectedRowIdx() {
         return widgetSelectedRowIdx;
     }
 
+    /**
+        After the app scroll to the selected widget's row, this method is called to clear its value
+     */
     public void clearWidgetSelectedRowIdx() {
         widgetSelectedRowIdx = -1;
     }
 
+    /**
+        returns the 'today' page - when the app starts, it shows data for that date
+     */
     public static int getTodaysPage() {
         return TODAYS_PAGE;
     }

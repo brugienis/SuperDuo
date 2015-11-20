@@ -34,11 +34,6 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
         currDate = MainActivity.getDefaultPageDayInMillis();
     }
 
-//    private void updateScores() {
-//        Intent intent = new Intent(getActivity(), MyFetchService.class);
-//        getActivity().startService(intent);
-//    }
-
     public void setFragmentDate(String date) {
         mFragmentDate[0] = date;
     }
@@ -78,6 +73,10 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
                 " ," + DatabaseContract.scores_table.HOME_COL + ASC);
     }
 
+    /**
+     *
+     * When the default 'current' day's data was inserted to DB, calls updateWidgets().
+     */
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
 //        Log.v(LOG_TAG, "onLoadFinished - date/count: " + mFragmentDate[0] + "/" + cursor.getCount());
@@ -101,6 +100,10 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
         mAdapter.swapCursor(null);
     }
 
+    /**
+     * Send broadcast message to the widgets. It will force them to reload data from DB
+     * and update their UI.
+     */
     private void updateWidgets() {
         Context context = getActivity().getApplication();
         // Setting the package ensures that only components in our app will receive the broadcast

@@ -50,6 +50,11 @@ public class MyFetchService extends IntentService {
         getData("p10");
     }
 
+    /**
+     *
+     * @param timeFrame - p or n followed by the number. e.g. p10 - retrieve data for the last
+     *                    10 days. n10 - retrieve data for the next 10 days.
+     */
     private void getData(String timeFrame) {
         //Creating fetch URL
         String APIKey = getString(R.string.api_key);
@@ -133,6 +138,12 @@ public class MyFetchService extends IntentService {
         }
     }
 
+    /**
+     *
+     * @param JSONData  - String: data downloaded from the Internet
+     * @param mContext
+     * @param isReal    - boolean: true - real data. false - simulated data
+     */
     private void processJSONData(String JSONData, Context mContext, boolean isReal) {
         // This set of league codes is for the 2015/2016 season. In fall of 2016, they will need to
         // be updated. Feel free to use the codes
@@ -220,8 +231,8 @@ public class MyFetchService extends IntentService {
 
                         if (!isReal) {
                             //This if statement changes the dummy data's date to match our current date range.
-                            Date fragmentdate = new Date(System.currentTimeMillis() + ((i - 2) * TWENTY_FOUR_HOURS_IN_MILLIS));
-                            date = mformat.format(fragmentdate);
+                            Date fragmentDate = new Date(System.currentTimeMillis() + ((i - 2) * TWENTY_FOUR_HOURS_IN_MILLIS));
+                            date = mformat.format(fragmentDate);
                         }
                     } catch (Exception e) {
                         sendMessage(getResources().getString(R.string.error_processing_datetime_json_data));
@@ -256,6 +267,11 @@ public class MyFetchService extends IntentService {
 
     }
 
+    /**
+     * Shows a message in a Toast
+     *
+     * @param msg - message to show
+     */
     private void sendMessage(final String msg) {
         mMainThreadHandler.post(new Runnable() {
             @Override

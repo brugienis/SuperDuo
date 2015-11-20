@@ -53,13 +53,18 @@ public class ScoresCollectionWidgetRemoteViewsService extends RemoteViewsService
                 // Nothing to do
             }
 
-            /*
-                This method is called by the app hosting the widget (e.g., the launcher)
-                However, our ContentProvider is not exported so it doesn't have access to the
-                data. Therefore we need to clear (and finally restore) the calling identity so
-                that calls use our process and permission.
-
-                The data from DB is sorted by time and hone columns in ascending order.
+            /**
+             *
+             * Retrieves the most recent results for default day from DB. Data is sorted in
+             * ascending order of 'time' and 'home' columns.
+             *
+             * This method is called by the app hosting the widget (e.g., the launcher)
+             * However, our ContentProvider is not exported so it doesn't have access to the
+             * data. Therefore we need to clear (and finally restore) the calling identity so
+             * that calls use our process and permission.
+             *
+             * The data from DB is sorted by time and hone columns in ascending order.
+             *
              */
             @Override
             public void onDataSetChanged() {
@@ -72,7 +77,6 @@ public class ScoresCollectionWidgetRemoteViewsService extends RemoteViewsService
                         SCORE_COLUMNS, null, new String[]
                                 {currDate}, DatabaseContract.scores_table.TIME_COL + ASC +
                                 " ," + DatabaseContract.scores_table.HOME_COL + ASC);
-//                Log.v(LOG_TAG, "onDataSetChanged - count: " + mCursor.getCount());
                 Binder.restoreCallingIdentity(identityToken);
             }
 
@@ -89,6 +93,11 @@ public class ScoresCollectionWidgetRemoteViewsService extends RemoteViewsService
                 return mCursor == null ? 0 : mCursor.getCount();
             }
 
+            /**
+             *
+             * @param   position - index of the ListView row that has to be prepared for display
+             * @return  RemoteViews
+             */
             @Override
             public RemoteViews getViewAt(int position) {
                 if (position == AdapterView.INVALID_POSITION ||

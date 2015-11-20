@@ -34,6 +34,9 @@ public class PagerFragment extends Fragment {
 
     private final static String LOG_TAG = PagerFragment.class.getSimpleName();
 
+    /**
+     * Create one MainScreenFragment
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         updateScores();
@@ -54,6 +57,9 @@ public class PagerFragment extends Fragment {
         return rootView;
     }
 
+    /**
+     * start service that will get the latest scores data from the Internet.
+     */
     private void updateScores() {
         Intent intent = new Intent(getActivity(), MyFetchService.class);
         getActivity().startService(intent);
@@ -82,6 +88,10 @@ public class PagerFragment extends Fragment {
             return getDayName(getActivity(), System.currentTimeMillis() + ((position - MainActivity.getTodaysPage()) * 86400000));
         }
 
+        /**
+         * Returns the localized version of "Today, Yesterday and Tomorrow" instead of the actual
+         * day name.
+         */
         public String getDayName(Context context, long dateInMillis) {
             // If the date is today, return the localized version of "Today" instead of the actual
             // day name.

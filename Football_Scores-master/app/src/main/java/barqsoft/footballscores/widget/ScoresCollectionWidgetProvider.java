@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.TaskStackBuilder;
-import android.util.Log;
 import android.widget.RemoteViews;
 
 import barqsoft.footballscores.MainActivity;
@@ -25,10 +24,14 @@ public class ScoresCollectionWidgetProvider extends AppWidgetProvider {
 
     private final static String LOG_TAG = ScoresCollectionWidgetProvider.class.getSimpleName();
 
+    /**
+     *
+     * Initiate Scores Collection widget update.
+     *
+     */
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // Perform this loop procedure for each App Widget that belongs to this provider
-//        Log.v(LOG_TAG, "onUpdate - start");
         for (int appWidgetId : appWidgetIds) {
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_scores_collection);
 
@@ -39,7 +42,7 @@ public class ScoresCollectionWidgetProvider extends AppWidgetProvider {
 
             // Set up the collection
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-                setRemoteAdapter(appWidgetId, context, views);
+                setRemoteAdapter(context, views);
             } else {
                 setRemoteAdapterV11(context, views);
             }
@@ -52,25 +55,26 @@ public class ScoresCollectionWidgetProvider extends AppWidgetProvider {
 
             // Tell the AppWidgetManager to perform an update on the current app widget
             appWidgetManager.updateAppWidget(appWidgetId, views);
-//            Log.v(LOG_TAG, "onUpdate - start - updateAppWidget called");
             appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widget_list);
         }
-//        Log.v(LOG_TAG, "onUpdate - end");
         super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
 
+    /**
+     *
+     * Initiate Scores Collection widget update after receiving broadcast
+     * ACTION_TODAYS_DATA_UPDATED (sent from MainScreenFragment).
+     *
+     */
     @Override
     public void onReceive(@NonNull Context context, @NonNull Intent intent) {
         super.onReceive(context, intent);
-//        Log.v(LOG_TAG, "onReceive - start - intent: " + intent.getAction());
         if (MainScreenFragment.ACTION_TODAYS_DATA_UPDATED.equals(intent.getAction())) {
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             int[] appWidgetIds = appWidgetManager.getAppWidgetIds(
                     new ComponentName(context, getClass()));
             appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_list);
-//            Log.v(LOG_TAG, "onReceive - end - notifyAppWidgetViewDataChanged called: " + intent.getAction());
         }
-//        Log.v(LOG_TAG, "onReceive - end");
     }
 
     /**
@@ -79,7 +83,7 @@ public class ScoresCollectionWidgetProvider extends AppWidgetProvider {
      * @param views RemoteViews to set the RemoteAdapter
      */
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    private void setRemoteAdapter(int appWidgetId, Context context, @NonNull final RemoteViews views) {
+    private void setRemoteAdapter(Context context, @NonNull final RemoteViews views) {
         views.setRemoteAdapter(R.id.widget_list,
                 new Intent(context, ScoresCollectionWidgetRemoteViewsService.class));
     }

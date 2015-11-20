@@ -36,6 +36,10 @@ public class ScoresAdapter extends CursorAdapter {
         super(context, cursor, flags);
     }
 
+    /**
+     *
+     * Returns new list item view.
+     */
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         View mItem = LayoutInflater.from(context).inflate(R.layout.scores_list_item, parent, false);
@@ -44,6 +48,10 @@ public class ScoresAdapter extends CursorAdapter {
         return mItem;
     }
 
+    /**
+     *
+     * Populate one list item with the data contained in a cursor.
+     */
     @Override
     public void bindView(View view, final Context context, Cursor cursor) {
         final ViewHolder mHolder = (ViewHolder) view.getTag();
@@ -111,6 +119,10 @@ public class ScoresAdapter extends CursorAdapter {
 
     }
 
+    /**
+     *
+     * Returns 'share' Intent.
+     */
     public Intent createShareForecastIntent(String ShareText) {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);

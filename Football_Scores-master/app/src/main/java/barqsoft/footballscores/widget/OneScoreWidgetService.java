@@ -7,7 +7,6 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Build;
-import android.util.Log;
 import android.widget.RemoteViews;
 
 import barqsoft.footballscores.DatabaseContract;
@@ -44,6 +43,13 @@ public class OneScoreWidgetService  extends IntentService {
         super(LOG_TAG);
     }
 
+    /**
+     *
+     * Retrieves the most recent results for default day from DB. Data is sorted in
+     * descending order of 'time' and 'home' columns. Process sorted data until score is found
+     * with value > -1 and show the data in a Score One widget.
+     * If all rows have score value = -1, show the last row data in a Score One widget.
+     */
     @Override
     protected void onHandleIntent(Intent intent) {
         String currDate = MainActivity.getDefaultPageDayInMillis();
@@ -79,7 +85,6 @@ public class OneScoreWidgetService  extends IntentService {
                 if (homeScore > -1) {
                     break;
                 }
-//                Log.v(LOG_TAG, "onHandleIntent - processed: " + homeName + " - " + timeStr + " - " + awayName);
             };
         }
 
@@ -93,7 +98,6 @@ public class OneScoreWidgetService  extends IntentService {
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this,
                 OneScoreWidgetProvider.class));
-//        Log.v(LOG_TAG, "onHandleIntent - appWidgetIds cnt: " + appWidgetIds.length);
 
         for (int appWidgetId : appWidgetIds) {
 
@@ -119,7 +123,6 @@ public class OneScoreWidgetService  extends IntentService {
 
             // Tell the AppWidgetManager to perform an update on the current app widget
             appWidgetManager.updateAppWidget(appWidgetId, views);
-//            Log.v(LOG_TAG, "onHandleIntent - appWidgetId: " + appWidgetId + " updated");
         }
     }
 }
