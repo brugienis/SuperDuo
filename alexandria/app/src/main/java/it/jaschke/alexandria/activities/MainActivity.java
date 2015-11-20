@@ -16,6 +16,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+
 import it.jaschke.alexandria.R;
 import it.jaschke.alexandria.api.Callback;
 import it.jaschke.alexandria.fragments.About;
@@ -267,6 +270,23 @@ public class MainActivity extends ActionBarActivity
     public void onStop() {
         super.onStop();
         LocalBroadcastManager.getInstance(getApplication()).unregisterReceiver(messageReciever);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (scanResult != null) {
+            Log.d(LOG_TAG, "scan result: " + scanResult.toString());
+            try {
+                AddBook addBook = (AddBook) getSupportFragmentManager().findFragmentByTag(TAG_ADD_BOOK);
+                addBook.setScanedEAN(scanResult.getContents());
+            } catch (Exception e) {
+                // FIXME: 20/11/2015 - show error description
+                e.printStackTrace();
+                // maybe no add book fragment around?
+            }
+        }
+
     }
 
 
