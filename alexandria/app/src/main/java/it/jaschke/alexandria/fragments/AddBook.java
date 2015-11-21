@@ -51,13 +51,6 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
     private String mScanContents = "Contents:";
 
     private static final String NINE_SEVEN_EIGHT = "978";
-//    public static final String DELETE_EVENT = "DELETE_EVENT";
-//    public static final String MESSAGE_EVENT = "MESSAGE_EVENT";
-//    public static final String MESSAGE_KEY = "MESSAGE_EXTRA";
-
-//    private static final String SCAN_FORMAT = "scanFormat";
-//    private static final String SCAN_CONTENTS = "scanContents";
-//    private static final String TAG = "INTENT_TO_SCAN_ACTIVITY";
 
     private final static String LOG_TAG = AddBook.class.getSimpleName();
 
@@ -101,13 +94,11 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
             @Override
             public void afterTextChanged(Editable s) {
                 String eanStr = s.toString();
-//                Log.v(LOG_TAG, "afterTextChanged - eanTv: " + eanStr);
                 //catch isbn10 numbers
                 if (eanStr.length() == 10 && !eanStr.startsWith(NINE_SEVEN_EIGHT)) {
                     eanStr = NINE_SEVEN_EIGHT + eanStr;
                 }
                 if (eanStr.length() < 13) {
-//                    clearFields();
                     return;
                 }
                 eanTv.setEnabled(false);
@@ -119,6 +110,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
                 getActivity().startService(bookIntent);
                 AddBook.this.restartLoader();
                 bookEmptyTv.setText("Search started");
+                // FIXME: 21/11/2015 - test below - is it still a problem?
 //                in portraite enter ISBN and rotate, than click search - you will get NullPointerException on line 119
             }
         });
@@ -131,17 +123,8 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
                 //functionality directly in this app.
                 // Hint: Use a Try/Catch block to handle the Intent dispatch gracefully, if you
                 // are using an external app.
-                //when you're done, remove the toast below.
 
-//                startActivity(new Intent(getActivity(), ScannerActivity.class));
-
-//                Context context = getActivity();
-//                CharSequence text = "This button should let you scan a book for its barcode!";
-//                int duration = Toast.LENGTH_SHORT;
-//
-//                Toast toast = Toast.makeText(context, text, duration);
-//                toast.show();
-
+                // FIXME: 21/11/2015 check if try/catch is required
                 Context context = getActivity();
 
                 IntentIntegrator integrator = new IntentIntegrator(getActivity());
@@ -285,35 +268,10 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
         eanTv.setEnabled(true);
     }
 
-//    private class messageReciever extends BroadcastReceiver {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            Log.v(LOG_TAG, "messageReciever - intent: " + intent);
-//            if(intent.getStringExtra(MESSAGE_KEY) != null) {
-//                bookEmptyTv.setText(intent.getStringExtra(MESSAGE_KEY));
-//                eanTv.setEnabled(true);
-//            }
-//        }
-//    }
-
     private void hideKeyboard() {
         InputMethodManager inputMethodManager =
                 (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(eanTv.getWindowToken(), 0);
     }
 
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//
-//        messageReciever = new messageReciever();
-//        IntentFilter filter = new IntentFilter(MESSAGE_EVENT);
-//        LocalBroadcastManager.getInstance(getActivity().getApplication()).registerReceiver(messageReciever, filter);
-//    }
-
-//    @Override
-//    public void onStop() {
-//        super.onStop();
-//        LocalBroadcastManager.getInstance(getActivity().getApplication()).unregisterReceiver(messageReciever);
-//    }
 }

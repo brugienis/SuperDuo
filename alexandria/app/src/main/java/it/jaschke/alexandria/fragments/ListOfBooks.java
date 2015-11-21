@@ -68,8 +68,6 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
         searchTextInputLayout = (TextInputLayout) rootView.findViewById(R.id.name_et_textinputlayout);
         searchText.requestFocus();
 
-//        searchTextInputLayout.setVisibility(View.VISIBLE);
-        Log.v(LOG_TAG, "onCreateView - cursor.getCount(): " + cursor.getCount());
         if (cursor.getCount() == 0) {
             searchTextInputLayout.setHint("No books available");
             searchText.setEnabled(false);
@@ -127,15 +125,12 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
                 null, // values for "where" clause
                 null  // sort order
         );
-        Log.v(LOG_TAG, "getBooksFromDB - cursor.getCount(): " + cursor.getCount());
         if (searchText != null) {
             searchText.requestFocus();
         }
         if (cursor.getCount() == 0) {
-            Log.v(LOG_TAG, "getBooksFromDB - no data");
             searchTextInputLayout.setHint("");
             searchTextInputLayout.setError("No books available");
-//            searchText.setHint("No books available");
             searchText.setEnabled(false);
             searchButtonVw.setEnabled(false);
         } else {
@@ -159,6 +154,7 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
         String searchString = searchText.getText().toString();
 
         if(searchString.length()>0){
+            // FIXME: 21/11/2015 move to strings with an argument
             searchString = "%"+searchString+"%";
             return new CursorLoader(
                     getActivity(),
@@ -182,9 +178,7 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        Log.v(LOG_TAG, "onLoadFinished - start");
         bookListAdapter.swapCursor(data);
-//        bookListAdapter.changeCursor(data);
         if (bookListAdapter.isEmpty()) {
             searchTextInputLayout.setHint("No books available");
         } else {

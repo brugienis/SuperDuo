@@ -212,10 +212,6 @@ public class MainActivity extends ActionBarActivity
 
     }
 
-//    public void goBack(View view){
-//        getSupportFragmentManager().popBackStack();
-//    }
-
     private boolean isTablet() {
         return (getApplicationContext().getResources().getConfiguration().screenLayout
                 & Configuration.SCREENLAYOUT_SIZE_MASK)
@@ -238,11 +234,6 @@ public class MainActivity extends ActionBarActivity
 
         getSupportFragmentManager().popBackStack();
         removeBookDetailFragment();
-//        setTitle(getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName());
-//        for (int i = 0; i < cnt; i++) {
-//            Log.v(LOG_TAG, "onBackPressed - name: " + i + ": " + getSupportFragmentManager().getBackStackEntryAt(i).getName());
-//        }
-
     }
 
     private void removeBookDetailFragment() {
@@ -253,7 +244,6 @@ public class MainActivity extends ActionBarActivity
         if (getSupportFragmentManager().getBackStackEntryAt(cnt - 1).getName().equals(getResources().getString(R.string.title_book_details))) {
             getSupportFragmentManager().beginTransaction()
                     .detach(bookDetailFragment)
-//                    .addToBackStack(BACK_STACK_NAME_BOOK_DETAIL)
                     .commit();
         }
     }
