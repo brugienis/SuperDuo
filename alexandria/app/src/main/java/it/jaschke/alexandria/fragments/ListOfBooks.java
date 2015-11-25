@@ -9,8 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,12 +26,12 @@ import it.jaschke.alexandria.data.AlexandriaContract;
 
 public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private BookListAdapter bookListAdapter;
-    private ListView bookList;
-    private TextInputLayout searchTextInputLayout;
-    private View searchButtonVw;
-    private int position = ListView.INVALID_POSITION;
-    private EditText searchText;
+    private BookListAdapter mBookListAdapter;
+    private ListView mBookList;
+    private TextInputLayout mSearchTextInputLayout;
+    private View mSearchButtonVw;
+    private int mPosition = ListView.INVALID_POSITION;
+    private EditText mSearchText;
 
     private final int LOADER_ID = 10;
 
@@ -58,25 +56,25 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
                 null  // sort order
         );
 
-        bookListAdapter = new BookListAdapter(getActivity(), cursor, 0);
+        mBookListAdapter = new BookListAdapter(getActivity(), cursor, 0);
 
         View rootView = inflater.inflate(R.layout.fragment_list_of_books, container, false);
 
-        searchText = (EditText) rootView.findViewById(R.id.searchText);
-        searchButtonVw = rootView.findViewById(R.id.searchButton);
+        mSearchText = (EditText) rootView.findViewById(R.id.searchText);
+        mSearchButtonVw = rootView.findViewById(R.id.searchButton);
 
-        searchTextInputLayout = (TextInputLayout) rootView.findViewById(R.id.name_et_textinputlayout);
-        searchText.requestFocus();
+        mSearchTextInputLayout = (TextInputLayout) rootView.findViewById(R.id.name_et_textinputlayout);
+        mSearchText.requestFocus();
 
         if (cursor.getCount() == 0) {
-            searchTextInputLayout.setHint("No books available");
-            searchText.setEnabled(false);
-            searchButtonVw.setEnabled(false);
+            mSearchTextInputLayout.setHint(getResources().getString(R.string.no_books_available));
+            mSearchText.setEnabled(false);
+            mSearchButtonVw.setEnabled(false);
         } else {
-            searchTextInputLayout.setHint(getActivity().getResources().getString(R.string.title_input_hint));
+            mSearchTextInputLayout.setHint(getActivity().getResources().getString(R.string.title_input_hint));
         }
 
-        searchButtonVw.setOnClickListener(
+        mSearchButtonVw.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -85,14 +83,14 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
                 }
         );
 
-        bookList = (ListView) rootView.findViewById(R.id.listOfBooks);
-        bookList.setAdapter(bookListAdapter);
+        mBookList = (ListView) rootView.findViewById(R.id.listOfBooks);
+        mBookList.setAdapter(mBookListAdapter);
 
-        bookList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mBookList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Cursor cursor = bookListAdapter.getCursor();
+                Cursor cursor = mBookListAdapter.getCursor();
                 if (cursor != null && cursor.moveToPosition(position)) {
                     bookDetailsSelected(cursor.getString(cursor.getColumnIndex(AlexandriaContract.BookEntry._ID)));
                 }
@@ -102,9 +100,9 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
         return rootView;
     }
 
-    private ActionBar getActionBar() {
-        return ((ActionBarActivity) getActivity()).getSupportActionBar();
-    }
+//    private ActionBar getActionBar() {
+//        return ((ActionBarActivity) getActivity()).getSupportActionBar();
+//    }
 
     private void bookDetailsSelected(String ean) {
         ((Callback)getActivity()).onItemSelected(ean);
@@ -114,7 +112,7 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
     private void hideKeyboard() {
         InputMethodManager inputMethodManager =
                 (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(searchText.getWindowToken(), 0);
+        inputMethodManager.hideSoftInputFromWindow(mSearchText.getWindowToken(), 0);
     }
 
     public void getBooksFromDB() {
@@ -125,21 +123,21 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
                 null, // values for "where" clause
                 null  // sort order
         );
-        if (searchText != null) {
-            searchText.requestFocus();
+        if (mSearchText != null) {
+            mSearchText.requestFocus();
         }
         if (cursor.getCount() == 0) {
-            searchTextInputLayout.setHint("");
-            searchTextInputLayout.setError("No books available");
-            searchText.setEnabled(false);
-            searchButtonVw.setEnabled(false);
+            mSearchTextInputLayout.setHint("");
+            mSearchTextInputLayout.setError(getResources().getString(R.string.no_books_available));
+            mSearchText.setEnabled(false);
+            mSearchButtonVw.setEnabled(false);
         } else {
-            Log.v(LOG_TAG, "getBooksFromDB - there is data");
-            searchTextInputLayout.setHint(getActivity().getResources().getString(R.string.title_input_hint));
+//            Log.v(LOG_TAG, "getBooksFromDB - there is data");
+            mSearchTextInputLayout.setHint(getActivity().getResources().getString(R.string.title_input_hint));
         }
 
-        bookListAdapter = new BookListAdapter(getActivity(), cursor, 0);
-        bookList.setAdapter(bookListAdapter);
+        mBookListAdapter = new BookListAdapter(getActivity(), cursor, 0);
+        mBookList.setAdapter(mBookListAdapter);
     }
 
 
@@ -150,18 +148,20 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
-        final String selection = AlexandriaContract.BookEntry.TITLE +" LIKE ? OR " + AlexandriaContract.BookEntry.SUBTITLE + " LIKE ? ";
-        String searchString = searchText.getText().toString();
+        // FIXME: 23/11/2015 string with param
+//        final String selection = AlexandriaContract.BookEntry.TITLE +" LIKE ? OR " + AlexandriaContract.BookEntry.SUBTITLE + " LIKE ? ";
+        final String selection = getResources().getString(R.string.book_search_columns, AlexandriaContract.BookEntry.TITLE, AlexandriaContract.BookEntry.SUBTITLE);
+        String searchString = mSearchText.getText().toString();
 
-        if(searchString.length()>0){
-            // FIXME: 21/11/2015 move to strings with an argument
-            searchString = "%"+searchString+"%";
+        if (searchString.length()>0) {
+//            searchString =getResources().getString(R.string.book_search_string, searchString);
+            Log.v(LOG_TAG, "onCreateLoader - selection: " + selection);
             return new CursorLoader(
                     getActivity(),
                     AlexandriaContract.BookEntry.CONTENT_URI,
                     null,
                     selection,
-                    new String[]{searchString,searchString},
+                    new String[]{getResources().getString(R.string.book_search_string, searchString)},
                     null
             );
         }
@@ -178,20 +178,20 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        bookListAdapter.swapCursor(data);
-        if (bookListAdapter.isEmpty()) {
-            searchTextInputLayout.setHint("No books available");
+        mBookListAdapter.swapCursor(data);
+        if (mBookListAdapter.isEmpty()) {
+            mSearchTextInputLayout.setHint("No books available");
         } else {
-            searchTextInputLayout.setHint(getResources().getString(R.string.title_input_hint));
+            mSearchTextInputLayout.setHint(getResources().getString(R.string.title_input_hint));
         }
-        if (position != ListView.INVALID_POSITION) {
-            bookList.smoothScrollToPosition(position);
+        if (mPosition != ListView.INVALID_POSITION) {
+            mBookList.smoothScrollToPosition(mPosition);
         }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        bookListAdapter.swapCursor(null);
+        mBookListAdapter.swapCursor(null);
     }
 
     @Override

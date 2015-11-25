@@ -36,9 +36,9 @@ public class MainActivity extends ActionBarActivity
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
-    private NavigationDrawerFragment navigationDrawerFragment;
-    private BookDetail bookDetailFragment;
-    private BroadcastReceiver messageReciever;
+    private NavigationDrawerFragment mNavigationDrawerFragment;
+    private BookDetail mBookDetailFragment;
+    private BroadcastReceiver mMessageReceiver;
     public static final String DELETE_EVENT = "DELETE_EVENT";
     public static final String MESSAGE_EVENT = "MESSAGE_EVENT";
     public static final String MESSAGE_KEY = "MESSAGE_EXTRA";
@@ -55,26 +55,25 @@ public class MainActivity extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         IS_TABLET = isTablet();
-        if(IS_TABLET){
+        if (IS_TABLET){
             setContentView(R.layout.activity_main_tablet);
         }else {
             setContentView(R.layout.activity_main);
         }
 
-        navigationDrawerFragment = (NavigationDrawerFragment)
+        mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         title = getTitle();
 
         // Set up the drawer.
-        navigationDrawerFragment.setUp(R.id.navigation_drawer,
-                    (DrawerLayout) findViewById(R.id.drawer_layout));
+        mNavigationDrawerFragment.setUp(R.id.navigation_drawer,
+                (DrawerLayout) findViewById(R.id.drawer_layout));
     }
 
 
     private static final String TAG_LIST_OF_BOOKS = "List_of_books";
     private static final String TAG_ADD_BOOK = "add_book";
     private static final String TAG_ABOUT = "about";
-//    private static final String BACK_STACK_NAME_BOOK_DETAIL = "Book Detail";
 
     private static final String TITLE_LIST_OF_BOOKS = "list of Books";
     private static final String TITLE_ADD_BOOK = "Scan/Add a Book";
@@ -111,11 +110,11 @@ public class MainActivity extends ActionBarActivity
 
         String topBackStackEntryName = getCurrTopBackStackEntryName();
         if (topBackStackEntryName != null && topBackStackEntryName.equals(backStackName)) {
-            Log.v(LOG_TAG, "onNavigationDrawerItemSelected - this fragment is already the current tag/backStackName: " + getSupportFragmentManager().getBackStackEntryCount() + "/" + tag + "/" + backStackName);
+//            Log.v(LOG_TAG, "onNavigationDrawerItemSelected - this fragment is already the current tag/backStackName: " + getSupportFragmentManager().getBackStackEntryCount() + "/" + tag + "/" + backStackName);
             return;
         }
 
-        Log.v(LOG_TAG, "onNavigationDrawerItemSelected - backStackEntryCount/tag/backStackName: " + getSupportFragmentManager().getBackStackEntryCount() + "/" + tag + "/" + backStackName);
+//        Log.v(LOG_TAG, "onNavigationDrawerItemSelected - backStackEntryCount/tag/backStackName: " + getSupportFragmentManager().getBackStackEntryCount() + "/" + tag + "/" + backStackName);
         int cnt = getSupportFragmentManager().getBackStackEntryCount();
         if (cnt > 0) {
             getSupportFragmentManager().popBackStack();
@@ -125,10 +124,10 @@ public class MainActivity extends ActionBarActivity
                 .addToBackStack(backStackName)
                 .commit();
 
-        for (int i = 0, intCnt = getSupportFragmentManager().getBackStackEntryCount(); i < intCnt; i++) {
-            Log.v(LOG_TAG, "onNavigationDrawerItemSelected - name: " + i + ": " + getSupportFragmentManager().getBackStackEntryAt(i).getName());
-
-        }
+//        for (int i = 0, intCnt = getSupportFragmentManager().getBackStackEntryCount(); i < intCnt; i++) {
+//            Log.v(LOG_TAG, "onNavigationDrawerItemSelected - name: " + i + ": " + getSupportFragmentManager().getBackStackEntryAt(i).getName());
+//
+//        }
     }
 
     private String getCurrTopBackStackEntryName() {
@@ -150,7 +149,7 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (!navigationDrawerFragment.isDrawerOpen()) {
+        if (!mNavigationDrawerFragment.isDrawerOpen()) {
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
@@ -186,8 +185,8 @@ public class MainActivity extends ActionBarActivity
         Bundle args = new Bundle();
         args.putString(BookDetail.EAN_KEY, ean);
 
-        bookDetailFragment = new BookDetail();
-        bookDetailFragment.setArguments(args);
+        mBookDetailFragment = new BookDetail();
+        mBookDetailFragment.setArguments(args);
 
         int id = R.id.container;
         if (findViewById(R.id.right_container) == null) {
@@ -197,15 +196,15 @@ public class MainActivity extends ActionBarActivity
         }
 
         String topBackStackEntryName = getCurrTopBackStackEntryName();
-        Log.v(LOG_TAG, "onItemSelected - topBackStackEntryName: " + topBackStackEntryName);
+//        Log.v(LOG_TAG, "onItemSelected - topBackStackEntryName: " + topBackStackEntryName);
         if (topBackStackEntryName != null && topBackStackEntryName.equals(getResources().getString(R.string.title_book_details))) {
-            Log.v(LOG_TAG, "onItemSelected - this fragment is already the current tag/backStackName: " + getSupportFragmentManager().getBackStackEntryCount() + "/" + topBackStackEntryName);
+//            Log.v(LOG_TAG, "onItemSelected - this fragment is already the current tag/backStackName: " + getSupportFragmentManager().getBackStackEntryCount() + "/" + topBackStackEntryName);
             getSupportFragmentManager().beginTransaction()
-                    .replace(id, bookDetailFragment)
+                    .replace(id, mBookDetailFragment)
                     .commit();
         } else {
             getSupportFragmentManager().beginTransaction()
-                    .replace(id, bookDetailFragment)
+                    .replace(id, mBookDetailFragment)
                     .addToBackStack(getResources().getString(R.string.title_book_details))
                     .commit();
         }
@@ -220,13 +219,13 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void onBackPressed() {
-        Log.v(LOG_TAG, "onBackPressed - start - cnt: " + getSupportFragmentManager().getBackStackEntryCount());
+//        Log.v(LOG_TAG, "onBackPressed - start - cnt: " + getSupportFragmentManager().getBackStackEntryCount());
         int cnt = getSupportFragmentManager().getBackStackEntryCount();
         String topBackStackEntryName = getCurrTopBackStackEntryName();
         Log.v(LOG_TAG, "onBackPressed - start - name: " + topBackStackEntryName);
         if (!IS_TABLET && topBackStackEntryName.equals(getResources().getString(R.string.title_book_details))) {
             setTitle(R.string.title_list_of_books);
-            Log.v(LOG_TAG, "onBackPressed - title changed");
+//            Log.v(LOG_TAG, "onBackPressed - title changed");
         }
         if (getSupportFragmentManager().getBackStackEntryCount() < 2){
             finish();
@@ -237,13 +236,13 @@ public class MainActivity extends ActionBarActivity
     }
 
     private void removeBookDetailFragment() {
-        if (bookDetailFragment == null || !IS_TABLET) {
+        if (mBookDetailFragment == null || !IS_TABLET) {
             return;
         }
         int cnt = getSupportFragmentManager().getBackStackEntryCount();
         if (getSupportFragmentManager().getBackStackEntryAt(cnt - 1).getName().equals(getResources().getString(R.string.title_book_details))) {
             getSupportFragmentManager().beginTransaction()
-                    .detach(bookDetailFragment)
+                    .detach(mBookDetailFragment)
                     .commit();
         }
     }
@@ -251,15 +250,15 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onResume() {
         super.onResume();
-        messageReciever = new MessageReceiver();
+        mMessageReceiver = new MessageReceiver();
         IntentFilter filter = new IntentFilter(MESSAGE_EVENT);
-        LocalBroadcastManager.getInstance(getApplication()).registerReceiver(messageReciever, filter);
+        LocalBroadcastManager.getInstance(getApplication()).registerReceiver(mMessageReceiver, filter);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        LocalBroadcastManager.getInstance(getApplication()).unregisterReceiver(messageReciever);
+        LocalBroadcastManager.getInstance(getApplication()).unregisterReceiver(mMessageReceiver);
     }
 
     @Override
@@ -282,7 +281,7 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void processBookDeleted() {
-//    todo in onItemSelected() use tag to add navigationDrawerFragment.isDrawerOpen()HERE find it and call method in ListOfBooks to get a new cursor
+//    todo in onItemSelected() use tag to add mNavigationDrawerFragment.isDrawerOpen()HERE find it and call method in ListOfBooks to get a new cursor
         FragmentManager fragmentManager = getSupportFragmentManager();
         ListOfBooks listOfBooks = (ListOfBooks) fragmentManager.findFragmentByTag(TAG_LIST_OF_BOOKS);
         Log.v(LOG_TAG, "processBookDeleted - listOfBooks: " + listOfBooks);

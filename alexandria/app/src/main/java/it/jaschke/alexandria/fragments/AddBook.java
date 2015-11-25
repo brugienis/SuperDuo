@@ -203,6 +203,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
      */
     @Override
     public void onLoadFinished(android.support.v4.content.Loader<Cursor> loader, Cursor data) {
+        Log.v(LOG_TAG, "onLoadFinished - data count: " + data.getCount());
         if (!data.moveToFirst()) {
             return;
         }
