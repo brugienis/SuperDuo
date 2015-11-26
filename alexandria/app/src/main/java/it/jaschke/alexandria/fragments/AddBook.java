@@ -1,7 +1,6 @@
 package it.jaschke.alexandria.fragments;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -11,7 +10,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,10 +43,6 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
 
     private final int LOADER_ID = 1;
     private final String EAN_CONTENT="eanContent";
-    private BroadcastReceiver messageReciever;
-
-    private String mScanFormat = "Format:";
-    private String mScanContents = "Contents:";
 
     private static final String NINE_SEVEN_EIGHT = "978";
 
@@ -203,7 +197,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
      */
     @Override
     public void onLoadFinished(android.support.v4.content.Loader<Cursor> loader, Cursor data) {
-        Log.v(LOG_TAG, "onLoadFinished - data count: " + data.getCount());
+//        Log.v(LOG_TAG, "onLoadFinished - data count: " + data.getCount());
         if (!data.moveToFirst()) {
             return;
         }
@@ -211,15 +205,15 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
         bookEmptyTv.setText("");
 
         String bookTitle = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.TITLE));
-        Log.v(LOG_TAG, "onLoadFinished - bookTitle: " + bookTitle);
+//        Log.v(LOG_TAG, "onLoadFinished - bookTitle: " + bookTitle);
         bookTitleTv.setText(bookTitle);
 
         String bookSubTitle = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.SUBTITLE));
-        Log.v(LOG_TAG, "onLoadFinished - bookSubTitle: " + bookSubTitle);
+//        Log.v(LOG_TAG, "onLoadFinished - bookSubTitle: " + bookSubTitle);
         bookSubTitleTv.setText(bookSubTitle);
 
         String authors = data.getString(data.getColumnIndex(AlexandriaContract.AuthorEntry.AUTHOR));
-        Log.v(LOG_TAG, "onLoadFinished - authors: " + authors);
+//        Log.v(LOG_TAG, "onLoadFinished - authors: " + authors);
         String[] authorsArr = authors.split(",");
         authorsTv.setLines(authorsArr.length);
         authorsTv.setText(authors.replace(",", "\n"));
@@ -237,7 +231,6 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
 //        Log.v(LOG_TAG, "onLoadFinished - end");
     }
 
-    // FIXME: 21/09/2015 - why it is here - it does nothing
     @Override
     public void onLoaderReset(android.support.v4.content.Loader<Cursor> loader) {
 
@@ -264,7 +257,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
         activity.setTitle(R.string.title_scan);
     }
 
-    public void iprocessIsbnNotFound(String msg) {
+    public void processIsbnNotFound(String msg) {
         bookEmptyTv.setText(msg);
         eanTv.setEnabled(true);
     }

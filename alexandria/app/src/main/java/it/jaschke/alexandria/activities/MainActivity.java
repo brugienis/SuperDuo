@@ -265,7 +265,7 @@ public class MainActivity extends ActionBarActivity
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (scanResult != null) {
-            Log.d(LOG_TAG, "scan result: " + scanResult.toString());
+//            Log.d(LOG_TAG, "scan result: " + scanResult.toString());
             try {
                 AddBook addBook = (AddBook) getSupportFragmentManager().findFragmentByTag(TAG_ADD_BOOK);
                 addBook.setScanedEAN(scanResult.getContents());
@@ -295,7 +295,7 @@ public class MainActivity extends ActionBarActivity
         @Override
         public void onReceive(Context context, Intent intent) {
             String msgKey = intent.getStringExtra(MESSAGE_KEY);
-            Log.v(LOG_TAG, "messageReceiver - intent: " + intent);
+            Log.v(LOG_TAG, "messageReceiver - intent/msgKey: " + intent + "/" + msgKey);
             if (msgKey != null) {
                 if (msgKey.equals(DELETE_EVENT)) {
                     processBookDeleted();
@@ -303,7 +303,7 @@ public class MainActivity extends ActionBarActivity
                     // FIXME: 27/09/2015 call method in AddBook that will execute two lines below
                     FragmentManager fragmentManager = getSupportFragmentManager();
                     AddBook addBook = (AddBook) fragmentManager.findFragmentByTag(TAG_ADD_BOOK);
-                    addBook.iprocessIsbnNotFound(msgKey);
+                    addBook.processIsbnNotFound(msgKey);
                 }
             }
         }

@@ -21,6 +21,7 @@
     <string name="empty_book_data_isbn_not_found">No Book found</string>
     <string name="empty_book_data_server_error">No books information available. The server is not returning valid data. Please check for an updated version of Alexandria.</string>
     <string name="empty_book_data_no_network">No books information available. The network is not available to fetch book data.</string>
+    <string name="book_data_download_problem">No books information available. Problems downloading data from network.</string>
     <string name="no_books_available">No books available</string>
     <string name="search">Search</string>
     <string name="book_search_string" translatable="false">%%<xliff:g id="part_of_book_tile">%1$s</xliff:g>%%</string>

@@ -62,7 +62,7 @@ public class BookService extends IntentService {
      * parameters.
      */
     private void deleteBook(String ean) {
-        Log.e(LOG_TAG, "deleteBook - ean: " + ean);
+//        Log.e(LOG_TAG, "deleteBook - ean: " + ean);
         if (ean != null) {
             getContentResolver().delete(AlexandriaContract.BookEntry.buildBookUri(Long.parseLong(ean)), null, null);
             Intent messageIntent = new Intent(MainActivity.MESSAGE_EVENT);
@@ -99,9 +99,9 @@ public class BookService extends IntentService {
         BufferedReader reader = null;
         String bookJsonString = null;
         boolean serverProblem = false;
+        boolean otherProblem = false;
 
         try {
-//            final String FORECAST_BASE_URL = "https://www.googleapis.com/books/v1/volumes?";
             final String QUERY_PARAM = "q";
 
             final String ISBN_PARAM = "isbn:" + ean;
@@ -118,7 +118,6 @@ public class BookService extends IntentService {
 
             InputStream inputStream = urlConnection.getInputStream();
             StringBuffer buffer = new StringBuffer();
-//            Log.e(LOG_TAG, "fetchBook - inputStream: " + inputStream);
             if (inputStream == null) {
                 return;
             }
@@ -136,15 +135,13 @@ public class BookService extends IntentService {
             }
             bookJsonString = buffer.toString();
         } catch (IOException e) {
-            Log.e(LOG_TAG, "Error ", e);
+            Log.e(LOG_TAG, "Error IOException ", e);
             // If the code didn't successfully get the weather data, there's no point in attempting
             // to parse it.
             serverProblem = true;
         }
-        // FIXME: 22/09/2015 - test again to see if exception is thrown when no network connection
         catch (Exception e) {
-            Log.e(LOG_TAG, "Error ", e);
-            e.printStackTrace();
+            otherProblem = true;
         }
         finally {
             if (urlConnection != null) {
@@ -160,13 +157,10 @@ public class BookService extends IntentService {
 
         }
 
-//        Log.e(LOG_TAG, "fetchBook - after retrieving JSON - serverProblem: " + serverProblem);
-        if (!serverProblem) {
+        if (!serverProblem && !otherProblem) {
 
             final String ITEMS = "items";
-
             final String VOLUME_INFO = "volumeInfo";
-
             final String TITLE = "title";
             final String SUBTITLE = "subtitle";
             final String AUTHORS = "authors";
@@ -181,7 +175,6 @@ public class BookService extends IntentService {
                 if (bookJson.has(ITEMS)) {
                     bookArray = bookJson.getJSONArray(ITEMS);
                 } else {
-//                    Log.e(LOG_TAG, "fetchBook - JSON doesn't have ITEMS: " + bookJsonString);
                     Intent messageIntent = new Intent(MainActivity.MESSAGE_EVENT);
                     messageIntent.putExtra(MainActivity.MESSAGE_KEY, getResources().getString(R.string.empty_book_data_isbn_not_found));
                     LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(messageIntent);
@@ -232,6 +225,12 @@ public class BookService extends IntentService {
             }
             Intent messageIntent = new Intent(MainActivity.MESSAGE_EVENT);
             messageIntent.putExtra(MainActivity.MESSAGE_KEY, message);
+            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(messageIntent);
+            return;
+        } else if (otherProblem) {
+            Intent messageIntent = new Intent(MainActivity.MESSAGE_EVENT);
+            messageIntent.putExtra(MainActivity.MESSAGE_KEY,
+                    getResources().getString(R.string.book_data_download_problem));
             LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(messageIntent);
             return;
         }

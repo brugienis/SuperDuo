@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -132,7 +131,6 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
             mSearchText.setEnabled(false);
             mSearchButtonVw.setEnabled(false);
         } else {
-//            Log.v(LOG_TAG, "getBooksFromDB - there is data");
             mSearchTextInputLayout.setHint(getActivity().getResources().getString(R.string.title_input_hint));
         }
 
@@ -148,14 +146,10 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
-        // FIXME: 23/11/2015 string with param
-//        final String selection = AlexandriaContract.BookEntry.TITLE +" LIKE ? OR " + AlexandriaContract.BookEntry.SUBTITLE + " LIKE ? ";
         final String selection = getResources().getString(R.string.book_search_columns, AlexandriaContract.BookEntry.TITLE, AlexandriaContract.BookEntry.SUBTITLE);
         String searchString = mSearchText.getText().toString();
 
         if (searchString.length()>0) {
-//            searchString =getResources().getString(R.string.book_search_string, searchString);
-            Log.v(LOG_TAG, "onCreateLoader - selection: " + selection);
             return new CursorLoader(
                     getActivity(),
                     AlexandriaContract.BookEntry.CONTENT_URI,
