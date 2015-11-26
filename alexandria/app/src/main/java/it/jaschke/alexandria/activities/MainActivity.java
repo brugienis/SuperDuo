@@ -47,18 +47,18 @@ public class MainActivity extends ActionBarActivity
     public static final String MESSAGE_KEY = "MESSAGE_EXTRA";
 
     /**
-     * Used to store the last screen title. For use in {@link #restoreActionBar()}.
+     * Used to store the last screen mTitle. For use in {@link #restoreActionBar()}.
      */
-    private CharSequence title;
-    public static boolean IS_TABLET = false;
+    private CharSequence mTitle;
+    public static boolean sIsTablet = false;
 
     private final static String LOG_TAG = MainActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        IS_TABLET = isTablet();
-        if (IS_TABLET){
+        sIsTablet = isTablet();
+        if (sIsTablet){
             setContentView(R.layout.activity_main_tablet);
         }else {
             setContentView(R.layout.activity_main);
@@ -66,7 +66,7 @@ public class MainActivity extends ActionBarActivity
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
-        title = getTitle();
+        mTitle = getTitle();
 
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(R.id.navigation_drawer,
@@ -139,14 +139,14 @@ public class MainActivity extends ActionBarActivity
     }
 
     public void setTitle(int titleId) {
-        title = getString(titleId);
+        mTitle = getString(titleId);
     }
 
     public void restoreActionBar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(title);
+        actionBar.setTitle(mTitle);
     }
 
 
@@ -225,9 +225,9 @@ public class MainActivity extends ActionBarActivity
         int cnt = getSupportFragmentManager().getBackStackEntryCount();
         String topBackStackEntryName = getCurrTopBackStackEntryName();
         Log.v(LOG_TAG, "onBackPressed - start - name: " + topBackStackEntryName);
-        if (!IS_TABLET && topBackStackEntryName.equals(getResources().getString(R.string.title_book_details))) {
+        if (!sIsTablet && topBackStackEntryName.equals(getResources().getString(R.string.title_book_details))) {
             setTitle(R.string.title_list_of_books);
-//            Log.v(LOG_TAG, "onBackPressed - title changed");
+//            Log.v(LOG_TAG, "onBackPressed - mTitle changed");
         }
         if (getSupportFragmentManager().getBackStackEntryCount() < 2){
             finish();
@@ -238,7 +238,7 @@ public class MainActivity extends ActionBarActivity
     }
 
     private void removeBookDetailFragment() {
-        if (mBookDetailFragment == null || !IS_TABLET) {
+        if (mBookDetailFragment == null || !sIsTablet) {
             return;
         }
         int cnt = getSupportFragmentManager().getBackStackEntryCount();

@@ -37,7 +37,7 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
     private ShareActionProvider mShareActionProvider;
     private Callbacks mCallbacks;
     public static final String EAN_KEY = "EAN";
-    private final int LOADER_ID = 10;
+    private final int mLoaderId = 10;
 
     private final static String LOG_TAG = BookDetail.class.getSimpleName();
 
@@ -68,7 +68,7 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
         Bundle arguments = getArguments();
         if (arguments != null) {
             mEan = arguments.getString(BookDetail.EAN_KEY);
-            getLoaderManager().restartLoader(LOADER_ID, null, this);
+            getLoaderManager().restartLoader(mLoaderId, null, this);
         }
 
         mRootView = inflater.inflate(R.layout.fragment_full_book, container, false);

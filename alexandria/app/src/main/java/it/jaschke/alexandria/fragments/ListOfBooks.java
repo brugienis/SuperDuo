@@ -36,7 +36,7 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
     private EditText mSearchText;
     private Callbacks mCallbacks;
 
-    private final int LOADER_ID = 10;
+    private final int mLoaderId = 10;
 
     private final static String LOG_TAG = ListOfBooks.class.getSimpleName();
 
@@ -148,7 +148,7 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
 
 
     private void restartLoader(){
-        getLoaderManager().restartLoader(LOADER_ID, null, this);
+        getLoaderManager().restartLoader(mLoaderId, null, this);
     }
 
     @Override

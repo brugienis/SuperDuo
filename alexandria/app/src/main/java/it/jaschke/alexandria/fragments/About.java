@@ -16,7 +16,7 @@ import it.jaschke.alexandria.R;
 
 public class About extends Fragment {
 
-    public About(){
+    public About() {
 
     }
 

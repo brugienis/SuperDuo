@@ -33,20 +33,20 @@ import it.jaschke.alexandria.services.DownloadImage;
 
 public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private View rootView;
-    private EditText eanTv;
-    private TextView bookEmptyTv;
-    private ImageView bookCoverIv;
-    private TextView bookTitleTv;
-    private TextView bookSubTitleTv;
-    private TextView authorsTv;
-    private TextView categoriesTv;
-    private View nextBtn;
-    private View deleteBtn;
+    private View mRootView;
+    private EditText mEanTv;
+    private TextView mBookEmptyTv;
+    private ImageView mBookCoverIv;
+    private TextView mBookTitleTv;
+    private TextView mBookSubTitleTv;
+    private TextView mAuthorsTv;
+    private TextView mCategoriesTv;
+    private View mNextBtn;
+    private View mDeleteBtn;
 
 
-    private final int LOADER_ID = 1;
-    private final String EAN_CONTENT="eanContent";
+    private final int mLoaderId = 1;
+    private final String mEanContent ="eanContent";
 
     private static final String NINE_SEVEN_EIGHT = "978";
 
@@ -58,27 +58,27 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (eanTv != null) {
-            outState.putString(EAN_CONTENT, eanTv.getText().toString());
+        if (mEanTv != null) {
+            outState.putString(mEanContent, mEanTv.getText().toString());
         }
     }
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        rootView = inflater.inflate(R.layout.fragment_add_book, container, false);
+        mRootView = inflater.inflate(R.layout.fragment_add_book, container, false);
 
-        bookEmptyTv = (TextView) rootView.findViewById(R.id.bookEmpty);
+        mBookEmptyTv = (TextView) mRootView.findViewById(R.id.bookEmpty);
 
-        bookCoverIv = (ImageView) rootView.findViewById(R.id.bookCover);
-        bookTitleTv = (TextView) rootView.findViewById(R.id.bookTitle);
-        bookSubTitleTv = (TextView) rootView.findViewById(R.id.bookSubTitle);
-        authorsTv = (TextView) rootView.findViewById(R.id.authors);
-        categoriesTv = (TextView) rootView.findViewById(R.id.categories);
+        mBookCoverIv = (ImageView) mRootView.findViewById(R.id.bookCover);
+        mBookTitleTv = (TextView) mRootView.findViewById(R.id.bookTitle);
+        mBookSubTitleTv = (TextView) mRootView.findViewById(R.id.bookSubTitle);
+        mAuthorsTv = (TextView) mRootView.findViewById(R.id.authors);
+        mCategoriesTv = (TextView) mRootView.findViewById(R.id.categories);
 
-        eanTv = (EditText) rootView.findViewById(R.id.ean);
+        mEanTv = (EditText) mRootView.findViewById(R.id.ean);
 
-        eanTv.addTextChangedListener(new TextWatcher() {
+        mEanTv.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 //no need
@@ -99,7 +99,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
                 if (eanStr.length() < 13) {
                     return;
                 }
-                eanTv.setEnabled(false);
+                mEanTv.setEnabled(false);
                 hideKeyboard();
                 //Once we have an ISBN, start a book intent
                 Intent bookIntent = new Intent(getActivity(), BookService.class);
@@ -107,13 +107,13 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
                 bookIntent.setAction(BookService.FETCH_BOOK);
                 getActivity().startService(bookIntent);
                 AddBook.this.restartLoader();
-                bookEmptyTv.setText("Search started");
+                mBookEmptyTv.setText("Search started");
                 // FIXME: 21/11/2015 - test below - is it still a problem?
 //                in portraite enter ISBN and rotate, than click search - you will get NullPointerException on line 119
             }
         });
 
-        rootView.findViewById(R.id.scan_button).setOnClickListener(new View.OnClickListener() {
+        mRootView.findViewById(R.id.scan_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // This is the callback method that the system will invoke when your button is
@@ -130,22 +130,22 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
 
             }
         });
-        nextBtn = (View) rootView.findViewById(R.id.next_button);
-        nextBtn.setOnClickListener(new View.OnClickListener() {
+        mNextBtn = (View) mRootView.findViewById(R.id.next_button);
+        mNextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                deleteBtn.setVisibility(View.INVISIBLE);
+                mDeleteBtn.setVisibility(View.INVISIBLE);
                 clearFields();
-                eanTv.setText("");
-                eanTv.setEnabled(true);
+                mEanTv.setText("");
+                mEanTv.setEnabled(true);
             }
         });
 
-        deleteBtn = (View) rootView.findViewById(R.id.delete_button);
-        deleteBtn.setOnClickListener(new View.OnClickListener() {
+        mDeleteBtn = (View) mRootView.findViewById(R.id.delete_button);
+        mDeleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String eanStr = eanTv.getText().toString();
+                String eanStr = mEanTv.getText().toString();
                 if (eanStr.length() == 10 && !eanStr.startsWith(NINE_SEVEN_EIGHT)) {
                     eanStr = NINE_SEVEN_EIGHT + eanStr;
                 }
@@ -154,28 +154,28 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
                 bookIntent.setAction(BookService.DELETE_BOOK);
                 getActivity().startService(bookIntent);
                 clearFields();
-                eanTv.setEnabled(true);
+                mEanTv.setEnabled(true);
             }
         });
 
         if (savedInstanceState != null) {
-            eanTv.setText(savedInstanceState.getString(EAN_CONTENT));
-            eanTv.setHint("");
+            mEanTv.setText(savedInstanceState.getString(mEanContent));
+            mEanTv.setHint("");
         }
 
-        return rootView;
+        return mRootView;
     }
 
     private void restartLoader(){
-        getLoaderManager().restartLoader(LOADER_ID, null, this);
+        getLoaderManager().restartLoader(mLoaderId, null, this);
     }
 
     @Override
     public android.support.v4.content.Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        if (eanTv.getText().length() == 0) {
+        if (mEanTv.getText().length() == 0) {
             return null;
         }
-        String eanStr= eanTv.getText().toString();
+        String eanStr= mEanTv.getText().toString();
         if(eanStr.length() == 10 && !eanStr.startsWith(NINE_SEVEN_EIGHT)){
             eanStr = NINE_SEVEN_EIGHT + eanStr;
         }
@@ -206,32 +206,32 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
             return;
         }
 
-        bookEmptyTv.setText("");
+        mBookEmptyTv.setText("");
 
         String bookTitle = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.TITLE));
 //        Log.v(LOG_TAG, "onLoadFinished - bookTitle: " + bookTitle);
-        bookTitleTv.setText(bookTitle);
+        mBookTitleTv.setText(bookTitle);
 
         String bookSubTitle = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.SUBTITLE));
 //        Log.v(LOG_TAG, "onLoadFinished - bookSubTitle: " + bookSubTitle);
-        bookSubTitleTv.setText(bookSubTitle);
+        mBookSubTitleTv.setText(bookSubTitle);
 
         String authors = data.getString(data.getColumnIndex(AlexandriaContract.AuthorEntry.AUTHOR));
 //        Log.v(LOG_TAG, "onLoadFinished - authors: " + authors);
         String[] authorsArr = authors.split(",");
-        authorsTv.setLines(authorsArr.length);
-        authorsTv.setText(authors.replace(",", "\n"));
+        mAuthorsTv.setLines(authorsArr.length);
+        mAuthorsTv.setText(authors.replace(",", "\n"));
         String imgUrl = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.IMAGE_URL));
         if (Patterns.WEB_URL.matcher(imgUrl).matches()) {
-            new DownloadImage(bookCoverIv).execute(imgUrl);
-            bookCoverIv.setVisibility(View.VISIBLE);
+            new DownloadImage(mBookCoverIv).execute(imgUrl);
+            mBookCoverIv.setVisibility(View.VISIBLE);
         }
 
         String categories = data.getString(data.getColumnIndex(AlexandriaContract.CategoryEntry.CATEGORY));
-        categoriesTv.setText(categories);
+        mCategoriesTv.setText(categories);
 
-        nextBtn.setVisibility(View.VISIBLE);
-        deleteBtn.setVisibility(View.VISIBLE);
+        mNextBtn.setVisibility(View.VISIBLE);
+        mDeleteBtn.setVisibility(View.VISIBLE);
 //        Log.v(LOG_TAG, "onLoadFinished - end");
     }
 
@@ -241,18 +241,18 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
     }
 
     public void setScanedEAN(String ean) {
-        eanTv.setText(ean);
+        mEanTv.setText(ean);
     }
 
     private void clearFields() {
-        eanTv.setText("");
-        bookTitleTv.setText("");
-        bookSubTitleTv.setText("");
-        authorsTv.setText("");
-        categoriesTv.setText("");
-        rootView.findViewById(R.id.bookCover).setVisibility(View.INVISIBLE);
-        nextBtn.setVisibility(View.INVISIBLE);
-        deleteBtn.setVisibility(View.INVISIBLE);
+        mEanTv.setText("");
+        mBookTitleTv.setText("");
+        mBookSubTitleTv.setText("");
+        mAuthorsTv.setText("");
+        mCategoriesTv.setText("");
+        mRootView.findViewById(R.id.bookCover).setVisibility(View.INVISIBLE);
+        mNextBtn.setVisibility(View.INVISIBLE);
+        mDeleteBtn.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -262,14 +262,14 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
     }
 
     public void processIsbnNotFound(String msg) {
-        bookEmptyTv.setText(msg);
-        eanTv.setEnabled(true);
+        mBookEmptyTv.setText(msg);
+        mEanTv.setEnabled(true);
     }
 
     private void hideKeyboard() {
         InputMethodManager inputMethodManager =
                 (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(eanTv.getWindowToken(), 0);
+        inputMethodManager.hideSoftInputFromWindow(mEanTv.getWindowToken(), 0);
     }
 
 }

@@ -16,10 +16,10 @@ import java.io.InputStream;
  * Created by saj on 11/01/15.
  */
 public class DownloadImage extends AsyncTask<String, Void, Bitmap> {
-    ImageView bmImage;
+    ImageView mBmImage;
 
     public DownloadImage(ImageView bmImage) {
-        this.bmImage = bmImage;
+        this.mBmImage = bmImage;
     }
 
     protected Bitmap doInBackground(String... urls) {
@@ -36,7 +36,7 @@ public class DownloadImage extends AsyncTask<String, Void, Bitmap> {
     }
 
     protected void onPostExecute(Bitmap result) {
-        bmImage.setImageBitmap(result);
+        mBmImage.setImageBitmap(result);
     }
 }
 
