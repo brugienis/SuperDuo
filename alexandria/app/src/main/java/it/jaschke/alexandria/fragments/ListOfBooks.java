@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +20,6 @@ import android.widget.ListView;
 
 import it.jaschke.alexandria.R;
 import it.jaschke.alexandria.api.BookListAdapter;
-import it.jaschke.alexandria.api.Callback;
 import it.jaschke.alexandria.data.AlexandriaContract;
 
 
@@ -31,10 +31,15 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
     private View mSearchButtonVw;
     private int mPosition = ListView.INVALID_POSITION;
     private EditText mSearchText;
+    private Callbacks mCallbacks;
 
     private final int LOADER_ID = 10;
 
     private final static String LOG_TAG = ListOfBooks.class.getSimpleName();
+
+    public interface Callbacks {
+        void onItemSelected(String ean);
+    }
 
     public ListOfBooks() {
     }
@@ -104,7 +109,9 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
 //    }
 
     private void bookDetailsSelected(String ean) {
-        ((Callback)getActivity()).onItemSelected(ean);
+//        ((Callback)getActivity()).onItemSelected(ean);
+        Log.v(LOG_TAG, "bookDetailsSelected - calling mCallbacks.onItemSelected(ean)");
+        mCallbacks.onItemSelected(ean);
         hideKeyboard();
     }
 
@@ -191,6 +198,7 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        mCallbacks = (Callbacks) activity;
         activity.setTitle(R.string.title_list_of_books);
     }
 

@@ -20,7 +20,6 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import it.jaschke.alexandria.R;
-import it.jaschke.alexandria.api.Callback;
 import it.jaschke.alexandria.fragments.About;
 import it.jaschke.alexandria.fragments.AddBook;
 import it.jaschke.alexandria.fragments.BookDetail;
@@ -30,7 +29,7 @@ import it.jaschke.alexandria.fragments.NavigationDrawerFragment;
 
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks,
-        Callback,
+        ListOfBooks.Callbacks,
         BookDetail.Callbacks{
 
     /**
@@ -182,6 +181,7 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void onItemSelected(String ean) {
+        Log.v(LOG_TAG, "onItemSelected");
         Bundle args = new Bundle();
         args.putString(BookDetail.EAN_KEY, ean);
 
