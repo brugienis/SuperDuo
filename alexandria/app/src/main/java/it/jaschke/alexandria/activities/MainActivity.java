@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2013 The Android Open Source Project
+ */
+
 package it.jaschke.alexandria.activities;
 
 import android.content.BroadcastReceiver;
@@ -171,9 +175,9 @@ public class MainActivity extends ActionBarActivity
             return true;
         } else if (id == R.id.action_show_backstack) {
             // FIXME: 1/10/2015 remove after testing
-            for (int i = 0, cnt = getSupportFragmentManager().getBackStackEntryCount(); i < cnt; i++) {
-                Log.v(LOG_TAG, "backStack - name: " + i + ": " + getSupportFragmentManager().getBackStackEntryAt(i).getName());
-            }
+//            for (int i = 0, cnt = getSupportFragmentManager().getBackStackEntryCount(); i < cnt; i++) {
+//                Log.v(LOG_TAG, "backStack - name: " + i + ": " + getSupportFragmentManager().getBackStackEntryAt(i).getName());
+//            }
         }
 
         return super.onOptionsItemSelected(item);
@@ -181,7 +185,6 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void onItemSelected(String ean) {
-        Log.v(LOG_TAG, "onItemSelected");
         Bundle args = new Bundle();
         args.putString(BookDetail.EAN_KEY, ean);
 
@@ -208,7 +211,6 @@ public class MainActivity extends ActionBarActivity
                     .addToBackStack(getResources().getString(R.string.title_book_details))
                     .commit();
         }
-
     }
 
     private boolean isTablet() {

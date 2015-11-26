@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2013 The Android Open Source Project
+ */
+
 package it.jaschke.alexandria.fragments;
 
 import android.app.Activity;
@@ -9,7 +13,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -109,8 +112,6 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
 //    }
 
     private void bookDetailsSelected(String ean) {
-//        ((Callback)getActivity()).onItemSelected(ean);
-        Log.v(LOG_TAG, "bookDetailsSelected - calling mCallbacks.onItemSelected(ean)");
         mCallbacks.onItemSelected(ean);
         hideKeyboard();
     }

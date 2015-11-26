@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2013 The Android Open Source Project
+ */
+
 package it.jaschke.alexandria.services;
 
 import android.app.IntentService;
@@ -151,7 +155,7 @@ public class BookService extends IntentService {
                 try {
                     reader.close();
                 } catch (final IOException nothingCanBeDone) {
-//                    Log.e(LOG_TAG, "Error closing stream", e);
+                    // nothing can be done
                 }
             }
 
