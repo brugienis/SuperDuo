@@ -24,8 +24,6 @@
     <string name="book_data_download_problem">No books information available. Problems downloading data from network.</string>
     <string name="no_books_available">No books available</string>
     <string name="search">Search</string>
-    <string name="book_search_string" translatable="false">%%<xliff:g id="part_of_book_tile">%1$s</xliff:g>%%</string>
-    <string name="book_search_columns" translatable="false"><xliff:g id="tile_column">%1$s</xliff:g> LIKE ? OR <xliff:g id="sub_tile_column">%2$s</xliff:g> LIKE ?</string>
     <string name="delete">Delete Book</string>
     <string name="pref_startScreen">Select Start Screen</string>
     <string name="title_activity_settings">Settings</string>
@@ -38,5 +36,10 @@
     <string name="about_text">This application gets book information from a Google API. All titles, cover images, and author information come from there.
     The original version of this app was built by Sascha Jaschke, and a modified version is given to students in the Udacity Android Nanodegree program. </string>
     <string name="title_activity_scanner">ScannerActivity</string>
+
+    <string name="book_search_string" translatable="false">%%<xliff:g id="part_of_book_tile">%1$s</xliff:g>%%</string>
+    <string name="book_search_columns" translatable="false"><xliff:g id="tile_column">%1$s</xliff:g> LIKE ? OR <xliff:g id="sub_tile_column">%2$s</xliff:g> LIKE ?</string>
+    <string name="authors_column_separator" translatable="false">,</string>
+    <string name="new_line" translatable="false">\n</string>
 
 </resources>

@@ -44,11 +44,11 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
     private View mNextBtn;
     private View mDeleteBtn;
 
-
     private final int mLoaderId = 1;
     private final String mEanContent ="eanContent";
 
     private static final String NINE_SEVEN_EIGHT = "978";
+    private static final String EMPTY_STRING = "";
 
     private final static String LOG_TAG = AddBook.class.getSimpleName();
 
@@ -131,7 +131,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
             public void onClick(View view) {
                 mDeleteBtn.setVisibility(View.INVISIBLE);
                 clearFields();
-                mEanTv.setText("");
+                mEanTv.setText(EMPTY_STRING);
                 mEanTv.setEnabled(true);
             }
         });
@@ -212,10 +212,16 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
         mBookSubTitleTv.setText(bookSubTitle);
 
         String authors = data.getString(data.getColumnIndex(AlexandriaContract.AuthorEntry.AUTHOR));
-//        Log.v(LOG_TAG, "onLoadFinished - authors: " + authors);
-        String[] authorsArr = authors.split(",");
-        mAuthorsTv.setLines(authorsArr.length);
-        mAuthorsTv.setText(authors.replace(",", "\n"));
+        if (authors == null) {
+            mAuthorsTv.setText(EMPTY_STRING);
+        } else {
+            String[] authorsArr = authors.split(getResources().getString(R.string.authors_column_separator));
+            mAuthorsTv.setLines(authorsArr.length);
+            mAuthorsTv.setText(authors.replace(
+                    getResources().getString(R.string.authors_column_separator),
+                    getResources().getString(R.string.new_line)));
+        }
+
         String imgUrl = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.IMAGE_URL));
         if (Patterns.WEB_URL.matcher(imgUrl).matches()) {
             new DownloadImage(mBookCoverIv, getActivity()).execute(imgUrl);
