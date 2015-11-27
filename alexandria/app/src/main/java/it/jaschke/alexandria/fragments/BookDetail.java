@@ -161,7 +161,6 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
 
     }
 
-    // FIXME: 23/11/2015 do we need below?
     @Override
     public void onLoaderReset(android.support.v4.content.Loader<Cursor> loader) {
 

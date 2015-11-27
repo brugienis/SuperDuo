@@ -174,8 +174,9 @@ public class MainActivity extends ActionBarActivity
         if (id == R.id.action_settings) {
             startActivity(new Intent(this, SettingsActivity.class));
             return true;
-        } else if (id == R.id.action_show_backstack) {
-            // FIXME: 1/10/2015 remove after testing
+        }
+        // FIXME: 1/10/2015 remove after testing
+        else if (id == R.id.action_show_backstack) {
 //            for (int i = 0, cnt = getSupportFragmentManager().getBackStackEntryCount(); i < cnt; i++) {
 //                Log.v(LOG_TAG, "backStack - name: " + i + ": " + getSupportFragmentManager().getBackStackEntryAt(i).getName());
 //            }

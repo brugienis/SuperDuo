@@ -2,6 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
 
+    <!-- TODO: 1/10/2015 remove 'action_show_backstack' after testing -->
     <item android:id="@+id/action_show_backstack"
           android:title="back stack"
           app:showAsAction="never"
