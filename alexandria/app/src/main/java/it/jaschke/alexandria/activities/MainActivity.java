@@ -19,6 +19,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -272,9 +273,9 @@ public class MainActivity extends ActionBarActivity
                 AddBook addBook = (AddBook) getSupportFragmentManager().findFragmentByTag(TAG_ADD_BOOK);
                 addBook.setScanedEAN(scanResult.getContents());
             } catch (Exception e) {
-                // FIXME: 20/11/2015 - show error description
-                e.printStackTrace();
-                // maybe no add book fragment around?
+                Toast.makeText(getApplicationContext(),
+                        getResources().getString(R.string.scanner_results_processing_problem),
+                        Toast.LENGTH_LONG).show();
             }
         }
 

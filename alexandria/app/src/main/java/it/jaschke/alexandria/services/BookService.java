@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -139,15 +138,10 @@ public class BookService extends IntentService {
             }
             bookJsonString = buffer.toString();
         } catch (IOException e) {
-            Log.e(LOG_TAG, "Error IOException ", e);
-            // If the code didn't successfully get the weather data, there's no point in attempting
-            // to parse it.
             serverProblem = true;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             otherProblem = true;
-        }
-        finally {
+        } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
             }
@@ -155,7 +149,7 @@ public class BookService extends IntentService {
                 try {
                     reader.close();
                 } catch (final IOException nothingCanBeDone) {
-                    // nothing can be done
+                    // nothing can be done - safe to ignore
                 }
             }
 
@@ -214,7 +208,7 @@ public class BookService extends IntentService {
                 }
 
             } catch (JSONException e) {
-                Log.e(LOG_TAG, "Error ", e);
+//                Log.e(LOG_TAG, "Error ", e);
                 serverProblem = true;
             }
         }

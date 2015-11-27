@@ -108,8 +108,6 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
                 getActivity().startService(bookIntent);
                 AddBook.this.restartLoader();
                 mBookEmptyTv.setText("Search started");
-                // FIXME: 21/11/2015 - test below - is it still a problem?
-//                in portraite enter ISBN and rotate, than click search - you will get NullPointerException on line 119
             }
         });
 
@@ -121,9 +119,6 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
                 //functionality directly in this app.
                 // Hint: Use a Try/Catch block to handle the Intent dispatch gracefully, if you
                 // are using an external app.
-
-                // FIXME: 21/11/2015 check if try/catch is required
-                Context context = getActivity();
 
                 IntentIntegrator integrator = new IntentIntegrator(getActivity());
                 integrator.initiateScan();
@@ -223,7 +218,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
         mAuthorsTv.setText(authors.replace(",", "\n"));
         String imgUrl = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.IMAGE_URL));
         if (Patterns.WEB_URL.matcher(imgUrl).matches()) {
-            new DownloadImage(mBookCoverIv).execute(imgUrl);
+            new DownloadImage(mBookCoverIv, getActivity()).execute(imgUrl);
             mBookCoverIv.setVisibility(View.VISIBLE);
         }
 

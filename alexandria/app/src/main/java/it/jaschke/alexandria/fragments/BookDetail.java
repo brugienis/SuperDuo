@@ -51,7 +51,11 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mCallbacks = (Callbacks) activity;
+        try {
+            mCallbacks = (Callbacks) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException("Activity must implement BookDetail.Callbacks.");
+        }
 //        Log.v(LOG_TAG, "onAttach - mCallbacks: " + mCallbacks);
     }
 
@@ -134,8 +138,8 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
         ((TextView) mRootView.findViewById(R.id.authors)).setLines(authorsArr.length);
         ((TextView) mRootView.findViewById(R.id.authors)).setText(authors.replace(",","\n"));
         String imgUrl = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.IMAGE_URL));
-        if(Patterns.WEB_URL.matcher(imgUrl).matches()){
-            new DownloadImage((ImageView) mRootView.findViewById(R.id.fullBookCover)).execute(imgUrl);
+        if (Patterns.WEB_URL.matcher(imgUrl).matches()){
+            new DownloadImage((ImageView) mRootView.findViewById(R.id.fullBookCover), getActivity()).execute(imgUrl);
             mRootView.findViewById(R.id.fullBookCover).setVisibility(View.VISIBLE);
         }
 

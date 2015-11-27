@@ -199,7 +199,11 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mCallbacks = (Callbacks) activity;
+        try {
+            mCallbacks = (Callbacks) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException("Activity must implement ListOfBooks.Callbacks.");
+        }
         activity.setTitle(R.string.title_list_of_books);
     }
 

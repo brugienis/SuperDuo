@@ -4,22 +4,30 @@
 
 package it.jaschke.alexandria.services;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.io.InputStream;
+
+import it.jaschke.alexandria.R;
 
 /**
  * Created by saj on 11/01/15.
  */
 public class DownloadImage extends AsyncTask<String, Void, Bitmap> {
-    ImageView mBmImage;
+    private ImageView mBmImage;
+    private Context mContext;
+    private boolean downloadUnsuccessful;
 
-    public DownloadImage(ImageView bmImage) {
+    private final static String LOG_TAG = DownloadImage.class.getSimpleName();
+
+    public DownloadImage(ImageView bmImage, Context context) {
         this.mBmImage = bmImage;
+        this.mContext = context;
     }
 
     protected Bitmap doInBackground(String... urls) {
@@ -29,14 +37,19 @@ public class DownloadImage extends AsyncTask<String, Void, Bitmap> {
             InputStream in = new java.net.URL(urlDisplay).openStream();
             bookCover = BitmapFactory.decodeStream(in);
         } catch (Exception e) {
-            Log.e("Error", e.getMessage());
-            e.printStackTrace();
+            downloadUnsuccessful = true;
         }
         return bookCover;
     }
 
     protected void onPostExecute(Bitmap result) {
-        mBmImage.setImageBitmap(result);
+        if (downloadUnsuccessful) {
+            Toast.makeText(mContext,
+                    mContext.getString(R.string.image_download_problem),
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            mBmImage.setImageBitmap(result);
+        }
     }
 }
 
