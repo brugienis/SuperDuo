@@ -21,7 +21,7 @@ import it.jaschke.alexandria.R;
 public class DownloadImage extends AsyncTask<String, Void, Bitmap> {
     private ImageView mBmImage;
     private Context mContext;
-    private boolean downloadUnsuccessful;
+    private boolean mDownloadUnsuccessful;
 
     private final static String LOG_TAG = DownloadImage.class.getSimpleName();
 
@@ -37,13 +37,13 @@ public class DownloadImage extends AsyncTask<String, Void, Bitmap> {
             InputStream in = new java.net.URL(urlDisplay).openStream();
             bookCover = BitmapFactory.decodeStream(in);
         } catch (Exception e) {
-            downloadUnsuccessful = true;
+            mDownloadUnsuccessful = true;
         }
         return bookCover;
     }
 
     protected void onPostExecute(Bitmap result) {
-        if (downloadUnsuccessful) {
+        if (mDownloadUnsuccessful) {
             Toast.makeText(mContext,
                     mContext.getString(R.string.image_download_problem),
                     Toast.LENGTH_SHORT).show();

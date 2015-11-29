@@ -264,7 +264,6 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void processBookDeleted() {
-//    todo in onItemSelected() use tag to add mNavigationDrawerFragment.isDrawerOpen()HERE find it and call method in ListOfBooks to get a new cursor
         FragmentManager fragmentManager = getSupportFragmentManager();
         ListOfBooks listOfBooks = (ListOfBooks) fragmentManager.findFragmentByTag(TAG_LIST_OF_BOOKS);
         if (listOfBooks != null) {
@@ -281,7 +280,6 @@ public class MainActivity extends ActionBarActivity
                 if (msgKey.equals(DELETE_EVENT)) {
                     processBookDeleted();
                 } else if (msgKey != null) {
-                    // FIXME: 27/09/2015 call method in AddBook that will execute two lines below
                     FragmentManager fragmentManager = getSupportFragmentManager();
                     AddBook addBook = (AddBook) fragmentManager.findFragmentByTag(TAG_ADD_BOOK);
                     addBook.processIsbnNotFound(msgKey);
