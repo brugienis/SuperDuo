@@ -107,10 +107,6 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
         return rootView;
     }
 
-//    private ActionBar getActionBar() {
-//        return ((ActionBarActivity) getActivity()).getSupportActionBar();
-//    }
-
     private void bookDetailsSelected(String ean) {
         mCallbacks.onItemSelected(ean);
         hideKeyboard();
@@ -122,6 +118,9 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
         inputMethodManager.hideSoftInputFromWindow(mSearchText.getWindowToken(), 0);
     }
 
+    /**
+     * Retrieve all books from the DB.
+     */
     public void getBooksFromDB() {
         Cursor cursor = getActivity().getContentResolver().query(
                 AlexandriaContract.BookEntry.CONTENT_URI,
@@ -151,13 +150,17 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
         getLoaderManager().restartLoader(mLoaderId, null, this);
     }
 
+    /**
+     *
+     * Retrieve all books with title or subtitle containing text entered by user.
+     */
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
         final String selection = getResources().getString(R.string.book_search_columns, AlexandriaContract.BookEntry.TITLE, AlexandriaContract.BookEntry.SUBTITLE);
         String searchString = mSearchText.getText().toString();
 
-        if (searchString.length()>0) {
+        if (searchString.length() > 0) {
             return new CursorLoader(
                     getActivity(),
                     AlexandriaContract.BookEntry.CONTENT_URI,

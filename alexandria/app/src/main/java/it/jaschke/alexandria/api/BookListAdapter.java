@@ -23,7 +23,6 @@ import it.jaschke.alexandria.services.DownloadImage;
  */
 public class BookListAdapter extends CursorAdapter {
 
-
     public static class ViewHolder {
         public final ImageView bookCover;
         public final TextView bookTitle;

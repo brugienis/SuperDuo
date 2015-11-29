@@ -65,7 +65,6 @@ public class BookService extends IntentService {
      * parameters.
      */
     private void deleteBook(String ean) {
-//        Log.e(LOG_TAG, "deleteBook - ean: " + ean);
         if (ean != null) {
             getContentResolver().delete(AlexandriaContract.BookEntry.buildBookUri(Long.parseLong(ean)), null, null);
             Intent messageIntent = new Intent(MainActivity.MESSAGE_EVENT);
@@ -91,7 +90,7 @@ public class BookService extends IntentService {
                 null  // sort order
         );
 
-        if(bookEntry.getCount() > 0){
+        if (bookEntry.getCount() > 0) {
             bookEntry.close();
             return;
         }
@@ -106,8 +105,9 @@ public class BookService extends IntentService {
 
         try {
             final String QUERY_PARAM = "q";
-
+            final String URL_GET = "GET";
             final String ISBN_PARAM = "isbn:" + ean;
+            final String NEW_LINE = "\n";
 
             Uri builtUri = Uri.parse(GOOGLEAPIS_URL).buildUpon()
                     .appendQueryParameter(QUERY_PARAM, ISBN_PARAM)
@@ -116,7 +116,7 @@ public class BookService extends IntentService {
             URL url = new URL(builtUri.toString());
 
             urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestMethod("GET");
+            urlConnection.setRequestMethod(URL_GET);
             urlConnection.connect();
 
             InputStream inputStream = urlConnection.getInputStream();
@@ -129,10 +129,9 @@ public class BookService extends IntentService {
             String line;
             while ((line = reader.readLine()) != null) {
                 buffer.append(line);
-                buffer.append("\n");
+                buffer.append(NEW_LINE);
             }
 
-//            Log.e(LOG_TAG, "fetchBook - buffer.length(): " + buffer.length());
             if (buffer.length() == 0) {
                 return;
             }
@@ -208,12 +207,10 @@ public class BookService extends IntentService {
                 }
 
             } catch (JSONException e) {
-//                Log.e(LOG_TAG, "Error ", e);
                 serverProblem = true;
             }
         }
 
-//        Log.e(LOG_TAG, "fetchBook - after parsing JSON - serverProblem: " + serverProblem  + "/" + Utility.isNetworkAvailable(this));
         if (serverProblem) {
             String message;
             if (Utility.isNetworkAvailable(this)) {

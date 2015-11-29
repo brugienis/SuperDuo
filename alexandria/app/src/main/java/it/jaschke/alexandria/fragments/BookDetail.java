@@ -58,7 +58,6 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
         } catch (ClassCastException e) {
             throw new ClassCastException("Activity must implement BookDetail.Callbacks.");
         }
-//        Log.v(LOG_TAG, "onAttach - mCallbacks: " + mCallbacks);
     }
 
     @Override
@@ -87,7 +86,6 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
                 getActivity().startService(bookIntent);
                 // FIXME: 26/09/2015 - call callback method on activity that will do popback and restartLoader
                 getActivity().getSupportFragmentManager().popBackStack();
-//                mCallbacks.processBookDeleted();
             }
         });
         return mRootView;
@@ -95,12 +93,10 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        Log.v(LOG_TAG, "onCreateOptionsMenu - start");
         inflater.inflate(R.menu.book_detail, menu);
 
         MenuItem menuItem = menu.findItem(R.id.action_share);
         mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
-        Log.v(LOG_TAG, "onCreateOptionsMenu - end - mShareActionProvider: " + mShareActionProvider);
     }
 
     @Override
@@ -128,7 +124,6 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
         shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
         shareIntent.setType("text/plain");
         shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_text)+ mBookTitle);
-        Log.v(LOG_TAG, "onLoadFinished - end - mShareActionProvider: " + mShareActionProvider);
         if (mShareActionProvider != null) {
             mShareActionProvider.setShareIntent(shareIntent);
         }

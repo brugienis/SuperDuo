@@ -16,7 +16,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -47,6 +46,14 @@ public class MainActivity extends ActionBarActivity
     public static final String MESSAGE_EVENT = "MESSAGE_EVENT";
     public static final String MESSAGE_KEY = "MESSAGE_EXTRA";
 
+    private static final String TAG_LIST_OF_BOOKS = "List_of_books";
+    private static final String TAG_ADD_BOOK = "add_book";
+    private static final String TAG_ABOUT = "about";
+
+    private static final String TITLE_LIST_OF_BOOKS = "list of Books";
+    private static final String TITLE_ADD_BOOK = "Scan/Add a Book";
+    private static final String TITLE_ABOUT = "About this App";
+
     /**
      * Used to store the last screen mTitle. For use in {@link #restoreActionBar()}.
      */
@@ -61,7 +68,7 @@ public class MainActivity extends ActionBarActivity
         sIsTablet = isTablet();
         if (sIsTablet){
             setContentView(R.layout.activity_main_tablet);
-        }else {
+        } else {
             setContentView(R.layout.activity_main);
         }
 
@@ -73,15 +80,6 @@ public class MainActivity extends ActionBarActivity
         mNavigationDrawerFragment.setUp(R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
     }
-
-
-    private static final String TAG_LIST_OF_BOOKS = "List_of_books";
-    private static final String TAG_ADD_BOOK = "add_book";
-    private static final String TAG_ABOUT = "about";
-
-    private static final String TITLE_LIST_OF_BOOKS = "list of Books";
-    private static final String TITLE_ADD_BOOK = "Scan/Add a Book";
-    private static final String TITLE_ABOUT = "About this App";
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
@@ -114,11 +112,9 @@ public class MainActivity extends ActionBarActivity
 
         String topBackStackEntryName = getCurrTopBackStackEntryName();
         if (topBackStackEntryName != null && topBackStackEntryName.equals(backStackName)) {
-//            Log.v(LOG_TAG, "onNavigationDrawerItemSelected - this fragment is already the current tag/backStackName: " + getSupportFragmentManager().getBackStackEntryCount() + "/" + tag + "/" + backStackName);
             return;
         }
 
-//        Log.v(LOG_TAG, "onNavigationDrawerItemSelected - backStackEntryCount/tag/backStackName: " + getSupportFragmentManager().getBackStackEntryCount() + "/" + tag + "/" + backStackName);
         int cnt = getSupportFragmentManager().getBackStackEntryCount();
         if (cnt > 0) {
             getSupportFragmentManager().popBackStack();
@@ -127,11 +123,6 @@ public class MainActivity extends ActionBarActivity
                 .replace(R.id.container, nextFragment, tag)
                 .addToBackStack(backStackName)
                 .commit();
-
-//        for (int i = 0, intCnt = getSupportFragmentManager().getBackStackEntryCount(); i < intCnt; i++) {
-//            Log.v(LOG_TAG, "onNavigationDrawerItemSelected - name: " + i + ": " + getSupportFragmentManager().getBackStackEntryAt(i).getName());
-//
-//        }
     }
 
     private String getCurrTopBackStackEntryName() {
@@ -175,12 +166,6 @@ public class MainActivity extends ActionBarActivity
             startActivity(new Intent(this, SettingsActivity.class));
             return true;
         }
-        // FIXME: 1/10/2015 remove after testing
-        else if (id == R.id.action_show_backstack) {
-//            for (int i = 0, cnt = getSupportFragmentManager().getBackStackEntryCount(); i < cnt; i++) {
-//                Log.v(LOG_TAG, "backStack - name: " + i + ": " + getSupportFragmentManager().getBackStackEntryAt(i).getName());
-//            }
-        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -201,9 +186,7 @@ public class MainActivity extends ActionBarActivity
         }
 
         String topBackStackEntryName = getCurrTopBackStackEntryName();
-//        Log.v(LOG_TAG, "onItemSelected - topBackStackEntryName: " + topBackStackEntryName);
         if (topBackStackEntryName != null && topBackStackEntryName.equals(getResources().getString(R.string.title_book_details))) {
-//            Log.v(LOG_TAG, "onItemSelected - this fragment is already the current tag/backStackName: " + getSupportFragmentManager().getBackStackEntryCount() + "/" + topBackStackEntryName);
             getSupportFragmentManager().beginTransaction()
                     .replace(id, mBookDetailFragment)
                     .commit();
@@ -223,13 +206,10 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void onBackPressed() {
-//        Log.v(LOG_TAG, "onBackPressed - start - cnt: " + getSupportFragmentManager().getBackStackEntryCount());
         int cnt = getSupportFragmentManager().getBackStackEntryCount();
         String topBackStackEntryName = getCurrTopBackStackEntryName();
-        Log.v(LOG_TAG, "onBackPressed - start - name: " + topBackStackEntryName);
         if (!sIsTablet && topBackStackEntryName.equals(getResources().getString(R.string.title_book_details))) {
             setTitle(R.string.title_list_of_books);
-//            Log.v(LOG_TAG, "onBackPressed - mTitle changed");
         }
         if (getSupportFragmentManager().getBackStackEntryCount() < 2){
             finish();
@@ -269,7 +249,6 @@ public class MainActivity extends ActionBarActivity
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (scanResult != null) {
-//            Log.d(LOG_TAG, "scan result: " + scanResult.toString());
             try {
                 AddBook addBook = (AddBook) getSupportFragmentManager().findFragmentByTag(TAG_ADD_BOOK);
                 addBook.setScanedEAN(scanResult.getContents());
@@ -288,7 +267,6 @@ public class MainActivity extends ActionBarActivity
 //    todo in onItemSelected() use tag to add mNavigationDrawerFragment.isDrawerOpen()HERE find it and call method in ListOfBooks to get a new cursor
         FragmentManager fragmentManager = getSupportFragmentManager();
         ListOfBooks listOfBooks = (ListOfBooks) fragmentManager.findFragmentByTag(TAG_LIST_OF_BOOKS);
-        Log.v(LOG_TAG, "processBookDeleted - listOfBooks: " + listOfBooks);
         if (listOfBooks != null) {
             listOfBooks.getBooksFromDB();
             getSupportActionBar().setTitle(getResources().getString(R.string.title_list_of_books));
@@ -299,7 +277,6 @@ public class MainActivity extends ActionBarActivity
         @Override
         public void onReceive(Context context, Intent intent) {
             String msgKey = intent.getStringExtra(MESSAGE_KEY);
-            Log.v(LOG_TAG, "messageReceiver - intent/msgKey: " + intent + "/" + msgKey);
             if (msgKey != null) {
                 if (msgKey.equals(DELETE_EVENT)) {
                     processBookDeleted();

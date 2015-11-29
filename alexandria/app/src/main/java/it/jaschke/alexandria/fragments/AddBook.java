@@ -125,7 +125,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
 
             }
         });
-        mNextBtn = (View) mRootView.findViewById(R.id.next_button);
+        mNextBtn = mRootView.findViewById(R.id.next_button);
         mNextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -136,7 +136,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
             }
         });
 
-        mDeleteBtn = (View) mRootView.findViewById(R.id.delete_button);
+        mDeleteBtn = mRootView.findViewById(R.id.delete_button);
         mDeleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -186,29 +186,20 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
 
     /**
      *
-     * test with
-     * Popular: How a Geek in Pearls Discovered the Secret to Confidence
-     * by Maya Van Wagenen
-     * ISBN-13: 978-01 475 125 43
-     *
-     * 978-11 180 878 86 OK
-     * 1118087887 problem
+     * Show details of a book.
      */
     @Override
     public void onLoadFinished(android.support.v4.content.Loader<Cursor> loader, Cursor data) {
-//        Log.v(LOG_TAG, "onLoadFinished - data count: " + data.getCount());
         if (!data.moveToFirst()) {
             return;
         }
 
-        mBookEmptyTv.setText("");
+        mBookEmptyTv.setText(EMPTY_STRING);
 
         String bookTitle = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.TITLE));
-//        Log.v(LOG_TAG, "onLoadFinished - bookTitle: " + bookTitle);
         mBookTitleTv.setText(bookTitle);
 
         String bookSubTitle = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.SUBTITLE));
-//        Log.v(LOG_TAG, "onLoadFinished - bookSubTitle: " + bookSubTitle);
         mBookSubTitleTv.setText(bookSubTitle);
 
         String authors = data.getString(data.getColumnIndex(AlexandriaContract.AuthorEntry.AUTHOR));
@@ -233,7 +224,6 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
 
         mNextBtn.setVisibility(View.VISIBLE);
         mDeleteBtn.setVisibility(View.VISIBLE);
-//        Log.v(LOG_TAG, "onLoadFinished - end");
     }
 
     @Override
@@ -246,11 +236,11 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
     }
 
     private void clearFields() {
-        mEanTv.setText("");
-        mBookTitleTv.setText("");
-        mBookSubTitleTv.setText("");
-        mAuthorsTv.setText("");
-        mCategoriesTv.setText("");
+        mEanTv.setText(EMPTY_STRING);
+        mBookTitleTv.setText(EMPTY_STRING);
+        mBookSubTitleTv.setText(EMPTY_STRING);
+        mAuthorsTv.setText(EMPTY_STRING);
+        mCategoriesTv.setText(EMPTY_STRING);
         mRootView.findViewById(R.id.bookCover).setVisibility(View.INVISIBLE);
         mNextBtn.setVisibility(View.INVISIBLE);
         mDeleteBtn.setVisibility(View.INVISIBLE);
