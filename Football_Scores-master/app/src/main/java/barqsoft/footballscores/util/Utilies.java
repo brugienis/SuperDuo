@@ -1,4 +1,6 @@
-package barqsoft.footballscores;
+package barqsoft.footballscores.util;
+
+import barqsoft.footballscores.R;
 
 /**
  * Created by yehya khaled on 3/3/2015.

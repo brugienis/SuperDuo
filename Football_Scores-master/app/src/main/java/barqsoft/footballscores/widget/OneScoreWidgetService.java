@@ -9,10 +9,10 @@ import android.database.Cursor;
 import android.os.Build;
 import android.widget.RemoteViews;
 
-import barqsoft.footballscores.DatabaseContract;
+import barqsoft.footballscores.database.DatabaseContract;
 import barqsoft.footballscores.activities.MainActivity;
 import barqsoft.footballscores.R;
-import barqsoft.footballscores.Utilies;
+import barqsoft.footballscores.util.Utilies;
 
 /**
  * Created by business on 28/10/2015.

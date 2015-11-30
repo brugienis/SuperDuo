@@ -10,10 +10,10 @@ import android.widget.AdapterView;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
-import barqsoft.footballscores.DatabaseContract;
+import barqsoft.footballscores.database.DatabaseContract;
 import barqsoft.footballscores.activities.MainActivity;
 import barqsoft.footballscores.R;
-import barqsoft.footballscores.Utilies;
+import barqsoft.footballscores.util.Utilies;
 
 /**
  * RemoteViewsService controlling the data being shown in the scrollable weather detail widget

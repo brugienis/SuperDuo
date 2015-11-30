@@ -14,10 +14,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import barqsoft.footballscores.DatabaseContract;
+import barqsoft.footballscores.database.DatabaseContract;
 import barqsoft.footballscores.R;
-import barqsoft.footballscores.ScoresAdapter;
-import barqsoft.footballscores.ViewHolder;
+import barqsoft.footballscores.adapters.ScoresAdapter;
+import barqsoft.footballscores.adapters.ViewHolder;
 import barqsoft.footballscores.activities.MainActivity;
 
 /**
