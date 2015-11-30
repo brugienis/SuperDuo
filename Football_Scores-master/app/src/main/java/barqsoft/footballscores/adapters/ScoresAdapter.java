@@ -31,7 +31,7 @@ public class ScoresAdapter extends CursorAdapter {
     public static final int COL_ID = 8;
     public static final int COL_MATCHTIME = 2;
     private static final String FOOTBALL_SCORES_HASHTAG = "#Football_Scores";
-//    private boolean isRightToLeft;
+    private static final String TEXT_PLAIN = "text/plain";
 
     private final static String LOG_TAG = ScoresAdapter.class.getSimpleName();
 
@@ -90,7 +90,6 @@ public class ScoresAdapter extends CursorAdapter {
         ViewGroup container = (ViewGroup) view.findViewById(R.id.details_fragment_container);
 
         if (mHolder.matchId == mDetailMatchId) {
-            //Log.v(FetchScoreTask.LOG_TAG,"will insert extraView");
             int matchDay = cursor.getInt(COL_MATCHDAY);
             int league = cursor.getInt(COL_LEAGUE);
             String matchDayKind = Utilies.getMatchDay(matchDay, league);
@@ -129,7 +128,7 @@ public class ScoresAdapter extends CursorAdapter {
     public Intent createShareForecastIntent(String ShareText) {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-        shareIntent.setType("text/plain");
+        shareIntent.setType(TEXT_PLAIN);
         shareIntent.putExtra(Intent.EXTRA_TEXT, ShareText + FOOTBALL_SCORES_HASHTAG);
         return shareIntent;
     }

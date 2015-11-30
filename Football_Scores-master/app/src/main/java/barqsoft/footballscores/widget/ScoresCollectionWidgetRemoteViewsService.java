@@ -74,9 +74,13 @@ public class ScoresCollectionWidgetRemoteViewsService extends RemoteViewsService
                 final long identityToken = Binder.clearCallingIdentity();
                 String currDate = MainActivity.getDefaultPageDayInMillis();
                 mCursor = getContentResolver().query(DatabaseContract.scores_table.buildScoreWithDate(),
-                        SCORE_COLUMNS, null, new String[]
-                                {currDate}, DatabaseContract.scores_table.TIME_COL + ASC +
-                                " ," + DatabaseContract.scores_table.HOME_COL + ASC);
+                        SCORE_COLUMNS,
+                        null,
+                        new String[] {currDate}, DatabaseContract.scores_table.TIME_COL +
+                                ASC +
+                                " ," +
+                                DatabaseContract.scores_table.HOME_COL +
+                                ASC);
                 Binder.restoreCallingIdentity(identityToken);
             }
 
@@ -112,7 +116,6 @@ public class ScoresCollectionWidgetRemoteViewsService extends RemoteViewsService
                 String timeStr = mCursor.getString(TIME_IDX);
 
                 String scores = Utilies.getScores(homeScore, awayScore);
-//                Log.v(LOG_TAG, "getViewAt - processed: " + position + ": " + homeName + " - " + timeStr + " - " + awayName);
 
                 RemoteViews views = new RemoteViews(getPackageName(),
                         R.layout.widget_scores_collection_list_item);
@@ -137,15 +140,9 @@ public class ScoresCollectionWidgetRemoteViewsService extends RemoteViewsService
 
                 fillInIntent.putExtra(MainActivity.WIDGET_SELECTED_MATCH_ID, mCursor.getDouble(MATCH_ID_IDX));
                 fillInIntent.putExtra(MainActivity.WIDGET_SELECTED_ROW_IDX, position);
-//                views.setOnClickFillInIntent(R.id.widget_list_item, fillInIntent);
                 views.setOnClickFillInIntent(R.id.widget_scores_collection_list_item, fillInIntent);
                 return views;
             }
-
-//            @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
-//            private void setRemoteContentDescription(RemoteViews views, String description) {
-//                views.setContentDescription(R.id.widget_icon, description);
-//            }
 
             @Override
             public RemoteViews getLoadingView() {
@@ -170,5 +167,6 @@ public class ScoresCollectionWidgetRemoteViewsService extends RemoteViewsService
             }
         };
     }
+    
 }
 

@@ -55,7 +55,6 @@ public class PagerFragment extends Fragment {
         }
 
         mPagerHandler.setAdapter(mPagerAdapter);
-//        mPagerHandler.setCurrentItem(MainActivity.currentFragment);
         mPagerHandler.setCurrentItem(MainActivity.getCurrentFragment());
         return rootView;
     }

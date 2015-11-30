@@ -47,7 +47,6 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
-//        updateScores();
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         scoreList = (ListView) rootView.findViewById(R.id.scores_list);
         mAdapter = new ScoresAdapter(getActivity(), null, 0);
@@ -85,7 +84,6 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
      */
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-//        Log.v(LOG_TAG, "onLoadFinished - date/count: " + mFragmentDate[0] + "/" + cursor.getCount());
         mAdapter.swapCursor(cursor);
         if (cursor.getCount() > 0 && currDate.equals(mFragmentDate[0])) {
             updateWidgets();

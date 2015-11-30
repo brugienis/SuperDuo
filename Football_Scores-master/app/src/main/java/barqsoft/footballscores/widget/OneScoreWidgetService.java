@@ -56,10 +56,14 @@ public class OneScoreWidgetService  extends IntentService {
 
         // get the most recent results for default day with scores
         Cursor cursor = getContentResolver().query(DatabaseContract.scores_table.buildScoreWithDate(),
-                SCORE_COLUMNS, null, new String[]{currDate},
-                DatabaseContract.scores_table.TIME_COL + DESC +
-                " ," + DatabaseContract.scores_table.HOME_COL + DESC);
-//        Log.v(LOG_TAG, "onHandleIntent - count: " + cursor.getCount());
+                SCORE_COLUMNS,
+                null,
+                new String[]{currDate},
+                DatabaseContract.scores_table.TIME_COL +
+                        DESC +
+                        " ," +
+                        DatabaseContract.scores_table.HOME_COL +
+                        DESC);
 
         String homeName = getResources().getString(R.string.retrieving_scores);
         String awayName  = getResources().getString(R.string.retrieving_scores);
@@ -106,7 +110,6 @@ public class OneScoreWidgetService  extends IntentService {
             // Create an Intent to launch MainActivity
             Intent launchIntent = new Intent(this, MainActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, launchIntent, 0);
-//            views.setOnClickPendingIntent(R.id.oneScoreWidget, pendingIntent);
             views.setOnClickPendingIntent(R.id.widget_one_score_list_item, pendingIntent);
 
             views.setTextViewText(R.id.home_name, homeName + cnt++);

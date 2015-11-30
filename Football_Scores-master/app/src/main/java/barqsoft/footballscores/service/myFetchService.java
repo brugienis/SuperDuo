@@ -23,8 +23,8 @@ import java.util.Date;
 import java.util.TimeZone;
 import java.util.Vector;
 
-import barqsoft.footballscores.database.DatabaseContract;
 import barqsoft.footballscores.R;
+import barqsoft.footballscores.database.DatabaseContract;
 
 /**
  * Created by yehya khaled on 3/2/2015.
@@ -36,6 +36,7 @@ public class MyFetchService extends IntentService {
     private SimpleDateFormat new_date = new SimpleDateFormat("yyyy-MM-dd:HH:mm");
     private SimpleDateFormat mformat = new SimpleDateFormat("yyyy-MM-dd");
     private static final long TWENTY_FOUR_HOURS_IN_MILLIS = 86400000L;
+    private static final String FIXTURES = "fixtures";
 
     private final static String LOG_TAG = MyFetchService.class.getSimpleName();
 
@@ -61,24 +62,29 @@ public class MyFetchService extends IntentService {
         if (APIKey.trim().length() == 0) {
             throw new RuntimeException(LOG_TAG + ".getData - empty 'api_key' in strings.xml");
         }
+
         final String BASE_URL = "http://api.football-data.org/alpha/fixtures"; //Base URL
         final String QUERY_TIME_FRAME = "timeFrame"; //Time Frame parameter to determine days
-        //final String QUERY_MATCH_DAY = "matchday";
+        final String GET = "GET";
+        final String AUTH_TOKEN = "X-Auth-Token";
+        final String APPID_KEY = "APPID";
+        final String APPID_VALUE = "a813e2098a3bc05b49ac25ece5e0eaf9";
+        final String NEW_LINE = "\n";
 
         Uri fetchBuild = Uri.parse(BASE_URL).buildUpon().
                 appendQueryParameter(QUERY_TIME_FRAME, timeFrame).
-                appendQueryParameter("APPID", "a813e2098a3bc05b49ac25ece5e0eaf9").
+                appendQueryParameter(APPID_KEY, APPID_VALUE).
                 build();
         HttpURLConnection connection = null;
         BufferedReader reader = null;
         String JSONData = null;
-//        Log.v(LOG_TAG, "getData - fetchBuild: " + fetchBuild);
+        
         //Opening Connection
         try {
             URL fetch = new URL(fetchBuild.toString());
             connection = (HttpURLConnection) fetch.openConnection();
-            connection.setRequestMethod("GET");
-            connection.addRequestProperty("X-Auth-Token", APIKey.trim());
+            connection.setRequestMethod(GET);
+            connection.addRequestProperty(AUTH_TOKEN, APIKey.trim());
             connection.connect();
 
             // Read the input stream into a String
@@ -96,7 +102,7 @@ public class MyFetchService extends IntentService {
                 // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
                 // But it does make debugging a *lot* easier if you print out the completed
                 // buffer for debugging.
-                buffer.append(line).append("\n");
+                buffer.append(line).append(NEW_LINE);
             }
             if (buffer.length() == 0) {
                 // Stream was empty.  No point in parsing.
@@ -104,7 +110,6 @@ public class MyFetchService extends IntentService {
             }
             JSONData = buffer.toString();
         } catch (Exception e) {
-//            Log.e(LOG_TAG, "Exception here" + e);
             sendMessage(getResources().getString(R.string.problem_downloading_data));
         } finally {
             if (connection != null) {
@@ -114,14 +119,14 @@ public class MyFetchService extends IntentService {
                 try {
                     reader.close();
                 } catch (IOException ignoreException) {
-//                    Log.e(LOG_TAG, "Error Closing Stream");
+                    // nothing can be done
                 }
             }
         }
         try {
             if (JSONData != null) {
                 //This bit is to check if the data contains any matches. If not, we call processJson on the dummy data
-                JSONArray matches = new JSONObject(JSONData).getJSONArray("fixtures");
+                JSONArray matches = new JSONObject(JSONData).getJSONArray(FIXTURES);
                 if (matches.length() == 0) {
                     //if there is no data, call the function on dummy data
                     //this is expected behavior during the off season.
@@ -130,7 +135,6 @@ public class MyFetchService extends IntentService {
                 }
                 processJSONData(JSONData, getApplicationContext(), true);
             } else {
-//                Log.d(LOG_TAG, "Could not connect to server.");
                 sendMessage(getResources().getString(R.string.could_not_connect_to_server));
             }
         } catch (Exception e) {
@@ -162,7 +166,6 @@ public class MyFetchService extends IntentService {
 
         final String SEASON_LINK = "http://api.football-data.org/alpha/soccerseasons/";
         final String MATCH_LINK = "http://api.football-data.org/alpha/fixtures/";
-        final String FIXTURES = "fixtures";
         final String LINKS = "_links";
         final String SOCCER_SEASON = "soccerseason";
         final String SELF = "self";
@@ -173,6 +176,13 @@ public class MyFetchService extends IntentService {
         final String HOME_GOALS = "goalsHomeTeam";
         final String AWAY_GOALS = "goalsAwayTeam";
         final String MATCH_DAY = "matchday";
+
+        final String HREF = "href";
+        final String T = "T";
+        final String Z = "Z";
+        final String EMPTY_STRING = "";
+        final String UTC = "UTC";
+        final String HH_MM_SEPARATOR = ":";
 
         //Match data
         String league;
@@ -195,8 +205,8 @@ public class MyFetchService extends IntentService {
 
                 JSONObject matchData = matches.getJSONObject(i);
                 league = matchData.getJSONObject(LINKS).getJSONObject(SOCCER_SEASON).
-                        getString("href");
-                league = league.replace(SEASON_LINK, "");
+                        getString(HREF);
+                league = league.replace(SEASON_LINK, EMPTY_STRING);
                 //This if statement controls which leagues we're interested in the data from.
                 //add leagues here in order to have them be added to the DB.
                 // If you are finding no data in the app, check that this contains all the leagues.
@@ -211,23 +221,23 @@ public class MyFetchService extends IntentService {
                         league.equals(LIGUE1)
                         ) {
                     matchId = matchData.getJSONObject(LINKS).getJSONObject(SELF).
-                            getString("href");
-                    matchId = matchId.replace(MATCH_LINK, "");
+                            getString(HREF);
+                    matchId = matchId.replace(MATCH_LINK, EMPTY_STRING);
                     if (!isReal) {
                         //This if statement changes the match ID of the dummy data so that it all goes into the database
                         matchId = matchId + Integer.toString(i);
                     }
                     // "date":"2015-10-23T16:30:00Z",
                     date = matchData.getString(MATCH_DATE);
-                    time = date.substring(date.indexOf("T") + 1, date.indexOf("Z"));
-                    date = date.substring(0, date.indexOf("T"));
-                    matchDate.setTimeZone(TimeZone.getTimeZone("UTC"));
+                    time = date.substring(date.indexOf(T) + 1, date.indexOf(Z));
+                    date = date.substring(0, date.indexOf(T));
+                    matchDate.setTimeZone(TimeZone.getTimeZone(UTC));
                     try {
                         Date parsedDate = matchDate.parse(date + time);
                         new_date.setTimeZone(TimeZone.getDefault());
                         date = new_date.format(parsedDate);
-                        time = date.substring(date.indexOf(":") + 1);
-                        date = date.substring(0, date.indexOf(":"));
+                        time = date.substring(date.indexOf(HH_MM_SEPARATOR) + 1);
+                        date = date.substring(0, date.indexOf(HH_MM_SEPARATOR));
 
                         if (!isReal) {
                             //This if statement changes the dummy data's date to match our current date range.
