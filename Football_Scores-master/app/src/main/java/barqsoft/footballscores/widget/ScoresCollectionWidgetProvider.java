@@ -12,8 +12,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.TaskStackBuilder;
 import android.widget.RemoteViews;
 
-import barqsoft.footballscores.MainActivity;
-import barqsoft.footballscores.MainScreenFragment;
+import barqsoft.footballscores.activities.MainActivity;
+import barqsoft.footballscores.fragments.MainScreenFragment;
 import barqsoft.footballscores.R;
 
 /**

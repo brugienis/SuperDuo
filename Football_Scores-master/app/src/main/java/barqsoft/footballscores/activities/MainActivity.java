@@ -1,4 +1,4 @@
-package barqsoft.footballscores;
+package barqsoft.footballscores.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +7,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import java.text.SimpleDateFormat;
+
+import barqsoft.footballscores.fragments.PagerFragment;
+import barqsoft.footballscores.R;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -25,7 +28,8 @@ public class MainActivity extends ActionBarActivity {
     private static final int NUM_PAGES = 13;
     private static final int TODAYS_PAGE = NUM_PAGES / 2;   /* number of pages or tabs */
     private static final int DEFAULT_DAY_ADJUSTMENT = 1;    /* -1 yesterday, 0 today, 1 tomorrow, etc. */
-    static int currentFragment = TODAYS_PAGE + DEFAULT_DAY_ADJUSTMENT;
+
+    private static int currentFragment = TODAYS_PAGE + DEFAULT_DAY_ADJUSTMENT;
 
     private final static String LOG_TAG = MainActivity.class.getSimpleName();
 
@@ -92,8 +96,18 @@ public class MainActivity extends ActionBarActivity {
         super.onRestoreInstanceState(savedInstanceState);
     }
 
+    /**
+     * Returns number of pages (tabs)
+     */
     public static int getNumPages() {
         return NUM_PAGES;
+    }
+
+    /**
+     * Returns currentFragment
+     */
+    public static int getCurrentFragment() {
+        return currentFragment;
     }
 
     /**

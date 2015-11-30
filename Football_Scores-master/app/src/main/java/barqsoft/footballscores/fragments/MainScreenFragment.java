@@ -1,4 +1,4 @@
-package barqsoft.footballscores;
+package barqsoft.footballscores.fragments;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +13,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
+import barqsoft.footballscores.DatabaseContract;
+import barqsoft.footballscores.R;
+import barqsoft.footballscores.ScoresAdapter;
+import barqsoft.footballscores.ViewHolder;
+import barqsoft.footballscores.activities.MainActivity;
 
 /**
  * A placeholder fragment containing a simple view.

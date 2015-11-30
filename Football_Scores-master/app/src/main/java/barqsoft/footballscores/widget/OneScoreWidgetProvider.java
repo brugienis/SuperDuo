@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.NonNull;
 
-import barqsoft.footballscores.MainScreenFragment;
+import barqsoft.footballscores.fragments.MainScreenFragment;
 
 /**
  * Created by business on 28/10/2015.

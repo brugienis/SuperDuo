@@ -1,4 +1,4 @@
-package barqsoft.footballscores;
+package barqsoft.footballscores.fragments;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +16,8 @@ import android.view.ViewGroup;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import barqsoft.footballscores.R;
+import barqsoft.footballscores.activities.MainActivity;
 import barqsoft.footballscores.service.MyFetchService;
 
 /**
@@ -53,7 +55,8 @@ public class PagerFragment extends Fragment {
         }
 
         mPagerHandler.setAdapter(mPagerAdapter);
-        mPagerHandler.setCurrentItem(MainActivity.currentFragment);
+//        mPagerHandler.setCurrentItem(MainActivity.currentFragment);
+        mPagerHandler.setCurrentItem(MainActivity.getCurrentFragment());
         return rootView;
     }
 
