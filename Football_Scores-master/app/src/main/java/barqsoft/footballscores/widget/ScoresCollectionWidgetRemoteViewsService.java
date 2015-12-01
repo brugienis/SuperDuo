@@ -167,6 +167,6 @@ public class ScoresCollectionWidgetRemoteViewsService extends RemoteViewsService
             }
         };
     }
-    
+
 }
 
