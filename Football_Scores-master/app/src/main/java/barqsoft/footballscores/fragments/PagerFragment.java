@@ -25,14 +25,14 @@ import barqsoft.footballscores.service.MyFetchService;
  */
 public class PagerFragment extends Fragment {
 
-    private static final long TWENTY_FOUR_HOURS_IN_MILLIS = 86400000L;
     /* ViewPager - see : http://developer.android.com/training/implementing-navigation/lateral.html */
-    public ViewPager mPagerHandler;
+    private ViewPager mPagerHandler;
     private MyPageAdapter mPagerAdapter;
     private SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd");
     private SimpleDateFormat mDayFormat = new SimpleDateFormat("EEEE");
     private MainScreenFragment[] mViewFragments = new MainScreenFragment[MainActivity.getNumPages()];
     private Date mFragmentdate;
+    private static final long TWENTY_FOUR_HOURS_IN_MILLIS = 86400000L;
 
     private final static String LOG_TAG = PagerFragment.class.getSimpleName();
 
@@ -65,6 +65,10 @@ public class PagerFragment extends Fragment {
     private void updateScores() {
         Intent intent = new Intent(getActivity(), MyFetchService.class);
         getActivity().startService(intent);
+    }
+
+    public ViewPager getPagerHandler() {
+        return mPagerHandler;
     }
 
     private class MyPageAdapter extends FragmentStatePagerAdapter {

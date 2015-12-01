@@ -100,7 +100,6 @@ public class MyFetchService extends IntentService {
 
             String line;
             while ((line = reader.readLine()) != null) {
-//                Log.v(LOG_TAG, "getData - line: " + line);
                 // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
                 // But it does make debugging a *lot* easier if you print out the completed
                 // buffer for debugging.

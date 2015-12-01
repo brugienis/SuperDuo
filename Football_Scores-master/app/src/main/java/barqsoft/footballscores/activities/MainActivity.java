@@ -35,7 +35,7 @@ public class MainActivity extends ActionBarActivity {
 
     /**
         If app opened by a click on the ScoresCollection widget, extract clicked match Id and index
-         of the touched row. When current page becomes visible, the row will be visible.
+        of the touched row. When current page becomes visible, the row will be visible.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +81,7 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putInt(PAGER_CURRENT, mPagerFragment.mPagerHandler.getCurrentItem());
+        outState.putInt(PAGER_CURRENT, mPagerFragment.getPagerHandler().getCurrentItem());
         outState.putInt(SELECTED_MATCH, sSelectedMatchId);
         getSupportFragmentManager().putFragment(outState, PAGER_FRAGMENT, mPagerFragment);
         super.onSaveInstanceState(outState);
@@ -154,7 +154,7 @@ public class MainActivity extends ActionBarActivity {
         return TODAYS_PAGE;
     }
 
-    /*
+    /**
         Return default page's date in milliseconds.
 
         DEFAULT_DAY_ADJUSTMENT = 0   today's date
