@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2013 The Android Open Source Project
+ */
+
 package barqsoft.footballscores.adapters;
 
 import android.view.View;

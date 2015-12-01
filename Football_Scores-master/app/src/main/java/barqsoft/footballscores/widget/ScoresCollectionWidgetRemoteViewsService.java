@@ -1,5 +1,8 @@
-package barqsoft.footballscores.widget;
+/*
+ * Copyright (C) 2013 The Android Open Source Project
+ */
 
+package barqsoft.footballscores.widget;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
