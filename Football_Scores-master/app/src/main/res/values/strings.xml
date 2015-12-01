@@ -2,7 +2,7 @@
 <resources xmlns:xliff="http://schemas.android.com/tools">
 
     <!-- API key - get from http://api.football-data.org/register -->
-    <string name="api_key" translatable="false"></string>
+    <string name="api_key" translatable="false">e2317cc188124d47bf8ea3100fd6098e</string>
 
     <string name="app_name">Football Scores</string>
     <string name="action_settings">Settings</string>
