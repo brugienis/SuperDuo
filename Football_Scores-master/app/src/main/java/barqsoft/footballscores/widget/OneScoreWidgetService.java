@@ -38,8 +38,6 @@ public class OneScoreWidgetService  extends IntentService {
     private static final int AWAY_GOALS_IDX = 3;
     private static final int TIME_IDX = 4;
     private static final String DESC = " DESC";
-    // FIXME: 12/11/2015 remove after tests
-    private static int cnt;
 
     private final static String LOG_TAG = OneScoreWidgetService.class.getSimpleName();
 
@@ -116,7 +114,7 @@ public class OneScoreWidgetService  extends IntentService {
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, launchIntent, 0);
             views.setOnClickPendingIntent(R.id.widget_one_score_list_item, pendingIntent);
 
-            views.setTextViewText(R.id.home_name, homeName + cnt++);
+            views.setTextViewText(R.id.home_name, homeName);
             views.setTextViewText(R.id.time, timeStr);
             views.setTextViewText(R.id.scores, scores);
             views.setTextViewText(R.id.away_name, awayName);

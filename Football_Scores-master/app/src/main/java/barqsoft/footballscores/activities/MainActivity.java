@@ -28,7 +28,6 @@ public class MainActivity extends ActionBarActivity {
     private static final String PAGER_FRAGMENT = "Selected_match";
     public static final String WIDGET_SELECTED_MATCH_ID = "widget_selected_match_id";
     public static final String WIDGET_SELECTED_ROW_IDX = "widget_selected_row_idx";
-    // FIXME: 6/11/2015 - below change back to 5
     private static final int NUM_PAGES = 13;
     private static final int TODAYS_PAGE = NUM_PAGES / 2;   /* number of pages or tabs */
     private static final int DEFAULT_DAY_ADJUSTMENT = -1;    /* -1 yesterday, 0 today, 1 tomorrow, etc. */
