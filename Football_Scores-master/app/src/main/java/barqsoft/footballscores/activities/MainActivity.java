@@ -96,10 +96,18 @@ public class MainActivity extends ActionBarActivity {
         super.onRestoreInstanceState(savedInstanceState);
     }
 
+
+    /**
+     * Returns sSelectedMatchId
+     */
     public static int getSelectedMatchId() {
         return sSelectedMatchId;
     }
 
+
+    /**
+     * Sets sSelectedMatchId
+     */
     public static void setSelectedMatchId(int selectedMatchId) {
         sSelectedMatchId = selectedMatchId;
     }

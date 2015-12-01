@@ -53,6 +53,8 @@ public class MyFetchService extends IntentService {
 
     /**
      *
+     * Retrieves data from the Internet.
+     *
      * @param timeFrame - p or n followed by the number. e.g. p10 - retrieve data for the last
      *                    10 days. n10 - retrieve data for the next 10 days.
      */
@@ -144,6 +146,8 @@ public class MyFetchService extends IntentService {
 
     /**
      *
+     * Process data retrieved from the Internet and insert into database.
+     *
      * @param JSONData  - String: data downloaded from the Internet
      * @param mContext
      * @param isReal    - boolean: true - real data. false - simulated data
@@ -194,7 +198,6 @@ public class MyFetchService extends IntentService {
         String awayGoals;
         String matchId;
         String matchDay;
-
 
         try {
             JSONArray matches = new JSONObject(JSONData).getJSONArray(FIXTURES);

@@ -65,8 +65,8 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
         return rootView;
     }
 
-    /*
-        start loading data from the DB for the selected date and sort it on the 'time' column
+    /**
+        Start loading data from the DB for the selected date and sort it on the 'time' column
         in ascending order.
     */
     @Override
