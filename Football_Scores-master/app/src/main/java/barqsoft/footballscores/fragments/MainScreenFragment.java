@@ -27,17 +27,17 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
 
     private String[] mFragmentDate = new String[1];
     private ScoresAdapter mAdapter;
-    private String currDate;
+    private String mCurrDate;
     private static final int SCORES_LOADER = 0;
     public static final String ACTION_TODAYS_DATA_UPDATED =
             "barqsoft.footballscores.ACTION_TODAYS_DATA_UPDATED";
-    private ListView scoreList;
+    private ListView mScoreList;
     private static final String ASC = " ASC";
 
     private final static String LOG_TAG = MainScreenFragment.class.getSimpleName();
 
     public MainScreenFragment() {
-        currDate = MainActivity.getDefaultPageDayInMillis();
+        mCurrDate = MainActivity.getDefaultPageDayInMillis();
     }
 
     public void setFragmentDate(String date) {
@@ -48,12 +48,12 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        scoreList = (ListView) rootView.findViewById(R.id.scores_list);
+        mScoreList = (ListView) rootView.findViewById(R.id.scores_list);
         mAdapter = new ScoresAdapter(getActivity(), null, 0);
-        scoreList.setAdapter(mAdapter);
+        mScoreList.setAdapter(mAdapter);
         getLoaderManager().initLoader(SCORES_LOADER, null, this);
         mAdapter.mDetailMatchId = MainActivity.getSelectedMatchId();
-        scoreList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mScoreList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ViewHolder selected = (ViewHolder) view.getTag();
@@ -85,11 +85,11 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         mAdapter.swapCursor(cursor);
-        if (cursor.getCount() > 0 && currDate.equals(mFragmentDate[0])) {
+        if (cursor.getCount() > 0 && mCurrDate.equals(mFragmentDate[0])) {
             updateWidgets();
             int selectedRow = ((MainActivity) getActivity()).getWidgetSelectedRowIdx();
             if (selectedRow > -1) {
-                scoreList.setSelection(selectedRow);
+                mScoreList.setSelection(selectedRow);
                 ((MainActivity) getActivity()).clearWidgetSelectedRowIdx();
 
                 mAdapter.mDetailMatchId = ((MainActivity) getActivity()).getWidgetSelectedMatchId();

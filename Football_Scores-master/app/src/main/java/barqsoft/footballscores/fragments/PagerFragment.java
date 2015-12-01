@@ -30,9 +30,9 @@ public class PagerFragment extends Fragment {
     public ViewPager mPagerHandler;
     private MyPageAdapter mPagerAdapter;
     private SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd");
-    private SimpleDateFormat dayFormat = new SimpleDateFormat("EEEE");
+    private SimpleDateFormat mDayFormat = new SimpleDateFormat("EEEE");
     private MainScreenFragment[] mViewFragments = new MainScreenFragment[MainActivity.getNumPages()];
-    private Date fragmentDate;
+    private Date mFragmentdate;
 
     private final static String LOG_TAG = PagerFragment.class.getSimpleName();
 
@@ -49,9 +49,9 @@ public class PagerFragment extends Fragment {
         mPagerAdapter = new MyPageAdapter(getChildFragmentManager());
 
             for (int i = 0; i < MainActivity.getNumPages(); i++) {
-                fragmentDate = new Date(System.currentTimeMillis() + ((i - MainActivity.getTodaysPage()) * TWENTY_FOUR_HOURS_IN_MILLIS));
+                mFragmentdate = new Date(System.currentTimeMillis() + ((i - MainActivity.getTodaysPage()) * TWENTY_FOUR_HOURS_IN_MILLIS));
                 mViewFragments[i] = new MainScreenFragment();
-                mViewFragments[i].setFragmentDate(mFormat.format(fragmentDate));
+                mViewFragments[i].setFragmentDate(mFormat.format(mFragmentdate));
         }
 
         mPagerHandler.setAdapter(mPagerAdapter);
@@ -112,7 +112,7 @@ public class PagerFragment extends Fragment {
                 Time time = new Time();
                 time.setToNow();
                 // Otherwise, the format is just the day of the week (e.g "Wednesday".
-                return dayFormat.format(dateInMillis);
+                return mDayFormat.format(dateInMillis);
             }
         }
     }

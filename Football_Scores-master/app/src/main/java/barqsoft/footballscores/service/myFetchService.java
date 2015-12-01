@@ -31,10 +31,10 @@ import barqsoft.footballscores.database.DatabaseContract;
  */
 public class MyFetchService extends IntentService {
 
-    Handler mMainThreadHandler = null;
-    private SimpleDateFormat matchDate = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss");
-    private SimpleDateFormat new_date = new SimpleDateFormat("yyyy-MM-dd:HH:mm");
-    private SimpleDateFormat mformat = new SimpleDateFormat("yyyy-MM-dd");
+    private Handler mMainThreadHandler = null;
+    private SimpleDateFormat mMatchDateFormat = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss");
+    private SimpleDateFormat mNewDateFormat = new SimpleDateFormat("yyyy-MM-dd:HH:mm");
+    private SimpleDateFormat mDateNoTimeFormat = new SimpleDateFormat("yyyy-MM-dd");
     private static final long TWENTY_FOUR_HOURS_IN_MILLIS = 86400000L;
     private static final String FIXTURES = "fixtures";
 
@@ -231,18 +231,18 @@ public class MyFetchService extends IntentService {
                     date = matchData.getString(MATCH_DATE);
                     time = date.substring(date.indexOf(T) + 1, date.indexOf(Z));
                     date = date.substring(0, date.indexOf(T));
-                    matchDate.setTimeZone(TimeZone.getTimeZone(UTC));
+                    mMatchDateFormat.setTimeZone(TimeZone.getTimeZone(UTC));
                     try {
-                        Date parsedDate = matchDate.parse(date + time);
-                        new_date.setTimeZone(TimeZone.getDefault());
-                        date = new_date.format(parsedDate);
+                        Date parsedDate = mMatchDateFormat.parse(date + time);
+                        mNewDateFormat.setTimeZone(TimeZone.getDefault());
+                        date = mNewDateFormat.format(parsedDate);
                         time = date.substring(date.indexOf(HH_MM_SEPARATOR) + 1);
                         date = date.substring(0, date.indexOf(HH_MM_SEPARATOR));
 
                         if (!isReal) {
                             //This if statement changes the dummy data's date to match our current date range.
                             Date fragmentDate = new Date(System.currentTimeMillis() + ((i - 2) * TWENTY_FOUR_HOURS_IN_MILLIS));
-                            date = mformat.format(fragmentDate);
+                            date = mDateNoTimeFormat.format(fragmentDate);
                         }
                     } catch (Exception e) {
                         sendMessage(getResources().getString(R.string.error_processing_datetime_json_data));
