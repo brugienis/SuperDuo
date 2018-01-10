@@ -15,7 +15,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -31,7 +31,7 @@ import it.jaschke.alexandria.fragments.ListOfBooks;
 import it.jaschke.alexandria.fragments.NavigationDrawerFragment;
 
 
-public class MainActivity extends ActionBarActivity
+public class MainActivity extends AppCompatActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks,
         ListOfBooks.Callbacks,
         BookDetail.Callbacks{

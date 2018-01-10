@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
+import android.util.Log;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -29,6 +30,8 @@ import java.util.Vector;
 
 import barqsoft.footballscores.R;
 import barqsoft.footballscores.database.DatabaseContract;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by yehya khaled on 3/2/2015.
@@ -115,6 +118,7 @@ public class MyFetchService extends IntentService {
             }
             JSONData = buffer.toString();
         } catch (Exception e) {
+            Log.v(LOG_TAG, "e: " + e);
             sendMessage(getResources().getString(R.string.problem_downloading_data));
         } finally {
             if (connection != null) {
@@ -167,6 +171,9 @@ public class MyFetchService extends IntentService {
         final String SEGUNDA_DIVISION = "400";
         final String SERIE_A = "401";
         final String PRIMERA_LIGA = "402";
+        final String XXXX0 = "427";
+        final String XXXX1 = "435";
+        final String XXXX2 = "440";
 //        final String Bundesliga3 = "403";
 //        final String EREDIVISIE = "404";
 
@@ -207,6 +214,7 @@ public class MyFetchService extends IntentService {
 
             //ContentValues to be inserted
             Vector<ContentValues> values = new Vector<>(matches.length());
+            Log.v(TAG, "processJSONData - matches.length(): " + matches.length());
             for (int i = 0; i < matches.length(); i++) {
 
                 JSONObject matchData = matches.getJSONObject(i);
@@ -217,6 +225,7 @@ public class MyFetchService extends IntentService {
                 //add leagues here in order to have them be added to the DB.
                 // If you are finding no data in the app, check that this contains all the leagues.
                 // If it doesn't, that can cause an empty DB, bypassing the dummy data routine.
+                Log.v(TAG, "processJSONData - before if - league: " + league);
                 if (league.equals(PREMIER_LEAGUE) ||
                         league.equals(SERIE_A) ||
                         league.equals(BUNDESLIGA1) ||
@@ -224,8 +233,13 @@ public class MyFetchService extends IntentService {
                         league.equals(PRIMERA_DIVISION) ||
                         league.equals(SEGUNDA_DIVISION) ||
                         league.equals(PRIMERA_LIGA) ||
-                        league.equals(LIGUE1)
+                        league.equals(LIGUE1) ||
+
+                        league.equals(XXXX0) ||
+                        league.equals(XXXX1) ||
+                        league.equals(XXXX2)
                         ) {
+                    Log.v(TAG, "processJSONData -  after if - league: " + league);
                     matchId = matchData.getJSONObject(LINKS).getJSONObject(SELF).
                             getString(HREF);
                     matchId = matchId.replace(MATCH_LINK, EMPTY_STRING);
